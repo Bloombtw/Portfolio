@@ -79,27 +79,6 @@ function pastille(n, aConfirmer, compte) {
   return `<span class="pip n${n}${aConfirmer ? " tbc" : ""}" title="Niveau ${n}${aConfirmer ? ", à confirmer" : ""}">N${n}${compte > 1 ? "×" + compte : ""}</span>`;
 }
 
-function pastillesCase(projet, c) {
-  const parNiveau = {};
-  Object.entries(projet.liens[c] || {}).forEach(([ac, l]) => {
-    const n = niveauDe(ac);
-    parNiveau[n] ??= { compte: 0, tousAConfirmer: true };
-    parNiveau[n].compte++;
-    if (!l.aConfirmer) parNiveau[n].tousAConfirmer = false;
-  });
-  return Object.keys(parNiveau).sort()
-    .map(n => pastille(n, parNiveau[n].tousAConfirmer, parNiveau[n].compte)).join("");
-}
-
-function legende() {
-  return `<div class="legende">
-    <span>${pastille(1)} niveau 1</span>
-    <span>${pastille(2)} niveau 2</span>
-    <span>${pastille(3)} niveau 3</span>
-    <span><span class="pip n1 tbc">N</span> preuve à confirmer</span>
-  </div>`;
-}
-
 function entreeSection(num, titre, intro) {
   return `<header class="tete-section rv">
     <p class="surtitre"><span>${num}</span>${titre}</p>
@@ -108,32 +87,52 @@ function entreeSection(num, titre, intro) {
 }
 
 /* ---------- Tableau croisé ---------- */
+/* Trois points = N1, N2, N3 : plein si démontré, creux si seulement à confirmer */
+function indicateurCase(projet, c) {
+  const liens = Object.entries(projet.liens[c] || {});
+  if (!liens.length) return null;
+  const etat = {};
+  liens.forEach(([ac, l]) => {
+    const n = niveauDe(ac);
+    if (!l.aConfirmer) etat[n] = "on";
+    else etat[n] ??= "tbc";
+  });
+  const points = [1, 2, 3].map(n => `<i class="pt${etat[n] ? " " + etat[n] : ""}"></i>`).join("");
+  const libelle = [1, 2, 3].filter(n => etat[n])
+    .map(n => `niveau ${n}${etat[n] === "tbc" ? " à confirmer" : ""}`).join(", ");
+  return { html: `<span class="points" aria-hidden="true">${points}</span><span class="nb">${liens.length}</span>`, libelle };
+}
+
 function tableauCroise() {
   const tete = COMPS.map(c =>
-    `<th scope="col"><a href="competences.html?id=${c}"><span class="code">${c}</span>${esc(COMPETENCES[c].court)}</a></th>`).join("");
+    `<th scope="col"><a href="competences.html?id=${c}" title="${esc(COMPETENCES[c].nom)}"><span class="code">${c}</span>${esc(COMPETENCES[c].court)}</a></th>`).join("");
   const lignes = PROJETS.map(p => {
     const cases = COMPS.map(c => {
-      const x = pastillesCase(p, c);
+      const x = indicateurCase(p, c);
       return x
-        ? `<td><a class="case on" href="projets.html?id=${p.id}#${c}" aria-label="${esc(p.nom)} et ${esc(COMPETENCES[c].nom)}">${x}</a></td>`
-        : `<td><span class="case" aria-label="Pas de lien">·</span></td>`;
+        ? `<td><a class="case" href="projets.html?id=${p.id}#${c}" aria-label="${esc(p.nom)}, ${esc(COMPETENCES[c].nom)} : ${x.libelle}">${x.html}</a></td>`
+        : `<td><span class="case vide" aria-label="Pas de lien">—</span></td>`;
     }).join("");
     return `<tr><th scope="row"><a href="projets.html?id=${p.id}">${esc(p.nom)}<small>${esc(p.periode)}</small></a></th>${cases}</tr>`;
   }).join("");
 
   const niveau3 = PROJETS.some(p => Object.values(p.liens).some(l => Object.keys(l).some(ac => niveauDe(ac) === 3)));
-  const manque = niveau3 ? "" :
-    `<tr class="manque"><td colspan="${COMPS.length + 1}">Niveau 3 : les projets de 3e année viendront compléter ce tableau.</td></tr>`;
 
   return `<div class="tableau rv">
     <div class="defile-x">
       <table class="croise">
         <caption class="sr">Projets en lignes, compétences en colonnes</caption>
         <thead><tr><th scope="col"><span class="sr">Projet</span></th>${tete}</tr></thead>
-        <tbody>${lignes}${manque}</tbody>
+        <tbody>${lignes}</tbody>
       </table>
     </div>
-    ${legende()}
+    <div class="legende">
+      <span><span class="points"><i class="pt on"></i><i class="pt"></i><i class="pt"></i></span>N1 · N2 · N3</span>
+      <span><i class="pt on"></i>démontré</span>
+      <span><i class="pt tbc"></i>à confirmer</span>
+      <span><span class="nb">3</span>nombre de preuves</span>
+      ${niveau3 ? "" : `<p class="note">Le niveau 3 viendra avec les projets de 3e année.</p>`}
+    </div>
   </div>`;
 }
 
