@@ -8,13 +8,13 @@ const info = document.getElementById("info-touche");
 const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const tactile = matchMedia("(hover: none)").matches;
 
-/* Couleurs des touches par catégorie : [capuchon, texte] */
+/* Couleurs des touches par catégorie : [capuchon, encre des icônes mono] */
 const PALETTE = [
-  ["#8ea6ff", "#0b0f22"],  // accent
-  ["#ecebe4", "#15161c"],  // crème
-  ["#c9b8ff", "#1a1030"],  // lilas
-  ["#2a2d38", "#e9ebf2"],  // graphite
-  ["#555a6b", "#f2f3f7"]   // ardoise
+  ["#dfe6ff", "#1c2b6b"],  // bleu pâle
+  ["#f1efe7", "#1b1c22"],  // crème
+  ["#e6dcff", "#3b1f7a"],  // lilas
+  ["#262933", "#e9ebf2"],  // graphite
+  ["#e2e4ea", "#1b1c22"]   // gris clair
 ];
 const U = 1;          // largeur d'une touche standard
 const JEU = 0.1;      // espace entre deux touches
@@ -40,24 +40,52 @@ function disposition(outils) {
   return rangees;
 }
 
-/* Texture du texte imprimé sur une touche */
-function etiquette(texte, largeur, couleur) {
+/* Charge un logo ; les icônes « mono-… » sont recolorées avec l'encre de la touche */
+async function chargerLogo(logo, encre) {
+  const url = `assets/img/logos/${logo}.svg`;
+  let src = url;
+  if (logo.startsWith("mono-")) {
+    const svg = (await (await fetch(url)).text()).replaceAll("currentColor", encre);
+    src = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+  }
+  const img = new Image();
+  img.src = src;
+  await img.decode();
+  return img;
+}
+
+/* Texture imprimée sur une touche : le logo de l'outil, ou son nom à défaut */
+function etiquette(outil, largeur, couleur) {
   const px = 256;
   const c = document.createElement("canvas");
   c.width = Math.round(px * largeur); c.height = px;
   const g = c.getContext("2d");
-  let taille = 84;
-  const police = t => `600 ${t}px "Geist Mono", ui-monospace, monospace`;
-  g.font = police(taille);
-  while (g.measureText(texte).width > c.width * 0.82 && taille > 36) g.font = police(--taille);
-  g.fillStyle = couleur;
-  g.textAlign = "center";
-  g.textBaseline = "middle";
-  g.fillText(texte, c.width / 2, px / 2 + 4);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 8;
+  if (outil.logo) {
+    chargerLogo(outil.logo, couleur).then(img => {
+      const cote = px * 0.56;
+      g.drawImage(img, (c.width - cote) / 2, (px - cote) / 2, cote, cote);
+      t.needsUpdate = true;
+    }).catch(() => texte(g, c, outil.touche || outil.nom, couleur, t));
+    return t;
+  }
+  texte(g, c, outil.touche || outil.nom, couleur, t);
   return t;
+}
+
+function texte(g, c, mot, couleur, t) {
+  const px = c.height;
+  let taille = 84;
+  const police = n => `600 ${n}px "Geist Mono", ui-monospace, monospace`;
+  g.font = police(taille);
+  while (g.measureText(mot).width > c.width * 0.82 && taille > 36) g.font = police(--taille);
+  g.fillStyle = couleur;
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  g.fillText(mot, c.width / 2, px / 2 + 4);
+  t.needsUpdate = true;
 }
 
 async function demarrer() {
@@ -127,7 +155,7 @@ async function demarrer() {
 
       const texte = new THREE.Mesh(
         new THREE.PlaneGeometry(w - JEU - 0.08, U - JEU - 0.08),
-        new THREE.MeshBasicMaterial({ map: etiquette(o.touche || o.nom, (w - JEU - 0.08) / (U - JEU - 0.08), encre), transparent: true, toneMapped: false })
+        new THREE.MeshBasicMaterial({ map: etiquette(o, (w - JEU - 0.08) / (U - JEU - 0.08), encre), transparent: true, toneMapped: false })
       );
       texte.rotation.x = -Math.PI / 2;
       texte.position.y = 0.211;
@@ -178,6 +206,8 @@ async function demarrer() {
     if (!info) return;
     const o = t?.outil;
     info.classList.toggle("actif", !!o);
+    const logo = info.querySelector(".info-logo");
+    logo.innerHTML = o?.logo ? imageLogo(o.logo, o.nom) : "";
     info.querySelector(".info-cat").textContent = o ? o.cat : "Outils et langages";
     info.querySelector(".info-nom").textContent = o ? o.nom : (tactile ? "Touchez une touche" : "Survolez une touche");
     info.querySelector(".info-desc").textContent = o ? o.desc : "Chaque touche du clavier est un outil que j'ai utilisé en projet.";

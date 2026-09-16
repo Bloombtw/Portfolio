@@ -11,6 +11,37 @@ const deux = n => String(n).padStart(2, "0");
 const compsDe = p => COMPS.filter(c => Object.keys(p.liens[c] || {}).length);
 const fleche = `<svg class="fleche" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
 
+/* ---------- Logos et icônes ---------- */
+const ICONES_COMP = {
+  C4: '<ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v13c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-13M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/>',
+  C5: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9 4v16M15 4v16M5.5 8h1.5M11.5 8h1.5M11.5 11.5h1.5M17.5 8h1"/>',
+  C6: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 4.9a3.2 3.2 0 0 1 0 6.2M21 20c0-2.6-1.4-4.5-3.6-5.2"/>'
+};
+const icone = c => ICONES_COMP[c]
+  ? `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONES_COMP[c]}</svg>` : "";
+/* Pastille « icône + code » d'une compétence */
+const puceComp = c => `<span class="puce" title="${esc(COMPETENCES[c].nom)}">${icone(c)}${c}</span>`;
+
+/* Retrouve le logo d'un outil par son nom (ou un alias) */
+function logoDe(nom) {
+  const o = OUTILS.find(x => x.nom === nom || x.touche === nom || (x.alias || []).includes(nom));
+  return o?.logo || AUTRES_LOGOS[nom] || null;
+}
+function imageLogo(logo, nom) {
+  const src = `assets/img/logos/${logo}.svg`;
+  return logo.startsWith("mono-")
+    // URL absolue : dans une variable CSS, un chemin relatif serait résolu depuis style.css
+    ? `<span class="lg mono" style="--m:url('${new URL(src, document.baseURI).href}')" role="img" aria-label="${esc(nom)}"></span>`
+    : `<img class="lg" src="${src}" alt="${esc(nom)}" loading="lazy">`;
+}
+/* Tuile logo avec infobulle, ou texte si l'outil n'a pas de logo */
+function tuileOutil(nom) {
+  const logo = logoDe(nom);
+  return logo
+    ? `<span class="tuile" data-nom="${esc(nom)}">${imageLogo(logo, nom)}</span>`
+    : `<span class="tag">${esc(nom)}</span>`;
+}
+
 /* Part des AC d'une compétence démontrés par au moins un projet */
 function couverture(c, n) {
   const acs = n ? Object.keys(COMPETENCES[c].niveaux[n].acs)
@@ -105,7 +136,7 @@ function indicateurCase(projet, c) {
 
 function tableauCroise() {
   const tete = COMPS.map(c =>
-    `<th scope="col"><a href="competences.html?id=${c}" title="${esc(COMPETENCES[c].nom)}"><span class="code">${c}</span>${esc(COMPETENCES[c].court)}</a></th>`).join("");
+    `<th scope="col"><a href="competences.html?id=${c}" title="${esc(COMPETENCES[c].nom)}">${icone(c)}${esc(COMPETENCES[c].court)}</a></th>`).join("");
   const lignes = PROJETS.map(p => {
     const cases = COMPS.map(c => {
       const x = indicateurCase(p, c);
@@ -149,7 +180,7 @@ function carteCompetence(c, i) {
   }).join("");
   return `<a class="carte comp rv" style="--d:${i}" href="competences.html?id=${c}">
     <div class="carte-haut">
-      <span class="code">${c}</span>
+      <span class="carte-ico">${icone(c)}<span class="mono">${c}</span></span>
       <span class="anneau" style="--p:${pct}"><span>${pct}%</span></span>
     </div>
     <h3>${esc(C.nom)}</h3>
@@ -164,11 +195,11 @@ function ligneProjet(p, i) {
     <span class="num mono">${deux(i + 1)}</span>
     <span class="ligne-corps">
       <span class="ligne-titre">${esc(p.nom)}${p.aCompleter ? ` <span class="badge">en cours</span>` : ""}</span>
-      <span class="ligne-resume">${esc(p.resume)}</span>
+      <span class="ligne-resume"><span class="mono">${esc(p.periode)}</span> · ${esc(p.resume)}</span>
     </span>
     <span class="ligne-meta">
-      <span class="mono">${esc(p.periode)}</span>
-      <span class="tags">${comps.map(c => `<span class="tag">${c}</span>`).join("")}</span>
+      <span class="logos-ligne">${p.outils.filter(logoDe).slice(0, 5).map(o => imageLogo(logoDe(o), o)).join("")}</span>
+      <span class="puces">${comps.map(puceComp).join("")}</span>
     </span>
     ${fleche}
   </a>`;
@@ -178,7 +209,7 @@ function ligneProjet(p, i) {
 function pageAccueil() {
   const cats = [...new Set(OUTILS.map(o => o.cat))];
   const repli = OUTILS.map(o =>
-    `<span class="touche-repli" data-cat="${cats.indexOf(o.cat)}">${esc(o.touche || o.nom)}</span>`).join("");
+    `<span class="touche-repli" data-cat="${cats.indexOf(o.cat)}" title="${esc(o.nom)}">${o.logo ? imageLogo(o.logo, o.nom) : esc(o.touche || o.nom)}</span>`).join("");
   const contact = liensContact();
   const nbAC = PROJETS.reduce((s, p) => s + Object.values(p.liens).reduce((t, l) => t + Object.keys(l).length, 0), 0);
 
@@ -206,6 +237,7 @@ function pageAccueil() {
             <div class="repli" data-cats='${esc(JSON.stringify(cats))}'>${repli}</div>
           </div>
           <div class="info-touche" id="info-touche" aria-live="polite">
+            <span class="info-logo" aria-hidden="true"></span>
             <span class="info-cat mono">Outils et langages</span>
             <strong class="info-nom">Survolez une touche</strong>
             <span class="info-desc">Chaque touche du clavier est un outil que j'ai utilisé en projet.</span>
@@ -246,7 +278,7 @@ function ficheProjet(p) {
   const cs = compsDe(p);
   const comps = cs.map((c, i) => `
     <section class="bloc-comp rv" style="--d:${i}" id="${c}">
-      <h3><a href="competences.html?id=${c}"><span class="code">${c}</span>${esc(COMPETENCES[c].nom)} ${fleche}</a></h3>
+      <h3><a href="competences.html?id=${c}">${puceComp(c)}${esc(COMPETENCES[c].nom)} ${fleche}</a></h3>
       ${Object.entries(p.liens[c]).map(([ac, l]) => `
         <div class="ac">
           <p class="ac-titre">${pastille(niveauDe(ac), l.aConfirmer)}<span><span class="mono">${ac}</span> ${esc(texteAC(ac))}</span></p>
@@ -270,7 +302,7 @@ function ficheProjet(p) {
         <dl class="meta rv" style="--d:3">
           <div><dt>Période</dt><dd>${esc(p.periode)}</dd></div>
           <div><dt>Équipe</dt><dd>${esc(p.equipe)}</dd></div>
-          <div><dt>Compétences</dt><dd>${cs.map(c => `<a href="#${c}">${c}</a>`).join(" ") || "—"}</dd></div>
+          <div><dt>Compétences</dt><dd class="puces">${cs.map(c => `<a href="#${c}">${puceComp(c)}</a>`).join("") || "—"}</dd></div>
         </dl>
         ${p.aCompleter ? `<p class="alerte rv">Fiche en cours de rédaction.</p>` : ""}
       </header>
@@ -280,7 +312,7 @@ function ficheProjet(p) {
         </div>
         <aside class="panneau rv">
           <h2>Outils</h2>
-          <div class="tags">${p.outils.map(o => `<span class="tag">${esc(o)}</span>`).join("")}</div>
+          <div class="tuiles">${p.outils.map(tuileOutil).join("")}</div>
           ${ressources ? `<h2>Ressources</h2><div class="pile">${ressources}</div>` : ""}
         </aside>
       </div>
@@ -305,7 +337,7 @@ function pageProjets() {
     return;
   }
   const filtres = ["Tous", ...COMPS].map((c, i) =>
-    `<button type="button" data-filtre="${i ? c : ""}" aria-pressed="${i === 0}">${i ? `${c} ${esc(COMPETENCES[c].court)}` : c}</button>`).join("");
+    `<button type="button" data-filtre="${i ? c : ""}" aria-pressed="${i === 0}">${i ? `${icone(c)}${esc(COMPETENCES[c].court)}` : c}</button>`).join("");
   zone.innerHTML = `
     <section class="wrap page-tete">
       <p class="surtitre rv"><span>${deux(PROJETS.length)}</span>Projets</p>
@@ -354,7 +386,7 @@ function ficheCompetence(c) {
     <article class="wrap fiche">
       <a class="retour rv" href="competences.html">← Toutes les compétences</a>
       <header class="fiche-tete">
-        <p class="surtitre rv"><span>${c}</span>${esc(C.court)}</p>
+        <p class="surtitre rv"><span class="avec-ico">${icone(c)}${c}</span>${esc(C.court)}</p>
         <h1 class="rv" style="--d:1">${esc(C.nom)}</h1>
         <p class="fiche-resume rv" style="--d:2">${tout.couverts} apprentissages critiques démontrés sur ${tout.total}, et les projets qui les prouvent.</p>
       </header>

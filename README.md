@@ -24,6 +24,7 @@ assets/
   js/app.js         Génération des pages (pas besoin d'y toucher)
   js/clavier.js     Clavier 3D de l'accueil (Three.js)
   img/              Captures d'écran des projets
+  img/logos/        Logos des outils (clavier 3D, fiches projets)
   docs/             CV et autres PDF
 .nojekyll           Indique à GitHub Pages de servir les fichiers tels quels
 ```
@@ -63,8 +64,17 @@ Tout se passe dans `assets/js/data.js`.
 `touche` est le texte court imprimé dessus et `largeur` élargit la touche (1 par défaut) :
 
 ```js
-{ cat: "Données", nom: "PostgreSQL", touche: "Postgres", largeur: 1.5, desc: "Ce que j'en ai fait." }
+{ cat: "Données", nom: "PostgreSQL", logo: "postgresql", largeur: 1.5, desc: "Ce que j'en ai fait." }
 ```
+
+**Logos** : `logo` est le nom d'un fichier SVG de `assets/img/logos/`. Les fichiers qui commencent par
+`mono-` sont des icônes d'une seule couleur, qui s'adaptent au thème. Le même logo s'affiche dans les
+fiches projets dès que le nom d'un outil du projet correspond au `nom` ou à un `alias` de l'outil.
+Pour un outil qui n'est pas sur le clavier, l'ajouter dans `AUTRES_LOGOS`.
+
+Crédits : logos de [Devicon](https://devicon.dev) (licence MIT) et de [Simple Icons](https://simpleicons.org)
+(CC0). Les icônes `mono-sql`, `mono-pgadmin`, `mono-mcd`, `mono-mvc`, `mono-javafx`, `mono-tests` et
+`mono-algo` ont été dessinées pour ce site.
 
 **Ajouter un projet** : copier un bloc de `PROJETS` et modifier ses champs. L'`id` sert dans l'adresse de la fiche (lettres minuscules et tirets).
 
