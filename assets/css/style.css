@@ -1,0 +1,130 @@
+/* Couleurs reprises de la charte de l'IUT de Montreuil */
+:root {
+  --fond: #F3F5F8; --surface: #FFFFFF; --texte: #16202B; --doux: #5A6776; --trait: #D5DCE4;
+  --rouge: #9A2548; --rouge-clair: #F4E1E7; --bleu: #0A4378; --bleu-clair: #DCE7F2;
+  --manque: #F7F1E3; --manque-texte: #7A5B12;
+  --n1: #DCE7F2; --n1-bord: #8FB0D2; --n2: #3F6E9E; --n3: #9A2548;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #0F161E; --surface: #17212C; --texte: #E8EDF2; --doux: #9AA8B7; --trait: #2A3847;
+    --rouge: #E58CA9; --rouge-clair: #3A1F2A; --bleu: #8DBCE8; --bleu-clair: #1C3149;
+    --manque: #2E2816; --manque-texte: #E3C77A;
+    --n1: #1C3149; --n1-bord: #3F6E9E; --n2: #4F82B8; --n3: #C0476E;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--fond); color: var(--texte);
+  font-family: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.0625rem; line-height: 1.6;
+  min-height: 100vh; display: flex; flex-direction: column;
+}
+main { flex: 1; }
+a { color: var(--bleu); }
+img { max-width: 100%; }
+:focus-visible { outline: 3px solid var(--rouge); outline-offset: 2px; }
+h1, h2, h3 { line-height: 1.15; }
+.wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* En-tête et pied */
+#entete { background: var(--surface); border-bottom: 4px solid var(--rouge); }
+.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding-top: .9rem; padding-bottom: .9rem; }
+.marque { text-decoration: none; color: var(--texte); }
+.marque strong { display: block; font-size: 1.1rem; }
+.marque span { color: var(--doux); font-size: .88rem; }
+#entete nav { display: flex; gap: .25rem; flex-wrap: wrap; }
+#entete nav a { text-decoration: none; color: var(--texte); padding: .4rem .8rem; border-radius: 8px; font-weight: 500; }
+#entete nav a:hover { background: var(--fond); }
+#entete nav a[aria-current="page"] { background: var(--texte); color: var(--surface); }
+#pied { border-top: 1px solid var(--trait); color: var(--doux); font-size: .92rem; margin-top: 3rem; }
+#pied .liens { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+/* Accueil */
+.hero { padding-top: 3.5rem; padding-bottom: 2rem; }
+.hero .parcours { color: var(--rouge); font-weight: 700; margin: 0 0 .5rem; }
+.hero h1 { font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 800; letter-spacing: -.02em; margin: 0 0 1rem; }
+.accroche { font-size: 1.2rem; max-width: 55ch; margin: 0 0 1.5rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.btn { display: inline-block; padding: .55rem 1.1rem; border: 2px solid var(--texte); border-radius: 999px; color: var(--texte); text-decoration: none; font-weight: 700; }
+.btn:hover { background: var(--surface); }
+.btn.plein { background: var(--texte); color: var(--surface); }
+.bloc { padding-top: 2rem; }
+.bloc h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 1rem 0 .5rem; }
+.bloc h2 { font-size: 1.6rem; margin: 0 0 .5rem; }
+.intro { color: var(--doux); max-width: 65ch; margin: 0 0 1.25rem; }
+.deux { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+.bloc.deux { padding-top: 3rem; }
+.outils h3 { font-size: .95rem; margin: 1rem 0 .35rem; color: var(--doux); font-weight: 500; }
+@media (max-width: 760px) { .deux { grid-template-columns: 1fr; } }
+
+/* Tableau croisé */
+.tableau { background: var(--surface); border: 1px solid var(--trait); border-radius: 14px; padding: 1rem; overflow-x: auto; }
+table.croise { border-collapse: separate; border-spacing: 6px; width: 100%; min-width: 620px; }
+.croise th { text-align: left; vertical-align: bottom; font-weight: 700; font-size: .98rem; }
+.croise th a { display: block; color: var(--texte); text-decoration: none; padding: .35rem .5rem; border-radius: 8px; }
+.croise th a:hover { background: var(--rouge-clair); color: var(--rouge); }
+.croise th small { display: block; font-weight: 400; color: var(--doux); font-size: .8rem; }
+.croise td { padding: 0; }
+.case { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; justify-content: center; min-height: 3.6rem; padding: .4rem; border-radius: 10px; background: var(--fond); color: var(--doux); text-decoration: none; }
+.case.on { background: var(--bleu-clair); }
+a.case:hover { box-shadow: inset 0 0 0 3px var(--rouge); }
+.manque td { background: var(--manque); color: var(--manque-texte); border-radius: 10px; padding: .55rem .8rem; font-size: .9rem; }
+.legende { display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; margin-top: .75rem; font-size: .85rem; color: var(--doux); }
+
+/* Pastilles */
+.pip { display: inline-block; font-size: .75rem; font-weight: 700; padding: .05rem .4rem; border-radius: 6px; line-height: 1.5; white-space: nowrap; }
+.pip.n1 { background: var(--n1); border: 1px solid var(--n1-bord); color: var(--texte); }
+.pip.n2 { background: var(--n2); color: #fff; }
+.pip.n3 { background: var(--n3); color: #fff; }
+.pip.tbc { outline: 2px dashed var(--manque-texte); outline-offset: 1px; }
+
+/* Cartes */
+.grille { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+.carte { display: flex; flex-direction: column; gap: .4rem; background: var(--surface); border: 1px solid var(--trait); border-radius: 14px; padding: 1.2rem; color: var(--texte); text-decoration: none; }
+.carte:hover { border-color: var(--rouge); }
+.carte h3 { margin: 0; font-size: 1.25rem; }
+.carte p { margin: 0; color: var(--doux); }
+.periode { color: var(--doux); font-size: .9rem; }
+.tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .3rem; }
+.tag { background: var(--fond); border: 1px solid var(--trait); border-radius: 6px; padding: .05rem .5rem; font-size: .85rem; color: var(--texte); }
+.jauge { display: grid; grid-template-columns: 5rem 1fr 2.5rem; align-items: center; gap: .5rem; font-size: .88rem; color: var(--doux); }
+.piste { height: .55rem; background: var(--fond); border-radius: 99px; overflow: hidden; }
+.rempli { display: block; height: 100%; }
+.rempli.n1 { background: var(--n1-bord); } .rempli.n2 { background: var(--n2); } .rempli.n3 { background: var(--n3); }
+
+/* Fiches */
+.fiche h1 { font-size: clamp(2rem, 5vw, 3rem); margin: .5rem 0 .25rem; }
+.fiche h2 { font-size: 1.15rem; margin: 1.5rem 0 .35rem; }
+.fiche p { max-width: 68ch; margin: 0 0 .5rem; }
+.fiche aside { background: var(--surface); border: 1px solid var(--trait); border-radius: 14px; padding: 0 1.2rem 1.2rem; align-self: start; }
+.fiche .retour { margin: 1.5rem 0 0; }
+.retour a::before { content: "‹ "; }
+h2.sep { font-size: 1.6rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--trait); }
+.lien-comp { background: var(--surface); border: 1px solid var(--trait); border-radius: 14px; padding: .4rem 1.2rem .9rem; margin: 1rem 0; scroll-margin-top: 1rem; }
+.lien-comp h3 a { color: var(--texte); }
+.ac { margin: .8rem 0; }
+.ac-titre { font-weight: 700; margin: 0; display: flex; gap: .5rem; align-items: baseline; }
+.preuve, .preuves { color: var(--doux); margin: .15rem 0 0; }
+.preuves { padding-left: 1.2rem; }
+.vide { color: var(--manque-texte); background: var(--manque); display: inline-block; border-radius: 6px; padding: .05rem .5rem; font-size: .9rem; margin: .2rem 0 0; }
+.niveau { border-left: 4px solid var(--n1-bord); padding-left: 1.2rem; margin: 2rem 0; }
+.niveau.n2 { border-color: var(--n2); }
+.niveau.n3 { border-color: var(--n3); }
+.niveau h2 { display: flex; gap: .6rem; align-items: baseline; font-size: 1.3rem; }
+.alerte { background: var(--manque); color: var(--manque-texte); border-radius: 8px; padding: .5rem .85rem; }
+.galerie { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); margin-top: 1.5rem; }
+.galerie img { border-radius: 10px; border: 1px solid var(--trait); width: 100%; height: auto; }
+
+@media (max-width: 560px) {
+  body { font-size: 1rem; }
+  .hero { padding-top: 2rem; }
+}
+
+@media (max-width: 660px) {
+  .tableau::before { content: "Faites glisser le tableau pour voir toutes les compétences."; display: block; font-size: .85rem; color: var(--doux); margin-bottom: .4rem; }
+}
