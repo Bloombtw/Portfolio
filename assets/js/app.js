@@ -6,6 +6,30 @@ const compDe = ac => "C" + ac[0];
 const texteAC = ac => COMPETENCES[compDe(ac)].niveaux[niveauDe(ac)].acs[ac];
 const param = k => new URLSearchParams(location.search).get(k);
 const page = document.body.dataset.page;
+const COMPS = Object.keys(COMPETENCES);
+const deux = n => String(n).padStart(2, "0");
+const compsDe = p => COMPS.filter(c => Object.keys(p.liens[c] || {}).length);
+const fleche = `<svg class="fleche" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
+
+/* Part des AC d'une compétence démontrés par au moins un projet */
+function couverture(c, n) {
+  const acs = n ? Object.keys(COMPETENCES[c].niveaux[n].acs)
+    : [1, 2, 3].flatMap(k => Object.keys(COMPETENCES[c].niveaux[k].acs));
+  const couverts = acs.filter(ac => PROJETS.some(p => (p.liens[c] || {})[ac])).length;
+  return { couverts, total: acs.length };
+}
+
+/* ---------- Thème ---------- */
+function themeActuel() {
+  return document.documentElement.dataset.theme
+    || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+}
+function basculerTheme() {
+  const t = themeActuel() === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("theme", t); } catch (e) {}
+  window.dispatchEvent(new CustomEvent("theme", { detail: t }));
+}
 
 /* ---------- En-tête et pied de page ---------- */
 function entete() {
@@ -15,35 +39,49 @@ function entete() {
     ["competences.html", "Compétences", "competences"]
   ].map(([href, label, id]) =>
     `<a href="${href}"${id === page ? ' aria-current="page"' : ""}>${label}</a>`).join("");
-  document.getElementById("entete").innerHTML = `
-    <div class="wrap bar">
-      <a class="marque" href="index.html"><strong>${esc(PROFIL.nom)}</strong><span>${esc(PROFIL.formation)}</span></a>
+  const el = document.getElementById("entete");
+  el.innerHTML = `
+    <div class="wrap barre">
+      <a class="marque" href="index.html" aria-label="${esc(PROFIL.nom)}, accueil">
+        <span class="logo">AM</span><span class="marque-nom">${esc(PROFIL.nom)}</span>
+      </a>
       <nav aria-label="Navigation principale">${nav}</nav>
+      <button class="theme" type="button" aria-label="Changer de thème">
+        <svg class="soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>
+      </button>
     </div>`;
+  el.querySelector(".theme").addEventListener("click", basculerTheme);
+  const suivre = () => el.classList.toggle("defile", scrollY > 8);
+  addEventListener("scroll", suivre, { passive: true });
+  suivre();
+}
+
+function liensContact() {
+  const l = [];
+  if (PROFIL.email) l.push(["mailto:" + PROFIL.email, "E-mail"]);
+  if (PROFIL.github) l.push([PROFIL.github, "GitHub"]);
+  if (PROFIL.linkedin) l.push([PROFIL.linkedin, "LinkedIn"]);
+  if (PROFIL.cv) l.push([PROFIL.cv, "CV (PDF)"]);
+  return l;
 }
 
 function pied() {
-  const liens = [];
-  if (PROFIL.email) liens.push(`<a href="mailto:${esc(PROFIL.email)}">${esc(PROFIL.email)}</a>`);
-  if (PROFIL.github) liens.push(`<a href="${esc(PROFIL.github)}">GitHub</a>`);
-  if (PROFIL.linkedin) liens.push(`<a href="${esc(PROFIL.linkedin)}">LinkedIn</a>`);
-  if (PROFIL.cv) liens.push(`<a href="${esc(PROFIL.cv)}">CV (PDF)</a>`);
   document.getElementById("pied").innerHTML = `
-    <div class="wrap bar">
-      <span>${esc(PROFIL.nom)}, portfolio de 3e année</span>
-      <span class="liens">${liens.join("")}</span>
+    <div class="wrap barre">
+      <span>© ${new Date().getFullYear()} ${esc(PROFIL.nom)} · ${esc(PROFIL.formation)}</span>
+      <span class="liens">${liensContact().map(([u, t]) => `<a href="${esc(u)}">${t}</a>`).join("")}</span>
     </div>`;
 }
 
 /* ---------- Pastilles de niveau ---------- */
 function pastille(n, aConfirmer, compte) {
-  return `<span class="pip n${n}${aConfirmer ? " tbc" : ""}" title="Niveau ${n}${aConfirmer ? ", à confirmer" : ""}">N${n}${compte > 1 ? " ×" + compte : ""}</span>`;
+  return `<span class="pip n${n}${aConfirmer ? " tbc" : ""}" title="Niveau ${n}${aConfirmer ? ", à confirmer" : ""}">N${n}${compte > 1 ? "×" + compte : ""}</span>`;
 }
 
 function pastillesCase(projet, c) {
-  const liens = projet.liens[c] || {};
   const parNiveau = {};
-  Object.entries(liens).forEach(([ac, l]) => {
+  Object.entries(projet.liens[c] || {}).forEach(([ac, l]) => {
     const n = niveauDe(ac);
     parNiveau[n] ??= { compte: 0, tousAConfirmer: true };
     parNiveau[n].compte++;
@@ -58,121 +96,202 @@ function legende() {
     <span>${pastille(1)} niveau 1</span>
     <span>${pastille(2)} niveau 2</span>
     <span>${pastille(3)} niveau 3</span>
-    <span><span class="pip n1 tbc">N</span>&nbsp; preuve à confirmer</span>
+    <span><span class="pip n1 tbc">N</span> preuve à confirmer</span>
   </div>`;
+}
+
+function entreeSection(num, titre, intro) {
+  return `<header class="tete-section rv">
+    <p class="surtitre"><span>${num}</span>${titre}</p>
+    ${intro ? `<p class="intro">${intro}</p>` : ""}
+  </header>`;
 }
 
 /* ---------- Tableau croisé ---------- */
 function tableauCroise() {
-  const cs = Object.keys(COMPETENCES);
-  const tete = cs.map(c =>
-    `<th scope="col"><a href="competences.html?id=${c}">${c} ${esc(COMPETENCES[c].court)}<small>${esc(COMPETENCES[c].nom)}</small></a></th>`).join("");
+  const tete = COMPS.map(c =>
+    `<th scope="col"><a href="competences.html?id=${c}"><span class="code">${c}</span>${esc(COMPETENCES[c].court)}</a></th>`).join("");
   const lignes = PROJETS.map(p => {
-    const cases = cs.map(c => {
+    const cases = COMPS.map(c => {
       const x = pastillesCase(p, c);
       return x
         ? `<td><a class="case on" href="projets.html?id=${p.id}#${c}" aria-label="${esc(p.nom)} et ${esc(COMPETENCES[c].nom)}">${x}</a></td>`
-        : `<td><span class="case" aria-label="Pas de lien">—</span></td>`;
+        : `<td><span class="case" aria-label="Pas de lien">·</span></td>`;
     }).join("");
     return `<tr><th scope="row"><a href="projets.html?id=${p.id}">${esc(p.nom)}<small>${esc(p.periode)}</small></a></th>${cases}</tr>`;
   }).join("");
 
-  const niveau3 = PROJETS.some(p => Object.keys(p.liens).some(c => Object.keys(p.liens[c]).some(ac => niveauDe(ac) === 3)));
+  const niveau3 = PROJETS.some(p => Object.values(p.liens).some(l => Object.keys(l).some(ac => niveauDe(ac) === 3)));
   const manque = niveau3 ? "" :
-    `<tr class="manque"><td colspan="${cs.length + 1}">Niveau 3 : les projets de 3e année viendront compléter ce tableau.</td></tr>`;
+    `<tr class="manque"><td colspan="${COMPS.length + 1}">Niveau 3 : les projets de 3e année viendront compléter ce tableau.</td></tr>`;
 
-  return `<div class="tableau">
-    <table class="croise">
-      <caption class="sr">Projets en lignes, compétences en colonnes</caption>
-      <thead><tr><th scope="col"><span class="sr">Projet</span></th>${tete}</tr></thead>
-      <tbody>${lignes}${manque}</tbody>
-    </table>
+  return `<div class="tableau rv">
+    <div class="defile-x">
+      <table class="croise">
+        <caption class="sr">Projets en lignes, compétences en colonnes</caption>
+        <thead><tr><th scope="col"><span class="sr">Projet</span></th>${tete}</tr></thead>
+        <tbody>${lignes}${manque}</tbody>
+      </table>
+    </div>
     ${legende()}
   </div>`;
 }
 
+/* ---------- Blocs réutilisables ---------- */
+function carteCompetence(c, i) {
+  const C = COMPETENCES[c];
+  const tout = couverture(c);
+  const pct = Math.round(tout.couverts / tout.total * 100);
+  const barres = [1, 2, 3].map(n => {
+    const { couverts, total } = couverture(c, n);
+    return `<div class="jauge"><span>N${n}</span>
+      <span class="piste"><span class="rempli n${n}" style="--v:${couverts / total}"></span></span>
+      <span class="mono">${couverts}/${total}</span></div>`;
+  }).join("");
+  return `<a class="carte comp rv" style="--d:${i}" href="competences.html?id=${c}">
+    <div class="carte-haut">
+      <span class="code">${c}</span>
+      <span class="anneau" style="--p:${pct}"><span>${pct}%</span></span>
+    </div>
+    <h3>${esc(C.nom)}</h3>
+    <div class="jauges">${barres}</div>
+    <span class="voir">Voir les preuves ${fleche}</span>
+  </a>`;
+}
+
+function ligneProjet(p, i) {
+  const comps = compsDe(p);
+  return `<a class="ligne rv" style="--d:${i}" href="projets.html?id=${p.id}" data-comps="${comps.join(" ")}">
+    <span class="num mono">${deux(i + 1)}</span>
+    <span class="ligne-corps">
+      <span class="ligne-titre">${esc(p.nom)}${p.aCompleter ? ` <span class="badge">en cours</span>` : ""}</span>
+      <span class="ligne-resume">${esc(p.resume)}</span>
+    </span>
+    <span class="ligne-meta">
+      <span class="mono">${esc(p.periode)}</span>
+      <span class="tags">${comps.map(c => `<span class="tag">${c}</span>`).join("")}</span>
+    </span>
+    ${fleche}
+  </a>`;
+}
+
 /* ---------- Page d'accueil ---------- */
 function pageAccueil() {
-  const outils = Object.entries(PROFIL.outils).map(([cat, items]) =>
-    `<div><h3>${esc(cat)}</h3><div class="tags">${items.map(i => `<span class="tag">${esc(i)}</span>`).join("")}</div></div>`).join("");
+  const cats = [...new Set(OUTILS.map(o => o.cat))];
+  const repli = OUTILS.map(o =>
+    `<span class="touche-repli" data-cat="${cats.indexOf(o.cat)}">${esc(o.touche || o.nom)}</span>`).join("");
+  const contact = liensContact();
+  const nbAC = PROJETS.reduce((s, p) => s + Object.values(p.liens).reduce((t, l) => t + Object.keys(l).length, 0), 0);
+
   document.getElementById("contenu").innerHTML = `
-    <section class="hero wrap">
-      <p class="parcours">${esc(PROFIL.parcours)}</p>
-      <h1>${esc(PROFIL.nom)}</h1>
-      <p class="accroche">${esc(PROFIL.accroche)}</p>
-      <div class="actions">
-        <a class="btn plein" href="projets.html">Voir les projets</a>
-        <a class="btn" href="competences.html">Voir les compétences</a>
-        ${PROFIL.cv ? `<a class="btn" href="${esc(PROFIL.cv)}">Télécharger le CV</a>` : ""}
+    <section class="hero">
+      <div class="wrap hero-grille">
+        <div class="hero-texte">
+          <p class="statut rv"><span class="point"></span>${esc(PROFIL.formation)}</p>
+          <h1 class="rv" style="--d:1">${esc(PROFIL.nom.split(" ")[0])}<br><span class="degrade">${esc(PROFIL.nom.split(" ").slice(1).join(" "))}</span></h1>
+          <p class="parcours rv" style="--d:2">${esc(PROFIL.parcours)}</p>
+          <p class="accroche rv" style="--d:3">${esc(PROFIL.accroche)}</p>
+          <div class="actions rv" style="--d:4">
+            <a class="btn plein" href="#projets">Voir les projets</a>
+            <a class="btn" href="competences.html">Compétences</a>
+            ${PROFIL.cv ? `<a class="btn" href="${esc(PROFIL.cv)}">CV</a>` : ""}
+          </div>
+          <dl class="chiffres rv" style="--d:5">
+            <div><dt>Projets</dt><dd>${deux(PROJETS.length)}</dd></div>
+            <div><dt>Compétences</dt><dd>${deux(COMPS.length)}</dd></div>
+            <div><dt>Preuves</dt><dd>${deux(nbAC)}</dd></div>
+          </dl>
+        </div>
+        <div class="scene-zone">
+          <div id="clavier" class="clavier">
+            <div class="repli" data-cats='${esc(JSON.stringify(cats))}'>${repli}</div>
+          </div>
+          <div class="info-touche" id="info-touche" aria-live="polite">
+            <span class="info-cat mono">Outils et langages</span>
+            <strong class="info-nom">Survolez une touche</strong>
+            <span class="info-desc">Chaque touche du clavier est un outil que j'ai utilisé en projet.</span>
+          </div>
+        </div>
       </div>
+      <a class="descendre" href="#competences" aria-label="Descendre"><span></span></a>
     </section>
 
-    <section class="wrap bloc">
-      <h2>Projets et compétences</h2>
-      <p class="intro">Chaque ligne est un projet, chaque colonne une compétence du parcours C. Une case indique le niveau des apprentissages démontrés ; cliquez dessus pour lire la preuve.</p>
+    <section class="wrap section" id="competences">
+      ${entreeSection("01", "Compétences", "Les trois compétences du parcours C. Chaque jauge montre la part des apprentissages critiques démontrés par au moins un projet.")}
+      <div class="grille-comp">${COMPS.map(carteCompetence).join("")}</div>
+    </section>
+
+    <section class="wrap section" id="projets">
+      ${entreeSection("02", "Projets", "Les projets menés pendant le BUT et les compétences qu'ils mobilisent.")}
+      <div class="lignes">${PROJETS.map(ligneProjet).join("")}</div>
+    </section>
+
+    <section class="wrap section" id="croise">
+      ${entreeSection("03", "Projets × compétences", "Chaque ligne est un projet, chaque colonne une compétence. Une case indique le niveau des apprentissages démontrés ; cliquez dessus pour lire la preuve.")}
       ${tableauCroise()}
     </section>
 
-    <section class="wrap bloc deux">
-      <div>
-        <h2>Objectif</h2>
-        <p>${esc(PROFIL.objectif)}</p>
-      </div>
-      <div class="outils">
-        <h2>Outils et langages</h2>
-        ${outils}
+    <section class="wrap section" id="contact">
+      <div class="final rv">
+        <p class="surtitre"><span>04</span>Et après ?</p>
+        <p class="final-texte">${esc(PROFIL.objectif)}</p>
+        <div class="actions">
+          ${contact.map(([u, t], i) => `<a class="btn${i ? "" : " plein"}" href="${esc(u)}">${t}</a>`).join("")}
+        </div>
       </div>
     </section>`;
 }
 
 /* ---------- Page projets ---------- */
-function carteProjet(p) {
-  const comps = Object.keys(p.liens).filter(c => Object.keys(p.liens[c]).length);
-  return `<a class="carte" href="projets.html?id=${p.id}">
-    <span class="periode">${esc(p.periode)}, ${esc(p.equipe.toLowerCase())}</span>
-    <h3>${esc(p.nom)}</h3>
-    <p>${esc(p.resume)}</p>
-    <span class="tags">${comps.map(c => `<span class="tag">${c} ${esc(COMPETENCES[c].court)}</span>`).join("")}</span>
-  </a>`;
-}
-
 function ficheProjet(p) {
-  const cs = Object.keys(COMPETENCES).filter(c => Object.keys(p.liens[c] || {}).length);
-  const comps = cs.map(c => `
-    <section class="lien-comp" id="${c}">
-      <h3><a href="competences.html?id=${c}">${c} · ${esc(COMPETENCES[c].nom)}</a></h3>
+  const cs = compsDe(p);
+  const comps = cs.map((c, i) => `
+    <section class="bloc-comp rv" style="--d:${i}" id="${c}">
+      <h3><a href="competences.html?id=${c}"><span class="code">${c}</span>${esc(COMPETENCES[c].nom)} ${fleche}</a></h3>
       ${Object.entries(p.liens[c]).map(([ac, l]) => `
         <div class="ac">
-          <p class="ac-titre">${pastille(niveauDe(ac), l.aConfirmer)} <span>${ac} ${esc(texteAC(ac))}</span></p>
-          <p class="preuve">${esc(l.preuve)}${l.aConfirmer ? " <em>(à confirmer)</em>" : ""}</p>
+          <p class="ac-titre">${pastille(niveauDe(ac), l.aConfirmer)}<span><span class="mono">${ac}</span> ${esc(texteAC(ac))}</span></p>
+          <p class="preuve">${esc(l.preuve)}${l.aConfirmer ? " <em>à confirmer</em>" : ""}</p>
         </div>`).join("")}
     </section>`).join("");
 
   const images = (p.images || []).map(src => `<img src="${esc(src)}" alt="Capture du projet ${esc(p.nom)}" loading="lazy">`).join("");
-  const ressources = (p.ressources || []).map(r => `<a class="btn" href="${esc(r.url)}">${esc(r.label)}</a>`).join("");
+  const ressources = (p.ressources || []).map(r => `<a class="btn" href="${esc(r.url)}">${esc(r.label)} ${fleche}</a>`).join("");
+  const idx = PROJETS.indexOf(p);
+  const suivant = PROJETS[(idx + 1) % PROJETS.length];
+  const rubriques = [["Contexte", p.contexte], ["Objectif", p.objectif], ["Mon rôle", p.role], ["Résultats", p.resultats]];
 
   return `
     <article class="wrap fiche">
-      <p class="retour"><a href="projets.html">Tous les projets</a></p>
-      <h1>${esc(p.nom)}</h1>
-      <p class="periode">${esc(p.periode)}, ${esc(p.equipe.toLowerCase())}</p>
-      ${p.aCompleter ? `<p class="alerte">Fiche en cours de rédaction.</p>` : ""}
-      <div class="deux">
-        <div>
-          <h2>Contexte</h2><p>${esc(p.contexte)}</p>
-          <h2>Objectif</h2><p>${esc(p.objectif)}</p>
-          <h2>Mon rôle</h2><p>${esc(p.role)}</p>
-          <h2>Résultats</h2><p>${esc(p.resultats)}</p>
+      <a class="retour rv" href="projets.html">← Tous les projets</a>
+      <header class="fiche-tete">
+        <p class="surtitre rv"><span>${deux(idx + 1)}</span>Projet</p>
+        <h1 class="rv" style="--d:1">${esc(p.nom)}</h1>
+        <p class="fiche-resume rv" style="--d:2">${esc(p.resume)}</p>
+        <dl class="meta rv" style="--d:3">
+          <div><dt>Période</dt><dd>${esc(p.periode)}</dd></div>
+          <div><dt>Équipe</dt><dd>${esc(p.equipe)}</dd></div>
+          <div><dt>Compétences</dt><dd>${cs.map(c => `<a href="#${c}">${c}</a>`).join(" ") || "—"}</dd></div>
+        </dl>
+        ${p.aCompleter ? `<p class="alerte rv">Fiche en cours de rédaction.</p>` : ""}
+      </header>
+      <div class="fiche-grille">
+        <div class="rubriques">
+          ${rubriques.map(([t, v]) => `<section class="rubrique rv"><h2>${t}</h2><p>${esc(v)}</p></section>`).join("")}
         </div>
-        <aside>
+        <aside class="panneau rv">
           <h2>Outils</h2>
           <div class="tags">${p.outils.map(o => `<span class="tag">${esc(o)}</span>`).join("")}</div>
-          ${ressources ? `<h2>Ressources</h2><div class="actions">${ressources}</div>` : ""}
+          ${ressources ? `<h2>Ressources</h2><div class="pile">${ressources}</div>` : ""}
         </aside>
       </div>
       ${images ? `<div class="galerie">${images}</div>` : ""}
-      <h2 class="sep">Compétences mobilisées</h2>
+      <h2 class="titre-bloc rv">Compétences mobilisées</h2>
       ${comps || "<p>Aucune compétence associée pour l'instant.</p>"}
+      <a class="suivant rv" href="projets.html?id=${suivant.id}">
+        <span class="mono">Projet suivant</span>
+        <strong>${esc(suivant.nom)} ${fleche}</strong>
+      </a>
     </article>`;
 }
 
@@ -186,58 +305,62 @@ function pageProjets() {
     if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
     return;
   }
+  const filtres = ["Tous", ...COMPS].map((c, i) =>
+    `<button type="button" data-filtre="${i ? c : ""}" aria-pressed="${i === 0}">${i ? `${c} ${esc(COMPETENCES[c].court)}` : c}</button>`).join("");
   zone.innerHTML = `
-    <section class="wrap bloc">
-      <h1>Projets</h1>
-      <p class="intro">Les projets menés pendant le BUT et les compétences qu'ils ont mobilisées.</p>
+    <section class="wrap page-tete">
+      <p class="surtitre rv"><span>${deux(PROJETS.length)}</span>Projets</p>
+      <h1 class="rv" style="--d:1">Ce que j'ai construit</h1>
+      <p class="intro rv" style="--d:2">Les projets menés pendant le BUT et les compétences qu'ils ont mobilisées.</p>
       ${id ? `<p class="alerte">Ce projet n'existe pas. Voici la liste complète.</p>` : ""}
-      <div class="grille">${PROJETS.map(carteProjet).join("")}</div>
+      <div class="filtres rv" style="--d:3" role="group" aria-label="Filtrer par compétence">${filtres}</div>
+      <div class="lignes">${PROJETS.map(ligneProjet).join("")}</div>
     </section>`;
+  zone.querySelectorAll("[data-filtre]").forEach(b => b.addEventListener("click", () => {
+    const f = b.dataset.filtre;
+    zone.querySelectorAll("[data-filtre]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    zone.querySelectorAll(".ligne").forEach(l => {
+      l.hidden = f && !l.dataset.comps.split(" ").includes(f);
+    });
+  }));
 }
 
 /* ---------- Page compétences ---------- */
 function ficheCompetence(c) {
   const C = COMPETENCES[c];
+  const tout = couverture(c);
   const niveaux = [1, 2, 3].map(n => {
     const N = C.niveaux[n];
+    const { couverts, total } = couverture(c, n);
     const acs = Object.entries(N.acs).map(([ac, texte]) => {
       const preuves = PROJETS.filter(p => (p.liens[c] || {})[ac]).map(p => {
         const l = p.liens[c][ac];
-        return `<li><a href="projets.html?id=${p.id}#${c}">${esc(p.nom)}</a> : ${esc(l.preuve)}${l.aConfirmer ? " <em>(à confirmer)</em>" : ""}</li>`;
+        return `<li><a href="projets.html?id=${p.id}#${c}">${esc(p.nom)}</a><span>${esc(l.preuve)}${l.aConfirmer ? " <em>à confirmer</em>" : ""}</span></li>`;
       }).join("");
-      return `<div class="ac">
-        <p class="ac-titre"><span>${ac} ${esc(texte)}</span></p>
-        ${preuves ? `<ul class="preuves">${preuves}</ul>` : `<p class="vide">Pas encore de preuve.</p>`}
+      return `<div class="ac${preuves ? " fait" : ""}">
+        <p class="ac-titre"><span class="coche" aria-hidden="true"></span><span><span class="mono">${ac}</span> ${esc(texte)}</span></p>
+        ${preuves ? `<ul class="preuves">${preuves}</ul>` : `<p class="vide">Pas encore de preuve</p>`}
       </div>`;
     }).join("");
-    return `<section class="niveau n${n}">
-      <h2>${pastille(n)} ${esc(N.titre)}</h2>
+    return `<section class="niveau n${n} rv">
+      <div class="niveau-tete">
+        ${pastille(n)}
+        <h2>${esc(N.titre)}</h2>
+        <span class="mono compte">${couverts}/${total}</span>
+      </div>
       ${acs}
     </section>`;
   }).join("");
   return `
     <article class="wrap fiche">
-      <p class="retour"><a href="competences.html">Toutes les compétences</a></p>
-      <h1>${c} · ${esc(C.nom)}</h1>
-      <p class="intro">Les apprentissages critiques de chaque niveau et les projets qui les démontrent.</p>
-      ${niveaux}
+      <a class="retour rv" href="competences.html">← Toutes les compétences</a>
+      <header class="fiche-tete">
+        <p class="surtitre rv"><span>${c}</span>${esc(C.court)}</p>
+        <h1 class="rv" style="--d:1">${esc(C.nom)}</h1>
+        <p class="fiche-resume rv" style="--d:2">${tout.couverts} apprentissages critiques démontrés sur ${tout.total}, et les projets qui les prouvent.</p>
+      </header>
+      <div class="niveaux">${niveaux}</div>
     </article>`;
-}
-
-function carteCompetence(c) {
-  const C = COMPETENCES[c];
-  const barres = [1, 2, 3].map(n => {
-    const total = Object.keys(C.niveaux[n].acs).length;
-    const couverts = Object.keys(C.niveaux[n].acs).filter(ac => PROJETS.some(p => (p.liens[c] || {})[ac])).length;
-    return `<div class="jauge"><span>Niveau ${n}</span>
-      <span class="piste"><span class="rempli n${n}" style="width:${Math.round(couverts / total * 100)}%"></span></span>
-      <span>${couverts}/${total}</span></div>`;
-  }).join("");
-  return `<a class="carte" href="competences.html?id=${c}">
-    <span class="periode">${c}</span>
-    <h3>${esc(C.nom)}</h3>
-    ${barres}
-  </a>`;
 }
 
 function pageCompetences() {
@@ -249,15 +372,83 @@ function pageCompetences() {
     return;
   }
   zone.innerHTML = `
-    <section class="wrap bloc">
-      <h1>Compétences</h1>
-      <p class="intro">Les trois compétences du parcours C. Les jauges montrent la part des apprentissages critiques démontrés par au moins un projet.</p>
+    <section class="wrap page-tete">
+      <p class="surtitre rv"><span>${deux(COMPS.length)}</span>Compétences</p>
+      <h1 class="rv" style="--d:1">Parcours C, en preuves</h1>
+      <p class="intro rv" style="--d:2">Les trois compétences du parcours C. Les jauges montrent la part des apprentissages critiques démontrés par au moins un projet.</p>
       ${id ? `<p class="alerte">Cette compétence n'existe pas. Voici la liste complète.</p>` : ""}
-      <div class="grille">${Object.keys(COMPETENCES).map(carteCompetence).join("")}</div>
+      <div class="grille-comp">${COMPS.map(carteCompetence).join("")}</div>
+    </section>
+    <section class="wrap section">
+      ${entreeSection("↳", "Projets × compétences")}
+      ${tableauCroise()}
     </section>`;
+}
+
+/* ---------- Apparitions au défilement ---------- */
+function apparitions() {
+  const els = document.querySelectorAll(".rv");
+  if (!("IntersectionObserver" in window)) return els.forEach(e => e.classList.add("vu"));
+  const io = new IntersectionObserver(entrees => entrees.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("vu"); io.unobserve(e.target); }
+  }), { rootMargin: "0px 0px -8% 0px" });
+  els.forEach(e => io.observe(e));
+}
+
+/* Reflet qui suit la souris sur les cartes */
+function reflets() {
+  document.addEventListener("pointermove", e => {
+    const c = e.target.closest?.(".carte");
+    if (!c) return;
+    const r = c.getBoundingClientRect();
+    c.style.setProperty("--mx", `${e.clientX - r.left}px`);
+    c.style.setProperty("--my", `${e.clientY - r.top}px`);
+  }, { passive: true });
+}
+
+/* ---------- Fond étoilé ---------- */
+function etoiles() {
+  const cv = document.getElementById("etoiles");
+  const ctx = cv?.getContext("2d");
+  if (!ctx) return;
+  const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let pts = [], w, h, couleur, px = 0, py = 0;
+  const lireCouleur = () => { couleur = getComputedStyle(document.documentElement).getPropertyValue("--etoile").trim() || "255,255,255"; };
+  const taille = () => {
+    const r = Math.min(devicePixelRatio || 1, 2);
+    w = innerWidth; h = innerHeight;
+    cv.width = w * r; cv.height = h * r;
+    ctx.setTransform(r, 0, 0, r, 0, 0);
+    const n = Math.round(Math.min(220, w * h / 7000));
+    pts = Array.from({ length: n }, () => ({
+      x: Math.random() * w, y: Math.random() * h,
+      z: Math.random() * .8 + .2, t: Math.random() * 6.28
+    }));
+  };
+  addEventListener("pointermove", e => { px = e.clientX / w - .5; py = e.clientY / h - .5; }, { passive: true });
+  const dessin = temps => {
+    ctx.clearRect(0, 0, w, h);
+    const sy = scrollY * .04;
+    for (const p of pts) {
+      if (!calme) { p.y -= p.z * .08; if (p.y < -4) { p.y = h + 4; p.x = Math.random() * w; } }
+      const a = (.25 + .55 * p.z) * (calme ? 1 : .65 + .35 * Math.sin(temps / 900 + p.t));
+      const x = (p.x - px * 18 * p.z + w) % w;
+      const y = ((p.y - py * 18 * p.z - sy * p.z) % h + h) % h;
+      ctx.fillStyle = `rgba(${couleur},${a})`;
+      ctx.beginPath(); ctx.arc(x, y, p.z * 1.1, 0, 6.29); ctx.fill();
+    }
+    if (!calme) requestAnimationFrame(dessin);
+  };
+  lireCouleur(); taille();
+  addEventListener("resize", () => { taille(); if (calme) dessin(0); });
+  addEventListener("theme", () => { lireCouleur(); if (calme) dessin(0); });
+  requestAnimationFrame(dessin);
 }
 
 /* ---------- Démarrage ---------- */
 entete();
 pied();
 ({ accueil: pageAccueil, projets: pageProjets, competences: pageCompetences })[page]?.();
+apparitions();
+reflets();
+etoiles();

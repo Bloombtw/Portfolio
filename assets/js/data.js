@@ -13,14 +13,34 @@ const PROFIL = {
   cv: "",               // ex. "assets/docs/CV_Anton_Meimoun.pdf" une fois le PDF déposé
   github: "https://github.com/Bloombtw",
   linkedin: "",          // ex. "https://www.linkedin.com/in/..."
-  email: "",             // ex. "anton.meimoun@example.com"
-  outils: {
-    "Langages": ["Java", "Python", "C", "SQL", "HTML / CSS"],
-    "Données": ["PostgreSQL", "pgAdmin", "Modélisation MCD / MLD"],
-    "Outils": ["Git / GitHub", "Trello", "IntelliJ", "VS Code", "Suite Office"],
-    "Systèmes": ["Linux", "Windows", "VirtualBox"]
-  }
+  email: ""              // ex. "anton.meimoun@example.com"
 };
+
+/* OUTILS : chaque entrée devient une touche du clavier 3D de l'accueil.
+   touche : texte court imprimé sur la touche (facultatif, sinon nom)
+   largeur : largeur de la touche (1 par défaut)
+   Les touches sont posées dans l'ordre de la liste et passent à la rangée
+   suivante quand la rangée est pleine. La catégorie donne la couleur. */
+const OUTILS = [
+  { cat: "Langages", nom: "Java", desc: "Langage principal de MineTaRouille (JavaFX, MVC) et du moteur de la SAE Jeu d'échecs." },
+  { cat: "Langages", nom: "Python", desc: "Scripts et exercices d'algorithmique." },
+  { cat: "Langages", nom: "C", desc: "Programmation bas niveau : mémoire, pointeurs, structures." },
+  { cat: "Langages", nom: "SQL", desc: "Création de bases, contraintes d'intégrité et requêtes d'interrogation." },
+  { cat: "Langages", nom: "HTML / CSS", touche: "HTML", desc: "Pages web, dont ce portfolio." },
+  { cat: "Données", nom: "PostgreSQL", touche: "Postgres", largeur: 1.5, desc: "SGBD de la SAE Base de données : création de la base et requêtes." },
+  { cat: "Données", nom: "pgAdmin", desc: "Administration et interrogation des bases PostgreSQL." },
+  { cat: "Conception", nom: "Modélisation MCD / MLD", touche: "MCD", desc: "Modèle conceptuel de 8 entités construit à partir d'un cahier des charges." },
+  { cat: "Conception", nom: "JavaFX", desc: "Interface graphique de MineTaRouille : rendu du monde et inventaire." },
+  { cat: "Conception", nom: "Architecture MVC", touche: "MVC", desc: "Séparation modèle, vue et contrôleur dans MineTaRouille." },
+  { cat: "Outils", nom: "Git / GitHub", touche: "Git", desc: "Dépôts partagés et branches pour organiser le travail en équipe." },
+  { cat: "Outils", nom: "Trello", desc: "Suivi des tâches de MineTaRouille." },
+  { cat: "Outils", nom: "IntelliJ", desc: "IDE pour les projets Java." },
+  { cat: "Outils", nom: "VS Code", desc: "Éditeur pour le web et les scripts." },
+  { cat: "Outils", nom: "Suite Office", touche: "Office", desc: "Rapports, présentations et documents de projet." },
+  { cat: "Systèmes", nom: "Linux", desc: "Environnement de travail quotidien à l'IUT." },
+  { cat: "Systèmes", nom: "Windows", desc: "Poste personnel et outils bureautiques." },
+  { cat: "Systèmes", nom: "VirtualBox", largeur: 2, desc: "Machines virtuelles pour tester des systèmes et des services." }
+];
 
 /* Compétences du parcours C (numérotation nationale C4, C5, C6).
    Chaque niveau liste ses apprentissages critiques (AC). */

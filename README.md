@@ -1,13 +1,16 @@
 # Portfolio — Anton Meimoun
 
 Portfolio de 3e année de BUT Informatique (parcours C, IUT de Montreuil).
-Site statique en HTML, CSS et JavaScript, sans dépendance ni compilation.
+Site statique en HTML, CSS et JavaScript, sans compilation. Seul le clavier 3D de l'accueil
+charge [Three.js](https://threejs.org) depuis un CDN ; sans lui, une grille de touches en CSS s'affiche à la place.
 
 Le site propose une double lecture :
 - **par projets** : chaque projet et les compétences qu'il a mobilisées ;
 - **par compétences** : chaque compétence (C4, C5, C6), ses apprentissages critiques par niveau et les projets qui les prouvent.
 
-La page d'accueil affiche le tableau croisé projets × compétences.
+La page d'accueil présente un clavier 3D interactif (une touche par outil : survoler ou toucher
+une touche affiche sa description), puis les compétences, les projets et le tableau croisé
+projets × compétences. Un bouton bascule entre thème sombre et thème clair.
 
 ## Structure
 
@@ -19,6 +22,7 @@ assets/
   css/style.css     Mise en forme
   js/data.js        TOUTES les données : profil, projets, liens avec les compétences
   js/app.js         Génération des pages (pas besoin d'y toucher)
+  js/clavier.js     Clavier 3D de l'accueil (Three.js)
   img/              Captures d'écran des projets
   docs/             CV et autres PDF
 .nojekyll           Indique à GitHub Pages de servir les fichiers tels quels
@@ -54,6 +58,13 @@ python3 -m http.server 8000
 Tout se passe dans `assets/js/data.js`.
 
 **Profil** : compléter `objectif`, `email`, `linkedin`. Pour le CV, déposer le PDF dans `assets/docs/` et renseigner son chemin dans `cv`.
+
+**Touches du clavier 3D** : chaque entrée de `OUTILS` devient une touche. La catégorie (`cat`) donne la couleur,
+`touche` est le texte court imprimé dessus et `largeur` élargit la touche (1 par défaut) :
+
+```js
+{ cat: "Données", nom: "PostgreSQL", touche: "Postgres", largeur: 1.5, desc: "Ce que j'en ai fait." }
+```
 
 **Ajouter un projet** : copier un bloc de `PROJETS` et modifier ses champs. L'`id` sert dans l'adresse de la fiche (lettres minuscules et tirets).
 
