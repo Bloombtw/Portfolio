@@ -7,12 +7,20 @@ const texteAC = ac => COMPETENCES[compDe(ac)].niveaux[niveauDe(ac)].acs[ac];
 const param = k => new URLSearchParams(location.search).get(k);
 const page = document.body.dataset.page;
 const COMPS = Object.keys(COMPETENCES);
+const numComp = c => c.slice(1);
+const niveauxDe = c => Object.keys(COMPETENCES[c].niveaux).map(Number);
+/* « 4.2c » → « AC 3 », comme dans le référentiel */
+const numAC = ac => `AC ${ac.charCodeAt(ac.length - 1) - 96}`;
+const groupeDe = c => (typeof GROUPES !== "undefined" ? GROUPES : []).find(g => g.comps.includes(c));
 const deux = n => String(n).padStart(2, "0");
 const compsDe = p => COMPS.filter(c => Object.keys(p.liens[c] || {}).length);
 const fleche = `<svg class="fleche" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
 
 /* ---------- Logos et icônes ---------- */
 const ICONES_COMP = {
+  C1: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
+  C2: '<path d="M4 17a8 8 0 1 1 16 0"/><path d="m12 17 4-5"/><circle cx="12" cy="17" r="1.2"/><path d="M6.5 13.5h.01M8.5 10.5h.01M12 9h.01"/>',
+  C3: '<rect x="4" y="3.5" width="16" height="6" rx="1.5"/><rect x="4" y="12.5" width="16" height="6" rx="1.5"/><path d="M7.5 6.5h.01M7.5 15.5h.01M12 18.5v2.5M8 21h8"/>',
   C4: '<ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v13c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-13M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/>',
   C5: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9 4v16M15 4v16M5.5 8h1.5M11.5 8h1.5M11.5 11.5h1.5M17.5 8h1"/>',
   C6: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 4.9a3.2 3.2 0 0 1 0 6.2M21 20c0-2.6-1.4-4.5-3.6-5.2"/>'
@@ -55,12 +63,15 @@ function tuileOrganisme(cle, classe = "") {
     : `<span class="organisme ${classe}" title="${esc(o.nom)}">${img}</span>`;
 }
 
-/* Part des AC d'une compétence démontrés par au moins un projet */
+/* AC d'une compétence : démontrés (au moins une preuve validée)
+   et en attente (seulement des preuves à confirmer) */
 function couverture(c, n) {
   const acs = n ? Object.keys(COMPETENCES[c].niveaux[n].acs)
-    : [1, 2, 3].flatMap(k => Object.keys(COMPETENCES[c].niveaux[k].acs));
-  const couverts = acs.filter(ac => PROJETS.some(p => (p.liens[c] || {})[ac])).length;
-  return { couverts, total: acs.length };
+    : niveauxDe(c).flatMap(k => Object.keys(COMPETENCES[c].niveaux[k].acs));
+  const preuves = ac => PROJETS.map(p => (p.liens[c] || {})[ac]).filter(Boolean);
+  const couverts = acs.filter(ac => preuves(ac).some(l => !l.aConfirmer)).length;
+  const attente = acs.filter(ac => preuves(ac).length && preuves(ac).every(l => l.aConfirmer)).length;
+  return { couverts, attente, total: acs.length };
 }
 
 /* ---------- Thème ---------- */
@@ -142,21 +153,26 @@ function indicateurCase(projet, c) {
     if (!l.aConfirmer) etat[n] = "on";
     else etat[n] ??= "tbc";
   });
-  const points = [1, 2, 3].map(n => `<i class="pt${etat[n] ? " " + etat[n] : ""}"></i>`).join("");
-  const libelle = [1, 2, 3].filter(n => etat[n])
+  const points = niveauxDe(c).map(n => `<i class="pt${etat[n] ? " " + etat[n] : ""}"></i>`).join("");
+  const libelle = niveauxDe(c).filter(n => etat[n])
     .map(n => `niveau ${n}${etat[n] === "tbc" ? " à confirmer" : ""}`).join(", ");
   return { html: `<span class="points" aria-hidden="true">${points}</span><span class="nb">${liens.length}</span>`, libelle };
 }
 
 function tableauCroise() {
-  const tete = COMPS.map(c =>
-    `<th scope="col"><a href="competences.html?id=${c}" title="${esc(COMPETENCES[c].nom)}">${icone(c)}${esc(COMPETENCES[c].court)}</a></th>`).join("");
+  const groupes = typeof GROUPES !== "undefined" ? GROUPES : [{ nom: "", comps: COMPS }];
+  const ordre = groupes.flatMap(g => g.comps);
+  const teteGroupes = groupes.map(g =>
+    `<th scope="colgroup" colspan="${g.comps.length}" class="groupe-col">${esc(g.nom)}</th>`).join("");
+  const tete = ordre.map((c, i) =>
+    `<th scope="col"${groupes.some(g => g.comps[0] === c) && i ? ' class="debut-groupe"' : ""}><a href="competences.html?id=${c}" title="Compétence ${numComp(c)} : ${esc(COMPETENCES[c].nom)}">${icone(c)}<span>${esc(COMPETENCES[c].court)}</span></a></th>`).join("");
   const lignes = PROJETS.map(p => {
-    const cases = COMPS.map(c => {
+    const cases = ordre.map((c, i) => {
       const x = indicateurCase(p, c);
+      const debut = groupes.some(g => g.comps[0] === c) && i ? ' class="debut-groupe"' : "";
       return x
-        ? `<td><a class="case" href="projets.html?id=${p.id}#${c}" aria-label="${esc(p.nom)}, ${esc(COMPETENCES[c].nom)} : ${x.libelle}">${x.html}</a></td>`
-        : `<td><span class="case vide" aria-label="Pas de lien">—</span></td>`;
+        ? `<td${debut}><a class="case" href="projets.html?id=${p.id}#${c}" aria-label="${esc(p.nom)}, ${esc(COMPETENCES[c].nom)} : ${x.libelle}">${x.html}</a></td>`
+        : `<td${debut}><span class="case vide" aria-label="Pas de lien">—</span></td>`;
     }).join("");
     return `<tr><th scope="row"><a href="projets.html?id=${p.id}">${esc(p.nom)}<small>${esc(p.periode)}</small></a></th>${cases}</tr>`;
   }).join("");
@@ -167,12 +183,15 @@ function tableauCroise() {
     <div class="defile-x">
       <table class="croise">
         <caption class="sr">Projets en lignes, compétences en colonnes</caption>
-        <thead><tr><th scope="col"><span class="sr">Projet</span></th>${tete}</tr></thead>
+        <thead>
+          <tr class="ligne-groupes"><td></td>${teteGroupes}</tr>
+          <tr><th scope="col"><span class="sr">Projet</span></th>${tete}</tr>
+        </thead>
         <tbody>${lignes}</tbody>
       </table>
     </div>
     <div class="legende">
-      <span><span class="points"><i class="pt on"></i><i class="pt"></i><i class="pt"></i></span>N1 · N2 · N3</span>
+      <span><span class="points"><i class="pt on"></i><i class="pt"></i><i class="pt"></i></span>N1 · N2 · N3 (C1 à C3 : N1 · N2)</span>
       <span><i class="pt on"></i>démontré</span>
       <span><i class="pt tbc"></i>à confirmer</span>
       <span><span class="nb">3</span>nombre de preuves</span>
@@ -186,21 +205,34 @@ function carteCompetence(c, i) {
   const C = COMPETENCES[c];
   const tout = couverture(c);
   const pct = Math.round(tout.couverts / tout.total * 100);
-  const barres = [1, 2, 3].map(n => {
-    const { couverts, total } = couverture(c, n);
-    return `<div class="jauge"><span>N${n}</span>
-      <span class="piste"><span class="rempli n${n}" style="--v:${couverts / total}"></span></span>
+  const barres = niveauxDe(c).map(n => {
+    const { couverts, attente, total } = couverture(c, n);
+    return `<div class="jauge" title="${couverts} démontré(s)${attente ? `, ${attente} à confirmer` : ""} sur ${total}"><span>N${n}</span>
+      <span class="piste"><span class="rempli n${n}" style="--v:${couverts / total}"></span><span class="rempli attente" style="--v:${attente / total}; --decal:${couverts / total}"></span></span>
       <span class="mono">${couverts}/${total}</span></div>`;
   }).join("");
   return `<a class="carte comp rv" style="--d:${i}" href="competences.html?id=${c}">
     <div class="carte-haut">
-      <span class="carte-ico">${icone(c)}<span class="mono">${c}</span></span>
+      <span class="carte-ico">${icone(c)}<span class="mono">Compétence ${numComp(c)}</span></span>
       <span class="anneau" style="--p:${pct}"><span>${pct}%</span></span>
     </div>
-    <h3>${esc(C.nom)}</h3>
+    <h3><span class="court">${esc(C.court)}</span>${esc(C.nom)}</h3>
     <div class="jauges">${barres}</div>
     <span class="voir">Voir les preuves ${fleche}</span>
   </a>`;
+}
+
+function grilleGroupee() {
+  if (typeof GROUPES === "undefined") return `<div class="grille-comp">${COMPS.map(carteCompetence).join("")}</div>`;
+  return `<div class="groupes">${GROUPES.map((g, k) => `
+    <section class="groupe rv" style="--d:${k}">
+      <header class="groupe-tete">
+        <span class="mono">${deux(k + 1)}</span>
+        <h3>${esc(g.nom)}</h3>
+        <p>${esc(g.texte)}</p>
+      </header>
+      <div class="grille-comp">${g.comps.map(carteCompetence).join("")}</div>
+    </section>`).join("")}</div>`;
 }
 
 function ligneProjet(p, i) {
@@ -397,8 +429,8 @@ function pageAccueil() {
     </section>
 
     <section class="wrap section" id="competences">
-      ${entreeSection("02", "Compétences", "Les trois compétences du parcours C. Chaque jauge montre la part des apprentissages critiques démontrés par au moins un projet.")}
-      <div class="grille-comp">${COMPS.map(carteCompetence).join("")}</div>
+      ${entreeSection("02", "Compétences", "Les six compétences du BUT Informatique, parcours C, regroupées en trois ensembles. Chaque jauge montre la part des apprentissages critiques démontrés par au moins un projet.")}
+      ${grilleGroupee()}
     </section>
 
     <section class="wrap section" id="projets">
@@ -427,10 +459,10 @@ function ficheProjet(p) {
   const cs = compsDe(p);
   const comps = cs.map((c, i) => `
     <section class="bloc-comp rv" style="--d:${i}" id="${c}">
-      <h3><a href="competences.html?id=${c}">${puceComp(c)}${esc(COMPETENCES[c].nom)} ${fleche}</a></h3>
+      <h3><a href="competences.html?id=${c}">${puceComp(c)}Compétence ${numComp(c)} : ${esc(COMPETENCES[c].nom)} ${fleche}</a></h3>
       ${Object.entries(p.liens[c]).map(([ac, l]) => `
         <div class="ac">
-          <p class="ac-titre">${pastille(niveauDe(ac), l.aConfirmer)}<span><span class="mono">${ac}</span> ${esc(texteAC(ac))}</span></p>
+          <p class="ac-titre">${pastille(niveauDe(ac), l.aConfirmer)}<span><span class="mono">${numAC(ac)}</span> ${esc(texteAC(ac))}</span></p>
           <p class="preuve">${esc(l.preuve)}${l.aConfirmer ? " <em>à confirmer</em>" : ""}</p>
         </div>`).join("")}
     </section>`).join("");
@@ -597,24 +629,25 @@ function pageProjets() {
 function ficheCompetence(c) {
   const C = COMPETENCES[c];
   const tout = couverture(c);
-  const niveaux = [1, 2, 3].map(n => {
+  const niveaux = niveauxDe(c).map(n => {
     const N = C.niveaux[n];
-    const { couverts, total } = couverture(c, n);
+    const { couverts, attente, total } = couverture(c, n);
     const acs = Object.entries(N.acs).map(([ac, texte]) => {
       const preuves = PROJETS.filter(p => (p.liens[c] || {})[ac]).map(p => {
         const l = p.liens[c][ac];
         return `<li><a href="projets.html?id=${p.id}#${c}">${esc(p.nom)}</a><span>${esc(l.preuve)}${l.aConfirmer ? " <em>à confirmer</em>" : ""}</span></li>`;
       }).join("");
-      return `<div class="ac${preuves ? " fait" : ""}">
-        <p class="ac-titre"><span class="coche" aria-hidden="true"></span><span><span class="mono">${ac}</span> ${esc(texte)}</span></p>
+      const liens = PROJETS.map(p => (p.liens[c] || {})[ac]).filter(Boolean);
+      const etat = liens.some(l => !l.aConfirmer) ? " fait" : liens.length ? " attente" : "";
+      return `<div class="ac${etat}">
+        <p class="ac-titre"><span class="coche" aria-hidden="true"></span><span><span class="mono">${numAC(ac)}</span> ${esc(texte)}</span></p>
         ${preuves ? `<ul class="preuves">${preuves}</ul>` : `<p class="vide">Pas encore de preuve</p>`}
       </div>`;
     }).join("");
     return `<section class="niveau n${n} rv">
       <div class="niveau-tete">
-        ${pastille(n)}
-        <h2>${esc(N.titre)}</h2>
-        <span class="mono compte">${couverts}/${total}</span>
+        <h2><span class="mono niveau-num">Niveau ${n}</span>${esc(N.titre)}</h2>
+        <span class="mono compte">${couverts}/${total}${attente ? ` <span class="attente-txt">+${attente} à confirmer</span>` : ""}</span>
       </div>
       ${acs}
     </section>`;
@@ -623,11 +656,25 @@ function ficheCompetence(c) {
     <article class="wrap fiche">
       <a class="retour rv" href="competences.html">← Toutes les compétences</a>
       <header class="fiche-tete">
-        <p class="surtitre rv"><span class="avec-ico">${icone(c)}${c}</span>${esc(C.court)}</p>
+        <p class="surtitre rv"><span class="avec-ico">${icone(c)}Compétence ${numComp(c)}</span>${esc(groupeDe(c)?.nom || C.court)}</p>
         <h1 class="rv" style="--d:1">${esc(C.nom)}</h1>
-        <p class="fiche-resume rv" style="--d:2">${tout.couverts} apprentissages critiques démontrés sur ${tout.total}, et les projets qui les prouvent.</p>
+        <p class="fiche-resume rv" style="--d:2">${esc(C.description || "")}</p>
+        <p class="compte-global rv" style="--d:3"><span class="mono">${tout.couverts}/${tout.total}</span> apprentissages critiques démontrés sur ${niveauxDe(c).length} niveaux${tout.attente ? `, ${tout.attente} de plus à confirmer` : ""}.</p>
       </header>
+      ${C.composantes ? `<div class="referentiel rv">
+        <section>
+          <h2>Composantes essentielles</h2>
+          <ul>${C.composantes.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+        </section>
+        <section>
+          <h2>Situations professionnelles</h2>
+          <ul>${C.situations.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+        </section>
+      </div>` : ""}
       <div class="niveaux">${niveaux}</div>
+      <nav class="autres-comps rv" aria-label="Autres compétences">
+        ${COMPS.filter(x => x !== c).map(x => `<a href="competences.html?id=${x}">${puceComp(x)}<span>${esc(COMPETENCES[x].court)}</span></a>`).join("")}
+      </nav>
     </article>`;
 }
 
@@ -635,7 +682,7 @@ function pageCompetences() {
   const id = param("id");
   const zone = document.getElementById("contenu");
   if (COMPETENCES[id]) {
-    document.title = `${id} ${COMPETENCES[id].nom} | ${PROFIL.nom}`;
+    document.title = `Compétence ${numComp(id)} : ${COMPETENCES[id].nom} | ${PROFIL.nom}`;
     zone.innerHTML = ficheCompetence(id);
     return;
   }
@@ -643,9 +690,9 @@ function pageCompetences() {
     <section class="wrap page-tete">
       <p class="surtitre rv"><span>${deux(COMPS.length)}</span>Compétences</p>
       <h1 class="rv" style="--d:1">Parcours C, en preuves</h1>
-      <p class="intro rv" style="--d:2">Les trois compétences du parcours C. Les jauges montrent la part des apprentissages critiques démontrés par au moins un projet.</p>
+      <p class="intro rv" style="--d:2">Les six compétences du référentiel national du BUT Informatique, parcours C « Administration, gestion et exploitation des données ». C1 à C3 se valident sur deux niveaux, C4 à C6 sur trois. Les jauges montrent la part des apprentissages critiques démontrés par au moins un projet.</p>
       ${id ? `<p class="alerte">Cette compétence n'existe pas. Voici la liste complète.</p>` : ""}
-      <div class="grille-comp">${COMPS.map(carteCompetence).join("")}</div>
+      ${grilleGroupee()}
     </section>
     <section class="wrap section">
       ${entreeSection("↳", "Projets × compétences")}

@@ -109,55 +109,120 @@ const AUTRES_LOGOS = {
   "Nettoyage de données": "mono-data"
 };
 
-/* Compétences du parcours C (numérotation nationale C4, C5, C6).
-   Chaque niveau liste ses apprentissages critiques (AC). */
+/* COMPÉTENCES du BUT Informatique, parcours C (référentiel national V34ABC)
+   Le parcours C mobilise les six compétences : C1 à C3 aux niveaux 1 et 2,
+   C4 à C6 aux niveaux 1 à 3.
+   Code d'un apprentissage critique (AC) dans les projets : « 4.2c » =
+   compétence 4, niveau 2, AC 3 (a = AC 1, b = AC 2…). */
 const COMPETENCES = {
-  C4: { nom: "Gérer des données de l'information", court: "Données", niveaux: {
+  C1: { nom: "Réaliser un développement d'application", court: "Réaliser",
+    description: "Développer — c'est-à-dire concevoir, coder, tester et intégrer — une solution informatique pour un client.",
+    composantes: ["En respectant les besoins décrits par le client", "En appliquant les principes algorithmiques", "En veillant à la qualité du code et à sa documentation", "En choisissant les ressources techniques appropriées"],
+    situations: ["Élaborer une application informatique", "Faire évoluer une application informatique", "Maintenir en conditions opérationnelles une application informatique"],
+    niveaux: {
+    1: { titre: "Développer des applications informatiques simples", acs: {
+      "1.1a": "Implémenter des conceptions simples",
+      "1.1b": "Élaborer des conceptions simples",
+      "1.1c": "Faire des essais et évaluer leurs résultats en regard des spécifications",
+      "1.1d": "Développer des interfaces utilisateurs" } },
+    2: { titre: "Partir des exigences et aller jusqu'à une application complète", acs: {
+      "1.2a": "Élaborer et implémenter les spécifications fonctionnelles et non fonctionnelles à partir des exigences",
+      "1.2b": "Appliquer des principes d'accessibilité et d'ergonomie",
+      "1.2c": "Adopter de bonnes pratiques de conception et de programmation",
+      "1.2d": "Vérifier et valider la qualité de l'application par les tests" } } } },
+  C2: { nom: "Optimiser des applications", court: "Optimiser",
+    description: "Proposer des applications informatiques optimisées en fonction de critères spécifiques : temps d'exécution, précision, consommation de ressources…",
+    composantes: ["En formalisant et modélisant des situations complexes", "En recensant les algorithmes et les structures de données usuels", "En s'appuyant sur des schémas de raisonnement", "En justifiant les choix et validant les résultats"],
+    situations: ["Améliorer les performances des programmes dans des contextes contraints", "Limiter l'impact environnemental d'une application informatique", "Mettre en place des applications informatiques adaptées et innovantes"],
+    niveaux: {
+    1: { titre: "Appréhender et construire des algorithmes", acs: {
+      "2.1a": "Analyser un problème avec méthode (découpage en éléments algorithmiques simples, structure de données…)",
+      "2.1b": "Comparer des algorithmes pour des problèmes classiques (tris simples, recherche…)",
+      "2.1c": "Formaliser et mettre en œuvre des outils mathématiques pour l'informatique" } },
+    2: { titre: "Sélectionner les algorithmes adéquats pour répondre à un problème donné", acs: {
+      "2.2a": "Choisir des structures de données complexes adaptées au problème",
+      "2.2b": "Utiliser des techniques algorithmiques adaptées pour des problèmes complexes (recherche opérationnelle, méthodes arborescentes, optimisation globale, intelligence artificielle…)",
+      "2.2c": "Comprendre les enjeux et moyens de sécurisation des données et du code",
+      "2.2d": "Évaluer l'impact environnemental et sociétal des solutions proposées" } } } },
+  C3: { nom: "Administrer des systèmes informatiques communicants complexes", court: "Administrer",
+    description: "Installer, configurer, mettre à disposition, maintenir en conditions opérationnelles des infrastructures, des services et des réseaux et optimiser le système informatique d'une organisation.",
+    composantes: ["En sécurisant le système d'information", "En appliquant les normes en vigueur et les bonnes pratiques architecturales et de sécurité", "En offrant une qualité de service optimale", "En assurant la continuité d'activité"],
+    situations: ["Déployer une nouvelle architecture technique", "Améliorer une infrastructure existante", "Sécuriser les applications et les services"],
+    niveaux: {
+    1: { titre: "Installer et configurer un poste de travail", acs: {
+      "3.1a": "Identifier les différents composants (matériels et logiciels) d'un système numérique",
+      "3.1b": "Utiliser les fonctionnalités de base d'un système multitâches / multiutilisateurs",
+      "3.1c": "Installer et configurer un système d'exploitation et des outils de développement",
+      "3.1d": "Configurer un poste de travail dans un réseau d'entreprise" } },
+    2: { titre: "Déployer des services dans une architecture réseau", acs: {
+      "3.2a": "Concevoir et développer des applications communicantes",
+      "3.2b": "Utiliser des serveurs et des services réseaux virtualisés",
+      "3.2c": "Sécuriser les services et données d'un système" } } } },
+  C4: { nom: "Gérer des données de l'information", court: "Gérer",
+    description: "Concevoir, gérer, administrer et exploiter les données de l'entreprise et mettre à disposition toutes les informations pour un bon pilotage de l'entreprise.",
+    composantes: ["En respectant les réglementations sur le respect de la vie privée et la protection des données personnelles", "En respectant les enjeux économiques, sociétaux et écologiques de l'utilisation du stockage de données, ainsi que les différentes infrastructures (data centers, cloud, etc.)", "En s'appuyant sur des bases mathématiques", "En assurant la cohérence et la qualité"],
+    situations: ["Lancer un nouveau projet", "Sécuriser des données", "Exploiter des données pour la prise de décisions"],
+    niveaux: {
     1: { titre: "Concevoir et mettre en place une base de données à partir d'un cahier des charges client", acs: {
-      "4.1a": "Mettre à jour et interroger une base de données relationnelle",
+      "4.1a": "Mettre à jour et interroger une base de données relationnelle (en requêtes directes ou à travers une application)",
       "4.1b": "Visualiser des données",
       "4.1c": "Concevoir une base de données relationnelle à partir d'un cahier des charges" } },
     2: { titre: "Optimiser une base de données, interagir avec une application et mettre en œuvre la sécurité", acs: {
       "4.2a": "Optimiser les modèles de données de l'entreprise",
-      "4.2b": "Assurer la confidentialité, l'intégrité et la sécurité des données",
-      "4.2c": "Organiser la restitution des données par la programmation et la visualisation",
+      "4.2b": "Assurer la confidentialité des données (intégrité et sécurité)",
+      "4.2c": "Organiser la restitution de données à travers la programmation et la visualisation",
       "4.2d": "Manipuler des données hétérogènes" } },
     3: { titre: "Administrer une base de données, concevoir et réaliser des systèmes d'informations décisionnels", acs: {
       "4.3a": "Capturer et stocker des ensembles volumineux et complexes de données hétérogènes",
       "4.3b": "Préparer et extraire les données pour l'exploitation",
-      "4.3c": "Appliquer des méthodes d'exploration et d'exploitation des données",
+      "4.3c": "Appliquer des méthodes d'exploration et d'exploitation des données (apprentissage, informatique décisionnelle ou fouille de données)",
       "4.3d": "Mettre en production et optimiser le système de gestion de données de l'entreprise" } } } },
-  C5: { nom: "Conduire un projet", court: "Projet", niveaux: {
+  C5: { nom: "Conduire un projet", court: "Conduire",
+    description: "Satisfaire les besoins des utilisateurs au regard de la chaîne de valeur du client, organiser et piloter un projet informatique avec des méthodes classiques ou agiles.",
+    composantes: ["En communiquant efficacement avec les différents acteurs d'un projet", "En respectant les règles juridiques et les normes en vigueur", "En sensibilisant à une gestion éthique, responsable, durable et interculturelle", "En adoptant une démarche proactive, créative et critique"],
+    situations: ["Lancer un nouveau projet", "Piloter le maintien d'un projet en condition opérationnelle", "Faire évoluer un système d'information"],
+    niveaux: {
     1: { titre: "Identifier les besoins métiers des clients et des utilisateurs", acs: {
       "5.1a": "Appréhender les besoins du client et de l'utilisateur",
       "5.1b": "Mettre en place les outils de gestion de projet",
       "5.1c": "Identifier les acteurs et les différentes phases d'un cycle de développement" } },
-    2: { titre: "Appliquer une démarche de suivi de projet selon les besoins métiers", acs: {
-      "5.2a": "Identifier les processus d'une organisation pour améliorer les systèmes d'information",
+    2: { titre: "Appliquer une démarche de suivi de projet en fonction des besoins métiers des clients et des utilisateurs", acs: {
+      "5.2a": "Identifier les processus présents dans une organisation en vue d'améliorer les systèmes d'information",
       "5.2b": "Formaliser les besoins du client et de l'utilisateur",
       "5.2c": "Identifier les critères de faisabilité d'un projet informatique",
       "5.2d": "Définir et mettre en œuvre une démarche de suivi de projet" } },
     3: { titre: "Participer à la conception et à la mise en œuvre d'un projet système d'information", acs: {
       "5.3a": "Mesurer les impacts économiques, sociétaux et technologiques d'un projet informatique",
-      "5.3b": "Intégrer un projet informatique dans le système d'information d'une organisation",
-      "5.3c": "Adapter un système d'information" } } } },
-  C6: { nom: "Collaborer au sein d'une équipe informatique", court: "Équipe", niveaux: {
+      "5.3b": "Savoir intégrer un projet informatique dans le système d'information d'une organisation",
+      "5.3c": "Savoir adapter un système d'information" } } } },
+  C6: { nom: "Collaborer au sein d'une équipe informatique", court: "Collaborer",
+    description: "Acquérir, développer et exploiter les aptitudes nécessaires pour travailler efficacement dans une équipe informatique.",
+    composantes: ["En inscrivant sa démarche au sein d'une équipe pluridisciplinaire", "En accompagnant la mise en œuvre des évolutions informatiques", "En veillant au respect des contraintes juridiques", "En développant une communication efficace et collaborative"],
+    situations: ["Lancer un nouveau projet", "Organiser son travail en relation avec celui de son équipe", "Élaborer, gérer et transmettre de l'information"],
+    niveaux: {
     1: { titre: "Identifier ses aptitudes pour travailler dans une équipe", acs: {
       "6.1a": "Appréhender l'écosystème numérique",
-      "6.1b": "Découvrir les aptitudes requises selon les secteurs informatiques",
-      "6.1c": "Identifier les statuts, fonctions et rôles dans une équipe pluridisciplinaire",
+      "6.1b": "Découvrir les aptitudes requises selon les différents secteurs informatiques",
+      "6.1c": "Identifier les statuts, les fonctions et les rôles de chaque membre d'une équipe pluridisciplinaire",
       "6.1d": "Acquérir les compétences interpersonnelles pour travailler en équipe" } },
     2: { titre: "Situer son rôle et ses missions au sein d'une équipe informatique", acs: {
-      "6.2a": "Comprendre la diversité et la structure de l'informatique dans une organisation",
-      "6.2b": "Appliquer une démarche pour intégrer une équipe informatique",
-      "6.2c": "Mobiliser les compétences interpersonnelles nécessaires",
+      "6.2a": "Comprendre la diversité, la structure et la dimension de l'informatique dans une organisation (ESN, DSI…)",
+      "6.2b": "Appliquer une démarche pour intégrer une équipe informatique au sein d'une organisation",
+      "6.2c": "Mobiliser les compétences interpersonnelles pour intégrer une équipe informatique",
       "6.2d": "Rendre compte de son activité professionnelle" } },
     3: { titre: "Manager une équipe informatique", acs: {
       "6.3a": "Organiser et partager une veille numérique",
       "6.3b": "Identifier les enjeux de l'économie de l'innovation numérique",
-      "6.3c": "Guider la conduite du changement informatique dans une organisation",
+      "6.3c": "Guider la conduite du changement informatique au sein d'une organisation",
       "6.3d": "Accompagner le management de projet informatique" } } } }
 };
+
+/* Regroupement des compétences pour l'affichage */
+const GROUPES = [
+  { nom: "Concevoir et développer", texte: "Écrire, tester et optimiser des applications.", comps: ["C1", "C2"] },
+  { nom: "Systèmes et données", texte: "Installer les infrastructures et exploiter les données : le cœur du parcours C.", comps: ["C3", "C4"] },
+  { nom: "Piloter et collaborer", texte: "Conduire les projets et travailler en équipe.", comps: ["C5", "C6"] }
+];
 
 /* PROJETS, du plus ancien au plus récent
    annee : rattache le projet à une étape de la frise (BUT1, BUT2, BUT3)
@@ -196,6 +261,13 @@ const PROJETS = [
     ],
     ressources: [],   // ajouter le lien GitHub et la vidéo
     liens: {
+      C1: {
+        "1.1a": { preuve: "Moteur d'échecs implémenté en Java à partir du besoin client." },
+        "1.1c": { preuve: "Tests JUnit sur les règles : pièces alliées, obstacles, prises, roque." }
+      },
+      C2: {
+        "2.1a": { preuve: "Règles découpées en fonctions : obstacle sur le trajet, prise, roque, sur un tableau char[8][8]." }
+      },
       C5: {
         "5.1a": { preuve: "Moteur développé pour répondre au besoin exprimé par le client." },
         "5.1b": { preuve: "Dépôt Git partagé et branches pour organiser le travail de l'équipe." }
@@ -234,6 +306,12 @@ const PROJETS = [
     ],
     ressources: [],
     liens: {
+      C3: {
+        "3.1a": { preuve: "Identification des logiciels à installer : serveur web, SGBD, langage de script.", aConfirmer: true },
+        "3.1b": { preuve: "Utilisation du terminal Linux pour installer et gérer les services." },
+        "3.1c": { preuve: "Installation et configuration d'une machine virtuelle Linux avec Apache, MySQL et PHP." },
+        "3.2b": { preuve: "Services web et base de données hébergés sur une machine virtuelle.", aConfirmer: true }
+      },
       C4: {
         "4.1a": { preuve: "Base MySQL créée puis interrogée depuis le site PHP." },
         "4.1b": { preuve: "Page web qui affiche le contenu de la base.", aConfirmer: true }
@@ -259,6 +337,9 @@ const PROJETS = [
     ressources: [],
     aCompleter: true,
     liens: {
+      C1: {
+        "1.1d": { preuve: "Pages du site web pour les JO." }
+      },
       C5: {
         "5.1a": { preuve: "Site conçu pour répondre au besoin du client." },
         "5.1b": { preuve: "Tableau Trello pour suivre les tâches de l'équipe." }
@@ -309,6 +390,10 @@ const PROJETS = [
     images: [],
     ressources: [],
     liens: {
+      C2: {
+        "2.1a": { preuve: "Modélisation du labyrinthe et découpage des algorithmes de recherche." },
+        "2.1b": { preuve: "Comparaison de plusieurs stratégies de recherche de chemin." }
+      },
       C6: {
         "6.2d": { preuve: "Présentation orale de l'analyse comparative." }
       }
@@ -346,6 +431,15 @@ const PROJETS = [
       { label: "Présentation (PDF)", url: "assets/docs/presentation-minetarouille.pdf" }
     ],
     liens: {
+      C1: {
+        "1.1a": { preuve: "Moteur de jeu et génération de la carte en Java." },
+        "1.1b": { preuve: "Conception en MVC des blocs, de l'inventaire et du joueur." },
+        "1.1d": { preuve: "Interfaces JavaFX : rendu du monde et inventaire graphique." }
+      },
+      C2: {
+        "2.1a": { preuve: "Monde représenté par des tableaux à deux dimensions." },
+        "2.2a": { preuve: "Structures de données choisies pour les performances du rendu.", aConfirmer: true }
+      },
       C4: {
         "4.2d": { preuve: "Système de sauvegarde et modélisation des entités du jeu." }
       },
@@ -387,6 +481,18 @@ const PROJETS = [
     ],
     ressources: [{ label: "Dépôt GitHub", url: "https://github.com/DUT-Info-Montreuil/SAE_Dev_Web_Anton_Sorana_Djeneba" }],
     liens: {
+      C1: {
+        "1.2a": { preuve: "Personas, user stories et backlog traduits en modules métiers." },
+        "1.2b": { preuve: "Interface ergonomique et responsive." },
+        "1.2c": { preuve: "Architecture MVC complète et PHP orienté objet." }
+      },
+      C2: {
+        "2.2c": { preuve: "Mots de passe hachés avec password_hash." }
+      },
+      C3: {
+        "3.2a": { preuve: "Application web client-serveur hébergée localement.", aConfirmer: true },
+        "3.2c": { preuve: "Authentification sécurisée et sessions.", aConfirmer: true }
+      },
       C4: {
         "4.1c": { preuve: "Base relationnelle MySQL modélisée pour les utilisateurs et les modules métiers." },
         "4.1a": { preuve: "Script SQL de structure et requêtes via PDO." },
@@ -418,6 +524,9 @@ const PROJETS = [
     images: [],
     ressources: [],
     liens: {
+      C1: {
+        "1.2c": { preuve: "Refactorisation axée sur la propreté du code et les design patterns." }
+      },
       C5: {
         "5.1b": { preuve: "Nouveau dépôt Git et tableau Trello pour suivre les fonctionnalités." },
         "5.2d": { preuve: "Journaux de bord et suivi Git de l'avancement." }
@@ -489,6 +598,9 @@ const PROJETS = [
     ressources: [],
     aCompleter: true,
     liens: {
+      C3: {
+        "3.2c": { preuve: "Plan d'action de cybersécurité.", aConfirmer: true }
+      },
       C4: {
         "4.2b": { preuve: "Mise en œuvre d'un plan d'action de cybersécurité.", aConfirmer: true }
       },

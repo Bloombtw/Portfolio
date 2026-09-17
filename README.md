@@ -7,7 +7,8 @@ La frise chronologique utilise [mo.js](https://github.com/mojs/mojs) pour ses ef
 
 Le site propose une double lecture :
 - **par projets** : chaque projet et les compétences qu'il a mobilisées ;
-- **par compétences** : chaque compétence (C4, C5, C6), ses apprentissages critiques par niveau et les projets qui les prouvent.
+- **par compétences** : les six compétences du référentiel national (C1 à C6, parcours C), regroupées en trois ensembles,
+  avec leurs apprentissages critiques par niveau et les projets qui les prouvent.
 
 La page d'accueil présente un clavier 3D interactif (une touche par outil : survoler ou toucher
 une touche affiche sa description), une frise chronologique interactive du parcours, puis les compétences, les projets et le tableau croisé
@@ -101,28 +102,11 @@ liens: {
 }
 ```
 
-Le niveau (N1, N2, N3) est déduit du code : `4.3b` est de niveau 3.
-`aConfirmer: true` affiche la preuve en pointillés, en attendant de la valider.
-Le tableau croisé, les fiches et les jauges se mettent à jour automatiquement.
-
-**Ajouter des points clés** : une liste de phrases courtes dans `details`.
-
-**Ajouter des captures** : déposer les images dans `assets/img/projets/` et les lister dans `images`,
-avec une légende. Un clic sur une image l'agrandit.
-
-```js
-images: [{ src: "assets/img/projets/mine-inventaire.png", legende: "Inventaire du joueur." }]
-```
-
-**Ajouter du code** : déposer un fichier (ou un extrait) dans `assets/code/` et le lister dans `code`.
-Il est chargé et coloré automatiquement ; au-delà de 40 lignes, il est replié.
-
-```js
-code: [{ titre: "Boucle de jeu", fichier: "assets/code/echecs/Main.java", langage: "java" }]
-```
-
-Les extraits sont chargés par le navigateur : pour les voir en local, ouvrir le site via un serveur
-(`python3 -m http.server 8000`) et non en double-cliquant sur le fichier HTML.
+Le code se lit « compétence . niveau + lettre » : `4.3b` = compétence 4, niveau 3, AC 2 (a = AC 1, b = AC 2…).
+Le site l'affiche comme le référentiel : « Compétence 4 · Niveau 3 · AC 2 ».
+En parcours C, C1 à C3 ont deux niveaux et C4 à C6 en ont trois.
+`aConfirmer: true` marque la preuve comme « à confirmer » : elle n'est pas comptée dans les jauges tant qu'elle n'est pas validée.
+Les groupes de compétences se règlent dans `GROUPES`.
 
 **Page « À propos »** : tout est dans `PERSO` (présentation, « en bref », moteurs, qualités, centres d'intérêt).
 Chaque carte a une `icone` parmi celles de `ICONES_PERSO` (dans `app.js`). Pour changer la photo, remplacer
@@ -145,4 +129,4 @@ ressources: [{ label: "Vidéo de démonstration", url: "https://..." }]
 - Compléter la fiche du site pour les JO.
 - Vérifier l'année du baccalauréat dans la frise (2024).
 - Ajouter le CV, les captures (MCD, jeu) et les liens (dépôt échecs, vidéo, jeux de tests).
-- Confirmer ou retirer les preuves marquées « à confirmer ».
+- Confirmer ou retirer les preuves marquées « à confirmer » (notamment celles de C3 et du niveau 3 de C4).
