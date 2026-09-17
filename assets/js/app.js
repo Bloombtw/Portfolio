@@ -416,7 +416,26 @@ function ficheProjet(p) {
         </div>`).join("")}
     </section>`).join("");
 
-  const images = (p.images || []).map(src => `<img src="${esc(src)}" alt="Capture du projet ${esc(p.nom)}" loading="lazy">`).join("");
+  // une image peut être un chemin ou { src, legende }
+  const images = (p.images || []).map(im => typeof im === "string" ? { src: im } : im).map((im, i) => `
+    <figure class="vignette rv" style="--d:${i}">
+      <button type="button" class="agrandir" data-src="${esc(im.src)}" data-legende="${esc(im.legende || "")}" aria-label="Agrandir l'image">
+        <img src="${esc(im.src)}" alt="${esc(im.legende || `Capture du projet ${p.nom}`)}" loading="lazy">
+      </button>
+      ${im.legende ? `<figcaption>${esc(im.legende)}</figcaption>` : ""}
+    </figure>`).join("");
+  const extraits = (p.code || []).map((c, i) => `
+    <figure class="extrait rv" style="--d:${i}" data-fichier="${esc(c.fichier)}" data-langage="${esc(c.langage || "")}">
+      <figcaption>
+        <span class="extrait-points" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="extrait-titre">${esc(c.titre)}</span>
+        <span class="mono extrait-fichier">${esc(c.fichier.split("/").pop())}</span>
+        <button type="button" class="copier">Copier</button>
+      </figcaption>
+      <pre><code class="language-${esc(c.langage || "plaintext")}">Chargement…</code></pre>
+      <button type="button" class="deplier" hidden>Afficher tout le fichier</button>
+    </figure>`).join("");
+  const details = (p.details || []).map(d => `<li>${esc(d)}</li>`).join("");
   const ressources = (p.ressources || []).map(r => `<a class="btn" href="${esc(r.url)}">${esc(r.label)} ${fleche}</a>`).join("");
   const idx = PROJETS.indexOf(p);
   const suivant = PROJETS[(idx + 1) % PROJETS.length];
@@ -446,7 +465,9 @@ function ficheProjet(p) {
           ${ressources ? `<h2>Ressources</h2><div class="pile">${ressources}</div>` : ""}
         </aside>
       </div>
-      ${images ? `<div class="galerie">${images}</div>` : ""}
+      ${details ? `<h2 class="titre-bloc rv">Points clés</h2><ul class="points-cles rv">${details}</ul>` : ""}
+      ${images ? `<h2 class="titre-bloc rv">En images</h2><div class="galerie">${images}</div>` : ""}
+      ${extraits ? `<h2 class="titre-bloc rv">Dans le code</h2><div class="extraits">${extraits}</div>` : ""}
       <h2 class="titre-bloc rv">Compétences mobilisées</h2>
       ${comps || "<p>Aucune compétence associée pour l'instant.</p>"}
       <a class="suivant rv" href="projets.html?id=${suivant.id}">
@@ -456,6 +477,65 @@ function ficheProjet(p) {
     </article>`;
 }
 
+/* Extraits de code : chargés depuis assets/code/, colorés par highlight.js s'il est là */
+const LIGNES_REPLIEES = 40;
+function chargerExtraits(zone) {
+  zone.querySelectorAll(".extrait").forEach(async fig => {
+    const code = fig.querySelector("code");
+    try {
+      const rep = await fetch(fig.dataset.fichier);
+      if (!rep.ok) throw new Error(rep.status);
+      code.textContent = (await rep.text()).replace(/\s+$/, "");
+    } catch (e) {
+      code.textContent = "Impossible de charger ce fichier (ouvrir le site via un serveur, voir le README).";
+      return;
+    }
+    const colorer = () => window.hljs?.highlightElement(code);
+    window.hljs ? colorer() : document.getElementById("script-hljs")?.addEventListener("load", colorer, { once: true });
+
+    const nb = code.textContent.split("\n").length;
+    const bouton = fig.querySelector(".deplier");
+    if (nb > LIGNES_REPLIEES) {
+      fig.classList.add("replie");
+      bouton.hidden = false;
+      bouton.textContent = `Afficher les ${nb} lignes`;
+      bouton.addEventListener("click", () => {
+        const replie = fig.classList.toggle("replie");
+        bouton.textContent = replie ? `Afficher les ${nb} lignes` : "Replier";
+      });
+    }
+    fig.querySelector(".copier").addEventListener("click", async e => {
+      try {
+        await navigator.clipboard.writeText(code.textContent);
+        e.target.textContent = "Copié";
+      } catch (err) {
+        e.target.textContent = "Échec";
+      }
+      setTimeout(() => { e.target.textContent = "Copier"; }, 1500);
+    });
+  });
+}
+
+/* Visionneuse : clic sur une image pour l'agrandir */
+function activerVisionneuse(zone) {
+  const boutons = zone.querySelectorAll(".agrandir");
+  if (!boutons.length) return;
+  const d = document.createElement("dialog");
+  d.className = "visionneuse";
+  d.innerHTML = `<button type="button" class="rond fermer" aria-label="Fermer">✕</button><img alt=""><p></p>`;
+  document.body.append(d);
+  const fermer = () => d.close();
+  d.querySelector(".fermer").addEventListener("click", fermer);
+  d.addEventListener("click", e => { if (e.target === d) fermer(); });
+  d.addEventListener("keydown", e => { if (e.key === "Escape") { e.preventDefault(); fermer(); } });
+  boutons.forEach(b => b.addEventListener("click", () => {
+    d.querySelector("img").src = b.dataset.src;
+    d.querySelector("img").alt = b.dataset.legende;
+    d.querySelector("p").textContent = b.dataset.legende;
+    d.showModal();
+  }));
+}
+
 function pageProjets() {
   const id = param("id");
   const p = PROJETS.find(x => x.id === id);
@@ -463,6 +543,8 @@ function pageProjets() {
   if (p) {
     document.title = `${p.nom} | ${PROFIL.nom}`;
     zone.innerHTML = ficheProjet(p);
+    chargerExtraits(zone);
+    activerVisionneuse(zone);
     if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
     return;
   }

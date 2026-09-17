@@ -26,6 +26,8 @@ assets/
   js/clavier.js     Clavier 3D de l'accueil (Three.js)
   img/              Captures d'écran des projets
   img/logos/        Logos des outils (clavier 3D, fiches projets)
+  img/projets/      Captures et schémas des projets
+  code/             Extraits de code affichés dans les fiches projets
   docs/             CV et autres PDF
 .nojekyll           Indique à GitHub Pages de servir les fichiers tels quels
 ```
@@ -102,11 +104,24 @@ Le niveau (N1, N2, N3) est déduit du code : `4.3b` est de niveau 3.
 `aConfirmer: true` affiche la preuve en pointillés, en attendant de la valider.
 Le tableau croisé, les fiches et les jauges se mettent à jour automatiquement.
 
-**Ajouter des captures** : déposer les images dans `assets/img/` et les lister dans `images` :
+**Ajouter des points clés** : une liste de phrases courtes dans `details`.
+
+**Ajouter des captures** : déposer les images dans `assets/img/projets/` et les lister dans `images`,
+avec une légende. Un clic sur une image l'agrandit.
 
 ```js
-images: ["assets/img/mine-inventaire.png"]
+images: [{ src: "assets/img/projets/mine-inventaire.png", legende: "Inventaire du joueur." }]
 ```
+
+**Ajouter du code** : déposer un fichier (ou un extrait) dans `assets/code/` et le lister dans `code`.
+Il est chargé et coloré automatiquement ; au-delà de 40 lignes, il est replié.
+
+```js
+code: [{ titre: "Boucle de jeu", fichier: "assets/code/echecs/Main.java", langage: "java" }]
+```
+
+Les extraits sont chargés par le navigateur : pour les voir en local, ouvrir le site via un serveur
+(`python3 -m http.server 8000`) et non en double-cliquant sur le fichier HTML.
 
 **Ajouter des liens** (dépôt, vidéo, PDF) dans `ressources` :
 

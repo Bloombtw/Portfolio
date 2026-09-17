@@ -121,7 +121,10 @@ const COMPETENCES = {
    stage : true pour un stage
    liens : { Cx: { "AC": { preuve: "texte", aConfirmer: true|false } } }
    outils : noms d'outils ; ceux qui ont un logo s'affichent en logo
-   images : chemins vers assets/img/ (facultatif)
+   details : points clés affichés en liste (facultatif)
+   images : [{ src, legende }] vers assets/img/projets/ (facultatif)
+   code : [{ titre, fichier, langage }] extraits dans assets/code/ (facultatif)
+          langage : java, sql, bash, php, python…
    ressources : [{ label, url }] (dépôts, vidéos, PDF…) */
 const PROJETS = [
   {
@@ -136,8 +139,18 @@ const PROJETS = [
     role: "Développement du moteur, écriture des jeux de tests et préparation de la soutenance.",
     resultats: "Fonctionnalités opérationnelles, soutenance réussie.",
     outils: ["Java", "JUnit", "Git / GitHub"],
+    details: [
+      "Code découpé en classes : Main (déroulement), Menu (saisies), Plateau et Pieces (règles).",
+      "Échiquier représenté par un tableau char[8][8] : majuscules pour les noirs, minuscules pour les blancs.",
+      "Au lancement : saisie des deux pseudos, tirage du joueur qui a les blancs, puis tours alternés.",
+      "Tests JUnit sur les règles : pièces alliées, obstacles sur le trajet, prise d'une pièce adverse, obstacles du roque."
+    ],
     images: [],
-    ressources: [],   // ajouter le lien GitHub, la vidéo et les jeux de tests
+    code: [
+      { titre: "Boucle de jeu", fichier: "assets/code/echecs/Main.java", langage: "java" },
+      { titre: "Tests unitaires des règles", fichier: "assets/code/echecs/Junit.java", langage: "java" }
+    ],
+    ressources: [],   // ajouter le lien GitHub et la vidéo
     liens: {
       C5: {
         "5.1a": { preuve: "Moteur développé pour répondre au besoin exprimé par le client." },
@@ -160,8 +173,21 @@ const PROJETS = [
     objectif: "Installer un poste virtuel Linux équipé de MySQL, Apache2 et PHP, créer une base de données, puis un site qui en affiche le contenu.",
     role: "Configuration individuelle de chaque logiciel, puis mise en commun à travers un site PHP servi par Apache qui affiche le contenu de la base créée en amont.",
     resultats: "Poste fonctionnel et site web affichant les données de la base.",
-    outils: ["Linux", "VirtualBox", "Apache", "MySQL", "PHP", "Bash"],
-    images: [],
+    outils: ["Linux", "VirtualBox", "Apache", "MySQL", "PHP", "Bash", "Python"],
+    details: [
+      "Machine virtuelle Linux créée sous VirtualBox.",
+      "Pile Apache, MySQL et PHP installée avec apt, services lancés au démarrage avec systemctl.",
+      "Base MySQL dédiée et utilisateur aux droits limités à cette base.",
+      "Page PHP servie par Apache qui lit la base avec PDO et l'affiche dans un tableau.",
+      "Vérification des versions installées, dont Python 3.11.7 pour les scripts."
+    ],
+    images: [
+      { src: "assets/img/projets/poste-terminal.png", legende: "Vérification de l'environnement dans le terminal : Python 3.11.7." }
+    ],
+    code: [
+      { titre: "Installation du poste", fichier: "assets/code/poste/installation.sh", langage: "bash" },
+      { titre: "Page qui affiche la base", fichier: "assets/code/poste/index.php", langage: "php" }
+    ],
     ressources: [],
     liens: {
       C4: {
@@ -285,7 +311,19 @@ const PROJETS = [
     role: "Analyse et conception (personas, user stories, backlog), modélisation de la base MySQL, back-end PHP orienté objet (sessions, routage, accès aux données par PDO), hachage des mots de passe, interface ergonomique et responsive.",
     resultats: "Application fonctionnelle, structurée en modèles, vues et contrôleurs pour chaque module, avec authentification par mots de passe hachés.",
     outils: ["PHP", "MySQL", "SQL", "Architecture MVC", "HTML / CSS", "IntelliJ", "Git / GitHub"],
-    images: [],
+    details: [
+      "Base MySQL de 9 tables : Utilisateur, Role, Membre, Association, Produit, Categorie, Panier_validation, Historique, Depenses.",
+      "Quatre rôles (administrateur, barman, membre, gestionnaire) ; un utilisateur peut appartenir à plusieurs associations avec un rôle dans chacune.",
+      "Panier validé au comptoir grâce à un code, avec un état (en attente, validé, annulé) et son contenu en JSON.",
+      "Solde de chaque membre, historique des achats et des rechargements, suivi des stocks et des dépenses.",
+      "Intégrité assurée par des clés étrangères (suppression en cascade) et une adresse e-mail unique."
+    ],
+    images: [
+      { src: "assets/img/projets/buvette-panier.png", legende: "Panier d'un membre : solde, détail de la commande et bouton Commander." }
+    ],
+    code: [
+      { titre: "Structure de la base (extrait)", fichier: "assets/code/buvette/structure.sql", langage: "sql" }
+    ],
     ressources: [{ label: "Dépôt GitHub", url: "https://github.com/DUT-Info-Montreuil/SAE_Dev_Web_Anton_Sorana_Djeneba" }],
     liens: {
       C4: {
@@ -343,7 +381,16 @@ const PROJETS = [
     role: "Scripts Python d'extraction, de nettoyage, de dédoublonnage et de fusion des fichiers CSV. Base normalisée en 3NF de 6 tables (Pays, Ville, Station, Polluant, Mesure, indicateur_pays). Schéma en constellation à deux tables de faits (mesures horaires, indicateurs annuels). Visualisation dans Qlik et rapport.",
     resultats: "Requêtes analytiques en moyenne 15 fois plus rapides qu'avec le modèle relationnel. Visualisation d'un sous-ensemble des données et rapport explicatif.",
     outils: ["Python", "SQL", "Modélisation relationnelle", "Modélisation OLAP", "Nettoyage de données", "Qlik", "PyCharm"],
-    images: [],
+    details: [
+      "MCD de 6 entités reliées par 5 associations : Posséder, Contenir, Produire, Mesurer, Avoir.",
+      "Un pays possède des villes, une ville contient des stations, une station produit des mesures, chaque mesure porte sur un polluant.",
+      "Les indicateurs annuels (urbanisation, consommation d'énergie, décès liés à la pollution) sont rattachés au pays.",
+      "Au passage au MLD, les associations deviennent des clés étrangères : iso2, ville_id, station_id, code."
+    ],
+    images: [
+      { src: "assets/img/projets/air-mcd.png", legende: "Modèle conceptuel (MCD)." },
+      { src: "assets/img/projets/air-mld.png", legende: "Modèle logique (MLD) avec les clés étrangères." }
+    ],
     ressources: [],
     liens: {
       C4: {
