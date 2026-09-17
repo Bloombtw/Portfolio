@@ -6,6 +6,7 @@
 const PROFIL = {
   nom: "Anton Meimoun",
   formation: "BUT Informatique, IUT de Montreuil",
+  ecole: "iut",          // clé dans ORGANISMES
   parcours: "Parcours C : administration, gestion et exploitation des données",
   accroche: "Étudiant en 3e année, passionné par la data et l'intelligence artificielle. Je conçois des bases de données et les applications qui les exploitent, en équipe et de bout en bout.",
   objectif: "Mettre mes compétences en données au service d'une équipe, et approfondir la data et l'intelligence artificielle dans un environnement tourné vers l'innovation.",
@@ -14,6 +15,13 @@ const PROFIL = {
   github: "https://github.com/Bloombtw",
   linkedin: "https://www.linkedin.com/in/anton-meimoun-69a4522a6/",
   email: "meimounanton@gmail.com"
+};
+
+/* ORGANISMES : écoles et entreprises, affichés avec leur logo
+   (fichier dans assets/img/logos/) sur une tuile blanche */
+const ORGANISMES = {
+  iut: { nom: "IUT de Montreuil, Université Paris 8", logo: "iut-montreuil.png", url: "https://www.iut.univ-paris8.fr/" },
+  afpols: { nom: "AFPOLS", logo: "afpols.png", url: "https://www.afpols.fr/" }
 };
 
 /* OUTILS : chaque entrée devient une touche du clavier 3D de l'accueil.
@@ -125,7 +133,8 @@ const COMPETENCES = {
    images : [{ src, legende }] vers assets/img/projets/ (facultatif)
    code : [{ titre, fichier, langage }] extraits dans assets/code/ (facultatif)
           langage : java, sql, bash, php, python…
-   ressources : [{ label, url }] (dépôts, vidéos, PDF…) */
+   organisme : clé dans ORGANISMES (entreprise d'un stage…)
+   ressources : [{ label, url }] (dépôts, vidéos, PDF dans assets/docs/…) */
 const PROJETS = [
   {
     id: "sae-echecs",
@@ -274,7 +283,7 @@ const PROJETS = [
     id: "minetarouille",
     nom: "MineTaRouille",
     annee: "BUT1",
-    periode: "BUT1 · S2, 2025",
+    periode: "BUT1 · S2, 2024–2025",
     equipe: "3 personnes, 2 mois",
     resume: "Jeu 2D de type Terraria en Java et JavaFX, en programmation orientée objet.",
     contexte: "SAE S2.01, S2.02, S2.05 et S2.06, réalisées autour d'un même projet de jeu.",
@@ -282,11 +291,28 @@ const PROJETS = [
     role: "Gestion des blocs (types, comportements, interactions), inventaire graphique, déplacements avec gravité et collisions.",
     resultats: "Jeu jouable avec génération de carte, inventaire et sauvegarde. Architecture MVC et choix techniques documentés.",
     outils: ["Java", "JavaFX", "Architecture MVC", "Git / GitHub", "Trello", "IntelliJ"],
-    images: [],
-    ressources: [{ label: "Dépôt GitHub", url: "https://github.com/Bloombtw/MineTaRouille" }],
+    details: [
+      "Moteur de jeu et interfaces en JavaFX, avec génération de la carte.",
+      "Monde stocké dans des tableaux à deux dimensions, choisis pour les performances.",
+      "Blocs : types, comportements et interactions (miner, poser).",
+      "Inventaire graphique : barre d'objets avec leurs quantités.",
+      "Déplacement du joueur avec gravité et collisions.",
+      "Sauvegarde de la partie et modélisation des entités du jeu.",
+      "GitHub pour les versions et les branches, Trello pour les tâches, débogage sous IntelliJ et choix techniques documentés."
+    ],
+    images: [
+      { src: "assets/img/projets/mtr-jeu.png", legende: "Le monde généré, avec le joueur à la surface." },
+      { src: "assets/img/projets/mtr-blocs.png", legende: "Rendu des blocs." },
+      { src: "assets/img/projets/mtr-inventaire.png", legende: "Rendu de l'inventaire." },
+      { src: "assets/img/projets/mtr-deplacement.png", legende: "Rendu du déplacement du joueur." }
+    ],
+    ressources: [
+      { label: "Dépôt GitHub", url: "https://github.com/Bloombtw/MineTaRouille" },
+      { label: "Présentation (PDF)", url: "assets/docs/presentation-minetarouille.pdf" }
+    ],
     liens: {
       C4: {
-        "4.2d": { preuve: "Système de sauvegarde et modélisation des entités du jeu.", aConfirmer: true }
+        "4.2d": { preuve: "Système de sauvegarde et modélisation des entités du jeu." }
       },
       C5: {
         "5.1b": { preuve: "Tableau Trello et branches Git pour suivre les tâches." },
@@ -374,7 +400,7 @@ const PROJETS = [
     nom: "Qualité de l'air mondial",
     annee: "BUT2",
     periode: "BUT2 · SAE S4.C.01, 2026",
-    equipe: "4 personnes",
+    equipe: "4 personnes (Djeneba Diallo, Anton Meimoun, Yanis Ouadah, Ilyes Brahim)",
     resume: "Croisement de données mondiales sur la pollution de l'air, la démographie et l'économie.",
     contexte: "SAE S4.C.01 de gestion et qualité des données, à partir de trois sources : OpenAQ (pollution), World Cities (démographie) et la Banque mondiale (indicateurs socio-économiques).",
     objectif: "Analyser et croiser ces jeux de données dans une base relationnelle, puis dans un modèle multidimensionnel adapté à l'analyse.",
@@ -382,16 +408,20 @@ const PROJETS = [
     resultats: "Requêtes analytiques en moyenne 15 fois plus rapides qu'avec le modèle relationnel. Visualisation d'un sous-ensemble des données et rapport explicatif.",
     outils: ["Python", "SQL", "Modélisation relationnelle", "Modélisation OLAP", "Nettoyage de données", "Qlik", "PyCharm"],
     details: [
-      "MCD de 6 entités reliées par 5 associations : Posséder, Contenir, Produire, Mesurer, Avoir.",
-      "Un pays possède des villes, une ville contient des stations, une station produit des mesures, chaque mesure porte sur un polluant.",
-      "Les indicateurs annuels (urbanisation, consommation d'énergie, décès liés à la pollution) sont rattachés au pays.",
-      "Au passage au MLD, les associations deviennent des clés étrangères : iso2, ville_id, station_id, code."
+      "Trois sources : OpenAQ (PM2.5, PM10, NO₂, CO, O₃, SO₂), World Cities (environ 40 000 villes) et les indicateurs de la Banque mondiale.",
+      "World Cities sert de table pivot : iso2 pour rejoindre OpenAQ, iso3 pour la Banque mondiale.",
+      "Scripts Python : fusion des CSV d'OpenAQ (en-têtes normalisés, doublons supprimés) et pivot des indicateurs par pays et par année.",
+      "Nettoyage : doublons, valeurs nulles, négatives ou aberrantes écartées ; noms de villes et codes pays harmonisés.",
+      "Modèle relationnel en 3NF : Pays, Ville, Station, Mesure, Polluant (avec le seuil OMS) et indicateur_pays.",
+      "Schéma en constellation : deux tables de faits, les mesures (valeur rapportée au seuil OMS, score de fiabilité) et les indicateurs annuels, qui partagent les dimensions Temps et Pays.",
+      "Dimension Temps découpée en année, mois et jour pour des ROLLUP et CUBE sans fonction de date."
     ],
     images: [
       { src: "assets/img/projets/air-mcd.png", legende: "Modèle conceptuel (MCD)." },
-      { src: "assets/img/projets/air-mld.png", legende: "Modèle logique (MLD) avec les clés étrangères." }
+      { src: "assets/img/projets/air-mld.png", legende: "Modèle logique (MLD) avec les clés étrangères." },
+      { src: "assets/img/projets/air-constellation.png", legende: "Modèle multidimensionnel en constellation." }
     ],
-    ressources: [],
+    ressources: [{ label: "Rapport détaillé (PDF)", url: "assets/docs/rapport-sae-s4-qualite-air.pdf" }],
     liens: {
       C4: {
         "4.2a": { preuve: "Modèle normalisé en 3NF puis schéma en constellation, 15 fois plus rapide sur les requêtes analytiques." },
@@ -410,6 +440,7 @@ const PROJETS = [
     id: "stage-afpols",
     nom: "Stage à l'AFPOLS",
     stage: true,
+    organisme: "afpols",
     annee: "Stage",
     periode: "BUT2 · 8 semaines, 2026",
     equipe: "Stage en entreprise",
@@ -441,18 +472,19 @@ const PROJETS = [
 /* FRISE CHRONOLOGIQUE de l'accueil
    type : Formation, Expérience, Stage…
    annee : affiche les projets qui ont la même « annee »
-   projet : lien vers la fiche d'un projet */
+   projet : lien vers la fiche d'un projet
+   organisme : clé dans ORGANISMES, affiche son logo */
 const FRISE = [
   { date: "2023", type: "Expérience", titre: "Encadrant scolaire bénévole",
     texte: "Un an d'accompagnement d'élèves : communication pédagogique et gestion du temps." },
   { date: "2024", type: "Formation", titre: "Baccalauréat général, mention bien",
     texte: "Lycée Maurice Ravel, Paris 12." },
-  { date: "2024 – 2025", type: "Formation", titre: "BUT Informatique, 1re année", annee: "BUT1",
+  { date: "2024 – 2025", type: "Formation", titre: "BUT Informatique, 1re année", annee: "BUT1", organisme: "iut",
     texte: "IUT de Montreuil, Université Paris 8. Premiers projets en équipe : développement, bases de données, systèmes." },
-  { date: "2025 – 2026", type: "Formation", titre: "BUT Informatique, 2e année", annee: "BUT2",
+  { date: "2025 – 2026", type: "Formation", titre: "BUT Informatique, 2e année", annee: "BUT2", organisme: "iut",
     texte: "Parcours C : administration, gestion et exploitation des données." },
-  { date: "2026", type: "Stage", titre: "Stage à l'AFPOLS · 8 semaines", projet: "stage-afpols",
+  { date: "2026", type: "Stage", titre: "Stage à l'AFPOLS · 8 semaines", projet: "stage-afpols", organisme: "afpols",
     texte: "Mise en œuvre d'un plan d'action de cybersécurité et gestion du parc applicatif." },
-  { date: "2026 – 2027", type: "Formation", titre: "BUT Informatique, 3e année", annee: "BUT3",
+  { date: "2026 – 2027", type: "Formation", titre: "BUT Informatique, 3e année", annee: "BUT3", organisme: "iut",
     texte: "Année en cours : les projets de 3e année viendront démontrer le niveau 3." }
 ];

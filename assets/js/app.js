@@ -45,6 +45,16 @@ function tuileOutil(nom) {
     : `<span class="tag">${esc(nom)}</span>`;
 }
 
+/* Logo d'un organisme sur une tuile blanche (lisible dans les deux thèmes) */
+function tuileOrganisme(cle, classe = "") {
+  const o = typeof ORGANISMES !== "undefined" && ORGANISMES[cle];
+  if (!o) return "";
+  const img = `<img src="${cheminLogo(o.logo)}" alt="${esc(o.nom)}" loading="lazy">`;
+  return o.url
+    ? `<a class="organisme ${classe}" href="${esc(o.url)}" title="${esc(o.nom)}" target="_blank" rel="noopener">${img}</a>`
+    : `<span class="organisme ${classe}" title="${esc(o.nom)}">${img}</span>`;
+}
+
 /* Part des AC d'une compétence démontrés par au moins un projet */
 function couverture(c, n) {
   const acs = n ? Object.keys(COMPETENCES[c].niveaux[n].acs)
@@ -103,7 +113,7 @@ function liensContact() {
 function pied() {
   document.getElementById("pied").innerHTML = `
     <div class="wrap barre">
-      <span>© ${new Date().getFullYear()} ${esc(PROFIL.nom)} · ${esc(PROFIL.formation)}</span>
+      <span class="pied-gauche">${tuileOrganisme(PROFIL.ecole, "petit")}<span>© ${new Date().getFullYear()} ${esc(PROFIL.nom)} · ${esc(PROFIL.formation)}</span></span>
       <span class="liens">${liensContact().map(([u, t]) => `<a href="${esc(u)}">${t}</a>`).join("")}</span>
     </div>`;
 }
@@ -197,7 +207,7 @@ function ligneProjet(p, i) {
   return `<a class="ligne rv" style="--d:${i}" href="projets.html?id=${p.id}" data-comps="${comps.join(" ")}">
     <span class="num mono">${deux(i + 1)}</span>
     <span class="ligne-corps">
-      <span class="ligne-titre">${esc(p.nom)}${p.stage ? ` <span class="badge accent">stage</span>` : ""}${p.aCompleter ? ` <span class="badge">en cours</span>` : ""}</span>
+      <span class="ligne-titre">${esc(p.nom)}${p.stage ? ` <span class="badge accent">stage</span>` : ""}${p.organisme && ORGANISMES[p.organisme] ? ` <img class="mini-organisme" src="${cheminLogo(ORGANISMES[p.organisme].logo)}" alt="${esc(ORGANISMES[p.organisme].nom)}">` : ""}${p.aCompleter ? ` <span class="badge">en cours</span>` : ""}</span>
       <span class="ligne-resume"><span class="mono">${esc(p.periode)}</span> · ${esc(p.resume)}</span>
     </span>
     <span class="ligne-meta">
@@ -243,8 +253,13 @@ function detailFrise(e) {
   }).join("");
   const fiche = e.projet && PROJETS.find(p => p.id === e.projet);
   return `
-    <p class="frise-meta"><span class="badge accent">${esc(e.type)}</span><span class="mono">${esc(e.date)}</span></p>
-    <h3>${esc(e.titre)}</h3>
+    <div class="frise-titre">
+      <div>
+        <p class="frise-meta"><span class="badge accent">${esc(e.type)}</span><span class="mono">${esc(e.date)}</span></p>
+        <h3>${esc(e.titre)}</h3>
+      </div>
+      ${tuileOrganisme(e.organisme, "grand")}
+    </div>
     <p class="frise-texte">${esc(e.texte)}</p>
     ${lies ? `<div class="minis">${lies}</div>` : ""}
     ${fiche ? `<a class="btn" href="projets.html?id=${fiche.id}">Voir la fiche ${fleche}</a>` : ""}`;
@@ -342,7 +357,10 @@ function pageAccueil() {
     <section class="hero">
       <div class="wrap hero-grille">
         <div class="hero-texte">
-          <p class="statut rv"><span class="point"></span>${esc(PROFIL.formation)}</p>
+          <div class="statut-ligne rv">
+            ${tuileOrganisme(PROFIL.ecole, "moyen")}
+            <p class="statut"><span class="point"></span>${esc(PROFIL.formation)}</p>
+          </div>
           <h1 class="rv" style="--d:1">${esc(PROFIL.nom.split(" ")[0])}<br><span class="degrade">${esc(PROFIL.nom.split(" ").slice(1).join(" "))}</span></h1>
           <p class="parcours rv" style="--d:2">${esc(PROFIL.parcours)}</p>
           <p class="accroche rv" style="--d:3">${esc(PROFIL.accroche)}</p>
@@ -436,7 +454,10 @@ function ficheProjet(p) {
       <button type="button" class="deplier" hidden>Afficher tout le fichier</button>
     </figure>`).join("");
   const details = (p.details || []).map(d => `<li>${esc(d)}</li>`).join("");
-  const ressources = (p.ressources || []).map(r => `<a class="btn" href="${esc(r.url)}">${esc(r.label)} ${fleche}</a>`).join("");
+  const ressources = (p.ressources || []).map(r => {
+    const externe = /^https?:/.test(r.url);
+    return `<a class="btn" href="${esc(r.url)}"${externe ? ' target="_blank" rel="noopener"' : ""}>${esc(r.label)} ${fleche}</a>`;
+  }).join("");
   const idx = PROJETS.indexOf(p);
   const suivant = PROJETS[(idx + 1) % PROJETS.length];
   const rubriques = [["Contexte", p.contexte], ["Objectif", p.objectif], ["Mon rôle", p.role], ["Résultats", p.resultats]];
@@ -446,7 +467,10 @@ function ficheProjet(p) {
       <a class="retour rv" href="projets.html">← Tous les projets</a>
       <header class="fiche-tete">
         <p class="surtitre rv"><span>${deux(idx + 1)}</span>${p.stage ? "Stage" : "Projet"}</p>
-        <h1 class="rv" style="--d:1">${esc(p.nom)}</h1>
+        <div class="fiche-titre rv" style="--d:1">
+          <h1>${esc(p.nom)}</h1>
+          ${tuileOrganisme(p.organisme, "grand")}
+        </div>
         <p class="fiche-resume rv" style="--d:2">${esc(p.resume)}</p>
         <dl class="meta rv" style="--d:3">
           <div><dt>Période</dt><dd>${esc(p.periode)}</dd></div>

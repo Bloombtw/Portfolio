@@ -28,7 +28,7 @@ assets/
   img/logos/        Logos des outils (clavier 3D, fiches projets)
   img/projets/      Captures et schémas des projets
   code/             Extraits de code affichés dans les fiches projets
-  docs/             CV et autres PDF
+  docs/             CV, rapports et présentations (PDF)
 .nojekyll           Indique à GitHub Pages de servir les fichiers tels quels
 ```
 
@@ -122,6 +122,10 @@ code: [{ titre: "Boucle de jeu", fichier: "assets/code/echecs/Main.java", langag
 
 Les extraits sont chargés par le navigateur : pour les voir en local, ouvrir le site via un serveur
 (`python3 -m http.server 8000`) et non en double-cliquant sur le fichier HTML.
+
+**Logos d'écoles et d'entreprises** : les déclarer dans `ORGANISMES` (nom, logo, site), puis indiquer la clé
+dans `PROFIL.ecole`, dans `organisme` d'un projet (stage…) ou d'une étape de la `FRISE`.
+Ils s'affichent sur une tuile blanche pour rester lisibles dans les deux thèmes.
 
 **Ajouter des liens** (dépôt, vidéo, PDF) dans `ressources` :
 

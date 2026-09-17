@@ -141,6 +141,20 @@ img.lg { width: auto; max-width: 2.6rem; }
 .carte-ico .mono { color: var(--pale); }
 .avec-ico { display: inline-flex; align-items: center; gap: .4rem; }
 
+/* Logos d'organismes : tuile blanche dans les deux thèmes */
+.organisme { --h: 1.6rem; display: inline-flex; align-items: center; justify-content: center; flex: none; background: #fff; border: 1px solid var(--trait); border-radius: 12px; padding: .35rem .6rem; transition: transform .2s, box-shadow .2s; }
+a.organisme:hover { transform: translateY(-2px); box-shadow: 0 6px 20px -8px rgba(0,0,0,.4); }
+.organisme img { display: block; height: var(--h); width: auto; max-width: none; }
+.organisme.petit { --h: 1.3rem; padding: .25rem .4rem; border-radius: 8px; }
+.organisme.moyen { --h: 1.7rem; padding: .3rem .5rem; border-radius: 10px; }
+.organisme.grand { --h: 3rem; padding: .55rem .8rem; border-radius: 14px; }
+.mini-organisme { height: 1.35rem; width: auto; padding: .15rem .35rem; border-radius: 6px; background: #fff; vertical-align: middle; }
+.statut-ligne { display: flex; align-items: center; gap: .6rem; margin: 0 0 1.5rem; }
+.statut-ligne .statut { margin: 0; }
+.pied-gauche { display: inline-flex; align-items: center; gap: .7rem; }
+.frise-titre, .fiche-titre { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
+.fiche-titre h1 { flex: 1; }
+
 /* Pastilles de niveau */
 .pip { display: inline-block; font-family: var(--mono); font-size: .68rem; font-weight: 600; padding: .1rem .42rem; border-radius: 6px; line-height: 1.45; white-space: nowrap; color: #fff; }
 .pip.n1 { background: var(--n1); }
