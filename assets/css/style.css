@@ -80,7 +80,7 @@ p { text-wrap: pretty; }
 .marque { display: flex; align-items: center; gap: .65rem; text-decoration: none; font-weight: 600; }
 .logo { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 9px; background: var(--texte); color: var(--fond); font-family: var(--mono); font-size: .72rem; font-weight: 600; }
 #entete nav { display: flex; gap: .15rem; padding: .25rem; border: 1px solid var(--trait); border-radius: 99px; background: var(--surface); margin-left: auto; }
-#entete nav a { text-decoration: none; color: var(--doux); padding: .35rem .9rem; border-radius: 99px; font-size: .9rem; transition: color .2s, background-color .2s; }
+#entete nav a { white-space: nowrap; text-decoration: none; color: var(--doux); padding: .35rem .9rem; border-radius: 99px; font-size: .9rem; transition: color .2s, background-color .2s; }
 #entete nav a:hover { color: var(--texte); }
 #entete nav a[aria-current="page"] { background: var(--texte); color: var(--fond); }
 .theme { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 99px; border: 1px solid var(--trait); background: var(--surface); color: var(--texte); cursor: pointer; transition: border-color .2s; }
@@ -430,6 +430,47 @@ em { font-style: normal; font-family: var(--mono); font-size: .72rem; color: var
 .vide { margin: .35rem 0 0 1.65rem; font-family: var(--mono); font-size: .75rem; color: var(--pale); }
 
 /* =========================================================
+   Page « À propos »
+   ========================================================= */
+.perso-tete { display: grid; grid-template-columns: 18rem minmax(0, 1fr); gap: 4rem; align-items: start; padding-top: 4.5rem; }
+.portrait-zone { position: sticky; top: 6rem; display: grid; justify-items: center; gap: 1.25rem; text-align: center; }
+.portrait { --rx: 0deg; --ry: 0deg; position: relative; width: 15rem; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; transform: perspective(700px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .25s ease-out; }
+.portrait img { position: relative; display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 6px solid var(--fond); }
+.portrait-anneau { position: absolute; inset: -4px; border-radius: 50%; background: conic-gradient(from var(--angle, 0deg), var(--accent), var(--accent-2), transparent 60%, var(--accent)); animation: tourne 6s linear infinite; }
+.portrait-anneau::after { content: ""; position: absolute; inset: -18px; border-radius: 50%; background: inherit; filter: blur(22px); opacity: .45; z-index: -1; }
+@property --angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes tourne { to { --angle: 360deg; } }
+.portrait:active { transform: perspective(700px) rotateX(var(--rx)) rotateY(var(--ry)) scale(.97); }
+.portrait-legende { display: grid; justify-items: center; gap: .35rem; }
+.portrait-legende strong { font-size: 1.15rem; letter-spacing: -.02em; }
+.portrait-legende .mono { color: var(--pale); }
+.portrait-legende .organisme { margin-top: .5rem; }
+.perso-texte h1 { font-size: clamp(2.6rem, 6.5vw, 4.6rem); letter-spacing: -.05em; margin-bottom: 1.75rem; }
+.perso-para { font-size: 1.12rem; color: var(--doux); max-width: 60ch; margin: 0 0 1.1rem; }
+.perso-texte h1 + .perso-para { color: var(--texte); font-size: 1.25rem; }
+.en-bref { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); margin: 2.25rem 0 0; border: 1px solid var(--trait); border-radius: var(--rayon); overflow: hidden; }
+.en-bref div { padding: 1rem 1.2rem; border-right: 1px solid var(--trait); }
+.en-bref div:last-child { border-right: 0; }
+.en-bref dt { font-family: var(--mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--pale); margin-bottom: .2rem; }
+.en-bref dd { margin: 0; font-weight: 500; }
+.grille-perso { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.carte-perso { position: relative; padding: 1.75rem; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); overflow: hidden; transition: border-color .3s, opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+.carte-perso:hover { border-color: var(--trait-fort); }
+.carte-perso::after { content: ""; position: absolute; right: -3rem; bottom: -3rem; width: 9rem; height: 9rem; border-radius: 50%; background: radial-gradient(var(--lueur), transparent 70%); transition: transform .5s; }
+.carte-perso:hover::after { transform: scale(1.6); }
+.carte-perso h3 { font-size: 1.3rem; margin: 1.25rem 0 .5rem; display: flex; align-items: baseline; gap: .6rem; }
+.carte-perso p { margin: 0; color: var(--doux); }
+.perso-ico { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 14px; border: 1px solid var(--trait-fort); color: var(--accent); transition: transform .4s cubic-bezier(.3,1.6,.5,1); }
+.perso-ico .ico { width: 1.5rem; height: 1.5rem; stroke-width: 1.5; }
+.carte-perso:hover .perso-ico, .qualite:hover .perso-ico { transform: rotate(-8deg) scale(1.08); }
+.chiffre { position: absolute; top: 1.5rem; right: 1.75rem; font-family: var(--mono); font-size: 2.2rem; font-weight: 500; letter-spacing: -.04em; background: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.grille-qualites { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); border-top: 1px solid var(--trait); }
+.qualite { display: grid; grid-template-columns: auto 1fr; column-gap: 1rem; align-items: center; padding: 1.4rem .5rem; border-bottom: 1px solid var(--trait); }
+.qualite .perso-ico { grid-row: 1 / 3; width: 2.6rem; height: 2.6rem; }
+.qualite h3 { font-size: 1.02rem; margin: 0; }
+.qualite p { margin: .1rem 0 0; font-size: .88rem; color: var(--doux); }
+
+/* =========================================================
    Responsive
    ========================================================= */
 @media (max-width: 900px) {
@@ -439,12 +480,17 @@ em { font-style: normal; font-family: var(--mono); font-size: .72rem; color: var
   .clavier { aspect-ratio: 1.3; max-height: 70svh; margin: 0 auto; }
   .descendre { display: none; }
   .fiche-grille { grid-template-columns: 1fr; }
+  .perso-tete { grid-template-columns: 1fr; gap: 2rem; padding-top: 2.5rem; }
+  .portrait-zone { position: static; }
+  .portrait { width: 11rem; }
+  .en-bref div { border-right: 0; border-bottom: 1px solid var(--trait); }
   .panneau { position: static; }
 }
 @media (max-width: 640px) {
   .wrap { padding: 0 1rem; }
   .marque-nom { display: none; }
-  #entete nav a { padding: .35rem .7rem; font-size: .85rem; }
+  #entete nav a { padding: .35rem .55rem; font-size: .8rem; }
+  .barre { gap: .5rem; }
   .chiffres { gap: 1.5rem; }
   .section { padding-top: 5rem; }
   .scene-zone { margin: 0 -1rem; }
@@ -467,6 +513,12 @@ em { font-style: normal; font-family: var(--mono); font-size: .72rem; color: var
   .tableau::before { content: "Faites glisser le tableau →"; display: block; font-family: var(--mono); font-size: .72rem; color: var(--pale); padding: .5rem 0 0; }
   .legende .note { margin-left: 0; }
 }
+@media (max-width: 420px) {
+  .marque { display: none; }
+  #entete nav { margin-left: 0; }
+  #entete nav a { padding: .35rem .5rem; font-size: .78rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; transition-delay: 0s !important; }

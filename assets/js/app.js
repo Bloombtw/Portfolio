@@ -80,7 +80,8 @@ function entete() {
   const nav = [
     ["index.html", "Accueil", "accueil"],
     ["projets.html", "Projets", "projets"],
-    ["competences.html", "Compétences", "competences"]
+    ["competences.html", "Compétences", "competences"],
+    ["apropos.html", "À propos", "apropos"]
   ].map(([href, label, id]) =>
     `<a href="${href}"${id === page ? ' aria-current="page"' : ""}>${label}</a>`).join("");
   const el = document.getElementById("entete");
@@ -712,10 +713,117 @@ function etoiles() {
   requestAnimationFrame(dessin);
 }
 
+/* ---------- Page « À propos » ---------- */
+const ICONES_PERSO = {
+  ia: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>',
+  code: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
+  equipe: ICONES_COMP.C6,
+  parole: '<path d="M4 5.5h16v10.5H10l-5 4v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/>',
+  temps: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
+  boussole: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+  bug: '<rect x="7" y="7.5" width="10" height="13" rx="5"/><path d="M12 7.5v13M9 4l1.5 3.5M15 4l-1.5 3.5M3 11.5h4M17 11.5h4M3.5 17h3.7M16.8 17h3.7"/>',
+  violoncelle: '<path d="M12 9c-2.5 0-4 1.5-4 3.3 0 1 .6 1.7.6 2.4 0 .8-1.1 1.4-1.1 3 0 2 2 3.8 4.5 3.8s4.5-1.8 4.5-3.8c0-1.6-1.1-2.2-1.1-3 0-.7.6-1.4.6-2.4C16 10.5 14.5 9 12 9z"/><path d="M12 9V2.5M10.8 2.5h2.4M10.4 13.5v2.5M13.6 13.5v2.5M10.6 18h2.8"/>',
+  football: '<circle cx="12" cy="12" r="9.5"/><path d="m12 7.5 3.3 2.4-1.3 3.9h-4l-1.3-3.9z"/><path d="M12 7.5V2.6M15.3 9.9l4.4-1.6M14 13.8l2.8 3.9M10 13.8l-2.8 3.9M8.7 9.9 4.3 8.3"/>',
+  halteres: '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>'
+};
+const iconePerso = k => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONES_PERSO[k] || ""}</svg>`;
+
+function cartesPerso(liste, classe) {
+  return liste.map((c, i) => `
+    <article class="${classe} rv" style="--d:${i}">
+      <span class="perso-ico">${iconePerso(c.icone)}</span>
+      ${c.chiffre ? `<span class="chiffre">${esc(c.chiffre)}</span>` : ""}
+      <h3>${esc(c.titre)}</h3>
+      <p>${esc(c.texte)}</p>
+    </article>`).join("");
+}
+
+function pageAPropos() {
+  if (typeof PERSO === "undefined") return;
+  document.title = `À propos | ${PROFIL.nom}`;
+  const contact = liensContact();
+  document.getElementById("contenu").innerHTML = `
+    <section class="wrap perso-tete">
+      <div class="portrait-zone rv">
+        <button type="button" class="portrait" aria-label="Photo d'${esc(PROFIL.nom)}">
+          <span class="portrait-anneau" aria-hidden="true"></span>
+          <img src="${esc(PROFIL.photo)}" alt="Portrait d'${esc(PROFIL.nom)}" width="246" height="246">
+        </button>
+        <div class="portrait-legende">
+          <strong>${esc(PROFIL.nom)}</strong>
+          <span class="mono">${esc(PROFIL.formation)}</span>
+          ${tuileOrganisme(PROFIL.ecole, "moyen")}
+        </div>
+      </div>
+      <div class="perso-texte">
+        <p class="surtitre rv"><span>✦</span>À propos</p>
+        <h1 class="rv" style="--d:1">${esc(PERSO.titre)}</h1>
+        ${PERSO.presentation.map((t, i) => `<p class="perso-para rv" style="--d:${i + 2}">${esc(t)}</p>`).join("")}
+        <dl class="en-bref rv" style="--d:5">
+          ${PERSO.enBref.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}
+        </dl>
+      </div>
+    </section>
+
+    <section class="wrap section">
+      ${entreeSection("01", "Ce qui me fait avancer")}
+      <div class="grille-perso">${cartesPerso(PERSO.moteurs, "carte-perso")}</div>
+    </section>
+
+    <section class="wrap section">
+      ${entreeSection("02", "Mes qualités", "Tirées de mon engagement bénévole et de mes projets en équipe.")}
+      <div class="grille-qualites">${cartesPerso(PERSO.qualites, "qualite")}</div>
+    </section>
+
+    <section class="wrap section">
+      ${entreeSection("03", "En dehors du code")}
+      <div class="grille-perso">${cartesPerso(PERSO.interets, "carte-perso interet")}</div>
+    </section>
+
+    <section class="wrap section">
+      <div class="final rv">
+        <p class="surtitre"><span>04</span>Et maintenant ?</p>
+        <p class="final-texte">${esc(PROFIL.objectif)}</p>
+        <div class="actions">
+          <a class="btn" href="index.html#parcours">Voir mon parcours ${fleche}</a>
+          ${contact.map(([u, t], i) => `<a class="btn${i ? "" : " plein"}" href="${esc(u)}">${t}</a>`).join("")}
+        </div>
+      </div>
+    </section>`;
+  activerPortrait();
+}
+
+/* Portrait : s'incline vers la souris, éclat mo.js au clic */
+function activerPortrait() {
+  const p = document.querySelector(".portrait");
+  if (!p) return;
+  const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!calme) {
+    p.addEventListener("pointermove", e => {
+      const r = p.getBoundingClientRect();
+      p.style.setProperty("--rx", `${((e.clientY - r.top) / r.height - 0.5) * -14}deg`);
+      p.style.setProperty("--ry", `${((e.clientX - r.left) / r.width - 0.5) * 14}deg`);
+    });
+    p.addEventListener("pointerleave", () => { p.style.setProperty("--rx", "0deg"); p.style.setProperty("--ry", "0deg"); });
+  }
+  let gerbe = null;
+  p.addEventListener("click", () => {
+    if (!window.mojs || calme) return;
+    const style = getComputedStyle(document.documentElement);
+    gerbe ??= new mojs.Burst({
+      parent: p, left: "50%", top: "50%", radius: { 60: 150 }, count: 14,
+      children: { shape: ["circle", "polygon"], radius: { 7: 0 }, points: 5,
+        fill: [style.getPropertyValue("--accent").trim(), style.getPropertyValue("--accent-2").trim()],
+        duration: 900, easing: "cubic.out" }
+    });
+    gerbe.replay();
+  });
+}
+
 /* ---------- Démarrage ---------- */
 entete();
 pied();
-({ accueil: pageAccueil, projets: pageProjets, competences: pageCompetences })[page]?.();
+({ accueil: pageAccueil, projets: pageProjets, competences: pageCompetences, apropos: pageAPropos })[page]?.();
 activerFrise();
 apparitions();
 reflets();

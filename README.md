@@ -19,6 +19,7 @@ projets × compétences. Un bouton bascule entre thème sombre et thème clair.
 index.html          Accueil et tableau croisé
 projets.html        Liste des projets, ou fiche d'un projet (projets.html?id=...)
 competences.html    Liste des compétences, ou fiche d'une compétence (competences.html?id=C4)
+apropos.html        Page plus personnelle : présentation, qualités, centres d'intérêt
 assets/
   css/style.css     Mise en forme
   js/data.js        TOUTES les données : profil, projets, liens avec les compétences
@@ -122,6 +123,10 @@ code: [{ titre: "Boucle de jeu", fichier: "assets/code/echecs/Main.java", langag
 
 Les extraits sont chargés par le navigateur : pour les voir en local, ouvrir le site via un serveur
 (`python3 -m http.server 8000`) et non en double-cliquant sur le fichier HTML.
+
+**Page « À propos »** : tout est dans `PERSO` (présentation, « en bref », moteurs, qualités, centres d'intérêt).
+Chaque carte a une `icone` parmi celles de `ICONES_PERSO` (dans `app.js`). Pour changer la photo, remplacer
+`assets/img/photo.jpg` par une image carrée d'au moins 400 × 400 px.
 
 **Logos d'écoles et d'entreprises** : les déclarer dans `ORGANISMES` (nom, logo, site), puis indiquer la clé
 dans `PROFIL.ecole`, dans `organisme` d'un projet (stage…) ou d'une étape de la `FRISE`.

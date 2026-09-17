@@ -14,7 +14,42 @@ const PROFIL = {
   cv: "",               // ex. "assets/docs/CV_Anton_Meimoun.pdf"
   github: "https://github.com/Bloombtw",
   linkedin: "https://www.linkedin.com/in/anton-meimoun-69a4522a6/",
-  email: "meimounanton@gmail.com"
+  email: "meimounanton@gmail.com",
+  // Photo : remplacer assets/img/photo.jpg par une image carrée (au moins 400 × 400 px)
+  photo: "assets/img/photo.jpg"
+};
+
+/* PAGE « À PROPOS »
+   icone : clé dans ICONES_PERSO (assets/js/app.js) */
+const PERSO = {
+  titre: "Bonjour, moi c'est Anton.",
+  presentation: [
+    "Étudiant en troisième année de BUT Informatique à l'IUT de Montreuil, je suis le parcours C, consacré à l'administration, à la gestion et à l'exploitation des données.",
+    "Je suis passionné par la data et l'intelligence artificielle. J'aime partir de données brutes, les nettoyer, les structurer puis les rendre utiles, comme dans la SAE sur la qualité de l'air mondial.",
+    "Je veux mettre ces compétences en pratique au sein d'une équipe dynamique et continuer à apprendre dans un environnement tourné vers l'innovation."
+  ],
+  enBref: [
+    ["Formation", "BUT Informatique, 3e année"],
+    ["Parcours", "C · données"],
+    ["Baccalauréat", "Général, mention bien"],
+    ["Expérience", "Stage de 8 semaines à l'AFPOLS"]
+  ],
+  moteurs: [
+    { icone: "ia", titre: "La data et l'IA", texte: "Comprendre ce que racontent les données, et comment l'intelligence artificielle peut les exploiter." },
+    { icone: "code", titre: "Construire", texte: "Passer d'un besoin à une application qui fonctionne : un jeu, une buvette, une base de données." },
+    { icone: "equipe", titre: "Le travail d'équipe", texte: "Répartir les tâches, relire le code ensemble et accueillir de nouveaux membres dans un projet." }
+  ],
+  qualites: [
+    { icone: "parole", titre: "Communication pédagogique", texte: "Un an d'encadrement scolaire bénévole." },
+    { icone: "temps", titre: "Gestion du temps", texte: "Accompagnement d'élèves en parallèle des études." },
+    { icone: "boussole", titre: "Autonomie", texte: "Avancer seul sur ma partie, avec GitHub pour suivre mon travail." },
+    { icone: "bug", titre: "Résolution de problèmes", texte: "Débogage méthodique sous IntelliJ." }
+  ],
+  interets: [
+    { icone: "violoncelle", titre: "Violoncelle", chiffre: "9 ans", texte: "Neuf ans de pratique, pour la rigueur et l'écoute." },
+    { icone: "football", titre: "Football", texte: "Le plaisir du jeu collectif." },
+    { icone: "halteres", titre: "Musculation", texte: "La régularité et le dépassement de soi." }
+  ]
 };
 
 /* ORGANISMES : écoles et entreprises, affichés avec leur logo
