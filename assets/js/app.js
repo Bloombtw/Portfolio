@@ -27,9 +27,12 @@ function logoDe(nom) {
   const o = OUTILS.find(x => x.nom === nom || x.touche === nom || (x.alias || []).includes(nom));
   return o?.logo || AUTRES_LOGOS[nom] || null;
 }
+/* « java » → java.svg ; « c.png » garde son extension */
+const cheminLogo = logo => `assets/img/logos/${logo}${logo.includes(".") ? "" : ".svg"}`;
+const estMono = logo => logo.startsWith("mono-") && !logo.includes(".");
 function imageLogo(logo, nom) {
-  const src = `assets/img/logos/${logo}.svg`;
-  return logo.startsWith("mono-")
+  const src = cheminLogo(logo);
+  return estMono(logo)
     // URL absolue : dans une variable CSS, un chemin relatif serait résolu depuis style.css
     ? `<span class="lg mono" style="--m:url('${new URL(src, document.baseURI).href}')" role="img" aria-label="${esc(nom)}"></span>`
     : `<img class="lg" src="${src}" alt="${esc(nom)}" loading="lazy">`;
@@ -194,7 +197,7 @@ function ligneProjet(p, i) {
   return `<a class="ligne rv" style="--d:${i}" href="projets.html?id=${p.id}" data-comps="${comps.join(" ")}">
     <span class="num mono">${deux(i + 1)}</span>
     <span class="ligne-corps">
-      <span class="ligne-titre">${esc(p.nom)}${p.aCompleter ? ` <span class="badge">en cours</span>` : ""}</span>
+      <span class="ligne-titre">${esc(p.nom)}${p.stage ? ` <span class="badge accent">stage</span>` : ""}${p.aCompleter ? ` <span class="badge">en cours</span>` : ""}</span>
       <span class="ligne-resume"><span class="mono">${esc(p.periode)}</span> · ${esc(p.resume)}</span>
     </span>
     <span class="ligne-meta">
@@ -203,6 +206,128 @@ function ligneProjet(p, i) {
     </span>
     ${fleche}
   </a>`;
+}
+
+/* ---------- Frise chronologique ---------- */
+function frise() {
+  const jalons = FRISE.map((e, i) => `
+    <button class="jalon" type="button" role="tab" id="jalon-${i}" data-i="${i}"
+      aria-selected="false" aria-controls="frise-detail" tabindex="-1">
+      <span class="jalon-point" aria-hidden="true"></span>
+      <span class="jalon-date mono">${esc(e.date)}</span>
+      <span class="jalon-type">${esc(e.type)}</span>
+    </button>`).join("");
+  return `<div class="frise rv" style="--n:${FRISE.length}">
+    <div class="frise-piste">
+      <div class="frise-jalons" role="tablist" aria-label="Étapes du parcours">
+        <div class="frise-rail" aria-hidden="true"><span class="frise-progres"></span></div>
+        ${jalons}
+      </div>
+    </div>
+    <div class="frise-bas">
+      <div class="frise-detail" id="frise-detail" role="tabpanel" aria-live="polite"></div>
+      <div class="frise-nav">
+        <button type="button" class="rond" data-pas="-1" aria-label="Étape précédente">←</button>
+        <span class="mono frise-compte"></span>
+        <button type="button" class="rond" data-pas="1" aria-label="Étape suivante">→</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function detailFrise(e) {
+  const projets = e.annee ? PROJETS.filter(p => p.annee === e.annee) : [];
+  const lies = projets.map(p => {
+    const logos = p.outils.filter(logoDe).slice(0, 3).map(o => imageLogo(logoDe(o), o)).join("");
+    return `<a class="mini" href="projets.html?id=${p.id}"><span class="mini-logos">${logos}</span>${esc(p.nom)}</a>`;
+  }).join("");
+  const fiche = e.projet && PROJETS.find(p => p.id === e.projet);
+  return `
+    <p class="frise-meta"><span class="badge accent">${esc(e.type)}</span><span class="mono">${esc(e.date)}</span></p>
+    <h3>${esc(e.titre)}</h3>
+    <p class="frise-texte">${esc(e.texte)}</p>
+    ${lies ? `<div class="minis">${lies}</div>` : ""}
+    ${fiche ? `<a class="btn" href="projets.html?id=${fiche.id}">Voir la fiche ${fleche}</a>` : ""}`;
+}
+
+/* Effets mo.js (chargé en asynchrone ; la frise marche sans) */
+let effets = null;
+function eclat(point, piste) {
+  if (!window.mojs || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const style = getComputedStyle(document.documentElement);
+  const accent = style.getPropertyValue("--accent").trim();
+  const accent2 = style.getPropertyValue("--accent-2").trim();
+  if (!effets) {
+    const commun = { parent: piste, left: 0, top: 0, isShowStart: false };
+    effets = {
+      gerbe: new mojs.Burst({ ...commun, radius: { 6: 34 }, count: 10, degree: 360,
+        children: { shape: "circle", radius: { 3.5: 0 }, fill: [accent, accent2], duration: 700, easing: "quad.out" } }),
+      anneau: new mojs.Shape({ ...commun, shape: "circle", radius: { 4: 22 }, fill: "none",
+        stroke: accent, strokeWidth: { 5: 0 }, opacity: { 1: 0 }, duration: 600, easing: "cubic.out" }),
+      eclats: new mojs.Burst({ ...commun, radius: { 14: 44 }, count: 6, angle: 30,
+        children: { shape: "line", radius: 5, scale: { 1: 0 }, stroke: accent2, strokeWidth: 2, duration: 550, easing: "quad.out", delay: 60 } })
+    };
+  }
+  const r = point.getBoundingClientRect(), b = piste.getBoundingClientRect();
+  const x = r.left + r.width / 2 - b.left + piste.scrollLeft;
+  const y = r.top + r.height / 2 - b.top + piste.scrollTop;
+  Object.values(effets).forEach(e => e.tune({ x, y }).replay());
+}
+
+function activerFrise() {
+  const racine = document.querySelector(".frise");
+  if (!racine) return;
+  const piste = racine.querySelector(".frise-piste");
+  const jalons = [...racine.querySelectorAll(".jalon")];
+  const detail = racine.querySelector(".frise-detail");
+  const compte = racine.querySelector(".frise-compte");
+  let actuel = -1;
+
+  const choisir = (i, { effet = true, focus = false } = {}) => {
+    i = Math.max(0, Math.min(jalons.length - 1, i));
+    if (i === actuel) return;
+    const sens = i > actuel ? 1 : -1;
+    actuel = i;
+    jalons.forEach((j, k) => {
+      j.setAttribute("aria-selected", k === i);
+      j.tabIndex = k === i ? 0 : -1;
+      j.classList.toggle("passe", k < i);
+    });
+    racine.style.setProperty("--p", jalons.length > 1 ? i / (jalons.length - 1) : 1);
+    detail.style.setProperty("--sens", sens);
+    detail.classList.remove("entre");
+    void detail.offsetWidth;
+    detail.innerHTML = detailFrise(FRISE[i]);
+    detail.classList.add("entre");
+    compte.textContent = `${deux(i + 1)} / ${deux(jalons.length)}`;
+    racine.querySelector('[data-pas="-1"]').disabled = i === 0;
+    racine.querySelector('[data-pas="1"]').disabled = i === jalons.length - 1;
+    // défilement horizontal de la frise seulement (pas de la page)
+    const j = jalons[i];
+    piste.scrollTo({ left: j.offsetLeft + j.offsetWidth / 2 - piste.clientWidth / 2, behavior: effet ? "smooth" : "auto" });
+    if (focus) jalons[i].focus({ preventScroll: true });
+    if (effet) eclat(jalons[i].querySelector(".jalon-point"), piste);
+  };
+
+  jalons.forEach((j, i) => j.addEventListener("click", () => choisir(i)));
+  racine.querySelectorAll("[data-pas]").forEach(b =>
+    b.addEventListener("click", () => choisir(actuel + Number(b.dataset.pas))));
+  racine.querySelector(".frise-jalons").addEventListener("keydown", e => {
+    const pas = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (pas) { e.preventDefault(); choisir(actuel + pas, { focus: true }); }
+    if (e.key === "Home") { e.preventDefault(); choisir(0, { focus: true }); }
+    if (e.key === "End") { e.preventDefault(); choisir(jalons.length - 1, { focus: true }); }
+  });
+
+  // Au départ : première étape, puis la frise se remplit jusqu'à l'étape en cours à l'apparition
+  choisir(0, { effet: false });
+  const derniere = jalons.length - 1;
+  const io = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    io.disconnect();
+    setTimeout(() => choisir(derniere), 600);
+  }, { threshold: 0.4 });
+  io.observe(racine);
 }
 
 /* ---------- Page d'accueil ---------- */
@@ -244,27 +369,32 @@ function pageAccueil() {
           </div>
         </div>
       </div>
-      <a class="descendre" href="#competences" aria-label="Descendre"><span></span></a>
+      <a class="descendre" href="#parcours" aria-label="Descendre"><span></span></a>
+    </section>
+
+    <section class="wrap section" id="parcours">
+      ${entreeSection("01", "Parcours", "De l'encadrement scolaire au stage : cliquez sur une étape, ou utilisez les flèches du clavier.")}
+      ${frise()}
     </section>
 
     <section class="wrap section" id="competences">
-      ${entreeSection("01", "Compétences", "Les trois compétences du parcours C. Chaque jauge montre la part des apprentissages critiques démontrés par au moins un projet.")}
+      ${entreeSection("02", "Compétences", "Les trois compétences du parcours C. Chaque jauge montre la part des apprentissages critiques démontrés par au moins un projet.")}
       <div class="grille-comp">${COMPS.map(carteCompetence).join("")}</div>
     </section>
 
     <section class="wrap section" id="projets">
-      ${entreeSection("02", "Projets", "Les projets menés pendant le BUT et les compétences qu'ils mobilisent.")}
+      ${entreeSection("03", "Projets", "Les projets menés pendant le BUT et les compétences qu'ils mobilisent.")}
       <div class="lignes">${PROJETS.map(ligneProjet).join("")}</div>
     </section>
 
     <section class="wrap section" id="croise">
-      ${entreeSection("03", "Projets × compétences", "Chaque ligne est un projet, chaque colonne une compétence. Une case indique le niveau des apprentissages démontrés ; cliquez dessus pour lire la preuve.")}
+      ${entreeSection("04", "Projets × compétences", "Chaque ligne est un projet, chaque colonne une compétence. Une case indique le niveau des apprentissages démontrés ; cliquez dessus pour lire la preuve.")}
       ${tableauCroise()}
     </section>
 
     <section class="wrap section" id="contact">
       <div class="final rv">
-        <p class="surtitre"><span>04</span>Et après ?</p>
+        <p class="surtitre"><span>05</span>Et après ?</p>
         <p class="final-texte">${esc(PROFIL.objectif)}</p>
         <div class="actions">
           ${contact.map(([u, t], i) => `<a class="btn${i ? "" : " plein"}" href="${esc(u)}">${t}</a>`).join("")}
@@ -296,7 +426,7 @@ function ficheProjet(p) {
     <article class="wrap fiche">
       <a class="retour rv" href="projets.html">← Tous les projets</a>
       <header class="fiche-tete">
-        <p class="surtitre rv"><span>${deux(idx + 1)}</span>Projet</p>
+        <p class="surtitre rv"><span>${deux(idx + 1)}</span>${p.stage ? "Stage" : "Projet"}</p>
         <h1 class="rv" style="--d:1">${esc(p.nom)}</h1>
         <p class="fiche-resume rv" style="--d:2">${esc(p.resume)}</p>
         <dl class="meta rv" style="--d:3">
@@ -480,6 +610,7 @@ function etoiles() {
 entete();
 pied();
 ({ accueil: pageAccueil, projets: pageProjets, competences: pageCompetences })[page]?.();
+activerFrise();
 apparitions();
 reflets();
 etoiles();

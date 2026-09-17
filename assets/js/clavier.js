@@ -8,17 +8,19 @@ const info = document.getElementById("info-touche");
 const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const tactile = matchMedia("(hover: none)").matches;
 
-/* Couleurs des touches par catégorie : [capuchon, encre des icônes mono] */
+/* Couleurs des touches par catégorie, dans l'ordre d'apparition dans OUTILS :
+   [capuchon, encre des icônes mono] */
 const PALETTE = [
-  ["#dfe6ff", "#1c2b6b"],  // bleu pâle
-  ["#f1efe7", "#1b1c22"],  // crème
-  ["#e6dcff", "#3b1f7a"],  // lilas
-  ["#262933", "#e9ebf2"],  // graphite
-  ["#e2e4ea", "#1b1c22"]   // gris clair
+  ["#dfe6ff", "#1c2b6b"],  // Langages : bleu pâle
+  ["#f1efe7", "#1b1c22"],  // Données : crème
+  ["#e6dcff", "#3b1f7a"],  // Conception : lilas
+  ["#fbe9dc", "#5a2a0c"],  // Frameworks : pêche
+  ["#262933", "#e9ebf2"],  // Outils : graphite
+  ["#e2e4ea", "#1b1c22"]   // Systèmes : gris clair
 ];
 const U = 1;          // largeur d'une touche standard
 const JEU = 0.1;      // espace entre deux touches
-const LARGEUR_RANGEE = 5.5;
+const LARGEUR_RANGEE = 7;
 
 function disponible() {
   try {
@@ -42,9 +44,9 @@ function disposition(outils) {
 
 /* Charge un logo ; les icônes « mono-… » sont recolorées avec l'encre de la touche */
 async function chargerLogo(logo, encre) {
-  const url = `assets/img/logos/${logo}.svg`;
+  const url = cheminLogo(logo);
   let src = url;
-  if (logo.startsWith("mono-")) {
+  if (estMono(logo)) {
     const svg = (await (await fetch(url)).text()).replaceAll("currentColor", encre);
     src = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
   }
@@ -65,8 +67,12 @@ function etiquette(outil, largeur, couleur) {
   t.anisotropy = 8;
   if (outil.logo) {
     chargerLogo(outil.logo, couleur).then(img => {
+      // le logo tient dans un carré de 56 % de la touche, proportions conservées
       const cote = px * 0.56;
-      g.drawImage(img, (c.width - cote) / 2, (px - cote) / 2, cote, cote);
+      const ratio = (img.naturalWidth || 1) / (img.naturalHeight || 1);
+      const w = ratio >= 1 ? Math.min(cote * ratio, c.width * 0.8) : cote * ratio;
+      const h = w / ratio;
+      g.drawImage(img, (c.width - w) / 2, (px - h) / 2, w, h);
       t.needsUpdate = true;
     }).catch(() => texte(g, c, outil.touche || outil.nom, couleur, t));
     return t;
@@ -114,7 +120,7 @@ async function demarrer() {
   soleil.position.set(-4, 9, 5);
   soleil.castShadow = true;
   soleil.shadow.mapSize.set(1024, 1024);
-  Object.assign(soleil.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6 });
+  Object.assign(soleil.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8 });
   soleil.shadow.radius = 4;
   scene.add(soleil);
   const contre = new THREE.PointLight(0x8ea6ff, 30, 20);
@@ -183,10 +189,12 @@ async function demarrer() {
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     // recule la caméra quand la zone est étroite pour garder le clavier entier
-    const recul = Math.max(1, 1.2 / camera.aspect);
+    // la caméra recule avec la taille du clavier (réglée pour 5,5 × 4 unités)
+    const echelle = Math.max(largeur / 5.5, profondeur / 4) * 0.9;
+    const recul = Math.max(1, 1.2 / camera.aspect) * echelle;
     camera.position.set(0, 8.2 * recul, 8.6 * recul);
     // sur une zone étroite, le clavier est recentré verticalement
-    VISEE.z = camera.aspect < 1.4 ? 0.5 : 1.1;
+    VISEE.z = (camera.aspect < 1.4 ? 0.5 : 1.1) * echelle;
     camera.lookAt(VISEE);
     camera.updateProjectionMatrix();
   };

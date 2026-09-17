@@ -3,13 +3,14 @@
 Portfolio de 3e année de BUT Informatique (parcours C, IUT de Montreuil).
 Site statique en HTML, CSS et JavaScript, sans compilation. Seul le clavier 3D de l'accueil
 charge [Three.js](https://threejs.org) depuis un CDN ; sans lui, une grille de touches en CSS s'affiche à la place.
+La frise chronologique utilise [mo.js](https://github.com/mojs/mojs) pour ses effets ; sans lui, elle fonctionne sans animation d'éclat.
 
 Le site propose une double lecture :
 - **par projets** : chaque projet et les compétences qu'il a mobilisées ;
 - **par compétences** : chaque compétence (C4, C5, C6), ses apprentissages critiques par niveau et les projets qui les prouvent.
 
 La page d'accueil présente un clavier 3D interactif (une touche par outil : survoler ou toucher
-une touche affiche sa description), puis les compétences, les projets et le tableau croisé
+une touche affiche sa description), une frise chronologique interactive du parcours, puis les compétences, les projets et le tableau croisé
 projets × compétences. Un bouton bascule entre thème sombre et thème clair.
 
 ## Structure
@@ -77,6 +78,14 @@ Crédits : logos de [Devicon](https://devicon.dev) (licence MIT) et de [Simple I
 `mono-algo` ont été dessinées pour ce site.
 
 **Ajouter un projet** : copier un bloc de `PROJETS` et modifier ses champs. L'`id` sert dans l'adresse de la fiche (lettres minuscules et tirets).
+`annee` (`BUT1`, `BUT2`, `BUT3`) rattache le projet à l'étape correspondante de la frise ; `stage: true` affiche le badge « stage ».
+
+**Frise chronologique** : chaque entrée de `FRISE` est une étape. `annee` liste automatiquement les projets
+de la même année, `projet` ajoute un lien vers une fiche :
+
+```js
+{ date: "2026", type: "Stage", titre: "Stage à l'AFPOLS · 8 semaines", projet: "stage-afpols", texte: "…" }
+```
 
 **Relier un projet à une compétence** : dans `liens`, indiquer la compétence, le code de l'apprentissage critique et la preuve :
 
@@ -107,7 +116,9 @@ ressources: [{ label: "Vidéo de démonstration", url: "https://..." }]
 
 ## Reste à faire
 
-- Ajouter les projets de 3e année (SAÉ, alternance ou stage) pour démontrer le niveau 3.
-- Compléter la fiche de la SAE Développement web.
+- Compléter la fiche du stage à l'AFPOLS (rôle, résultats, outils) et confirmer ses preuves.
+- Ajouter les projets de 3e année (`annee: "BUT3"`) pour démontrer le niveau 3.
+- Compléter la fiche du site pour les JO.
+- Vérifier l'année du baccalauréat dans la frise (2024).
 - Ajouter le CV, les captures (MCD, jeu) et les liens (dépôt échecs, vidéo, jeux de tests).
 - Confirmer ou retirer les preuves marquées « à confirmer ».

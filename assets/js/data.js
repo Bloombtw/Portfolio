@@ -1,54 +1,69 @@
 /* =========================================================
    DONNÉES DU PORTFOLIO — c'est le seul fichier à modifier
-   pour ajouter un projet ou une preuve.
+   pour ajouter un projet, une preuve ou une étape de la frise.
    ========================================================= */
 
 const PROFIL = {
   nom: "Anton Meimoun",
   formation: "BUT Informatique, IUT de Montreuil",
   parcours: "Parcours C : administration, gestion et exploitation des données",
-  accroche: "Étudiant en 3e année, je conçois des bases de données et des applications qui les exploitent, et je travaille en équipe sur des projets menés de bout en bout.",
-  objectif: "À compléter : poste ou poursuite d'études visée après le BUT.",
-  // Déposer le CV dans assets/docs/ puis garder ce chemin
-  cv: "",               // ex. "assets/docs/CV_Anton_Meimoun.pdf" une fois le PDF déposé
+  accroche: "Étudiant en 3e année, passionné par la data et l'intelligence artificielle. Je conçois des bases de données et les applications qui les exploitent, en équipe et de bout en bout.",
+  objectif: "Mettre mes compétences en données au service d'une équipe, et approfondir la data et l'intelligence artificielle dans un environnement tourné vers l'innovation.",
+  // Déposer le CV dans assets/docs/ puis renseigner son chemin
+  cv: "",               // ex. "assets/docs/CV_Anton_Meimoun.pdf"
   github: "https://github.com/Bloombtw",
-  linkedin: "",          // ex. "https://www.linkedin.com/in/..."
-  email: ""              // ex. "anton.meimoun@example.com"
+  linkedin: "https://www.linkedin.com/in/anton-meimoun-69a4522a6/",
+  email: "meimounanton@gmail.com"
 };
 
 /* OUTILS : chaque entrée devient une touche du clavier 3D de l'accueil.
-   logo : nom du fichier dans assets/img/logos/ (sans .svg). Les fichiers
-          « mono-… » sont des icônes d'une seule couleur, adaptée au thème.
+   logo : fichier dans assets/img/logos/. Sans extension, « .svg » est ajouté ;
+          un PNG s'écrit avec son extension (ex. "javafx.png"). Les fichiers
+          « mono-….svg » sont des icônes d'une seule couleur, adaptée au thème.
    alias : autres noms sous lesquels l'outil apparaît dans les projets
    touche : texte imprimé sur la touche si l'outil n'a pas de logo
    largeur : largeur de la touche (1 par défaut)
-   Les touches sont posées dans l'ordre de la liste et passent à la rangée
-   suivante quand la rangée est pleine. La catégorie donne la couleur. */
+   Les touches sont posées dans l'ordre de la liste, 7 unités par rangée.
+   La catégorie donne la couleur. */
 const OUTILS = [
-  { cat: "Langages", nom: "Java", logo: "java", desc: "Langage principal de MineTaRouille (JavaFX, MVC) et du moteur de la SAE Jeu d'échecs." },
-  { cat: "Langages", nom: "Python", logo: "python", desc: "Scripts et exercices d'algorithmique." },
-  { cat: "Langages", nom: "C", logo: "c", desc: "Programmation bas niveau : mémoire, pointeurs, structures." },
-  { cat: "Langages", nom: "SQL", logo: "mono-sql", desc: "Création de bases, contraintes d'intégrité et requêtes d'interrogation." },
-  { cat: "Langages", nom: "HTML / CSS", logo: "html", touche: "HTML", desc: "Pages web, dont ce portfolio." },
-  { cat: "Données", nom: "PostgreSQL", logo: "postgresql", touche: "Postgres", largeur: 1.5, desc: "SGBD de la SAE Base de données : création de la base et requêtes." },
+  { cat: "Langages", nom: "Java", logo: "java", desc: "MineTaRouille (JavaFX, MVC) et le moteur du jeu d'échecs." },
+  { cat: "Langages", nom: "Python", logo: "python", desc: "Scripts d'extraction, de nettoyage et de fusion de données (SAE Qualité de l'air)." },
+  { cat: "Langages", nom: "JavaScript", logo: "javascript", desc: "Interactions côté navigateur, dont ce portfolio." },
+  { cat: "Langages", nom: "PHP", logo: "php", desc: "Back-end orienté objet de la buvette associative : sessions, routage, PDO." },
+  { cat: "Langages", nom: "C", logo: "c.png", desc: "Programmation bas niveau : mémoire, pointeurs, structures." },
+  { cat: "Langages", nom: "SQL", logo: "mono-sql", desc: "Création de bases, contraintes, jointures et index." },
+  { cat: "Langages", nom: "HTML / CSS", logo: "html", alias: ["HTML", "CSS"], desc: "Sites web, interface responsive de la buvette et ce portfolio." },
+  { cat: "Données", nom: "PostgreSQL", logo: "postgresql", largeur: 2, desc: "SGBD de la SAE Base de données : boutique en ligne complète." },
+  { cat: "Données", nom: "MySQL", logo: "mysql", desc: "Base relationnelle de la buvette et du poste de développement." },
+  { cat: "Données", nom: "MongoDB", logo: "mongodb", desc: "Base de données orientée documents." },
   { cat: "Données", nom: "pgAdmin", logo: "mono-pgadmin", desc: "Administration et interrogation des bases PostgreSQL." },
-  { cat: "Conception", nom: "Modélisation MCD / MLD", logo: "mono-mcd", alias: ["MCD / MLD", "Modélisation"], touche: "MCD", desc: "Modèle conceptuel de 8 entités construit à partir d'un cahier des charges." },
-  { cat: "Conception", nom: "JavaFX", logo: "mono-javafx", desc: "Interface graphique de MineTaRouille : rendu du monde et inventaire." },
-  { cat: "Conception", nom: "Architecture MVC", logo: "mono-mvc", touche: "MVC", desc: "Séparation modèle, vue et contrôleur dans MineTaRouille." },
-  { cat: "Outils", nom: "Git / GitHub", logo: "git", touche: "Git", desc: "Dépôts partagés et branches pour organiser le travail en équipe." },
-  { cat: "Outils", nom: "Trello", logo: "trello", desc: "Suivi des tâches de MineTaRouille." },
-  { cat: "Outils", nom: "IntelliJ", logo: "intellij", desc: "IDE pour les projets Java." },
+  { cat: "Données", nom: "Qlik", logo: "qlik", largeur: 2, desc: "Visualisation d'un sous-ensemble des données sur la qualité de l'air." },
+  { cat: "Conception", nom: "Modélisation MCD / MLD", logo: "mono-mcd", alias: ["MCD / MLD", "Modélisation", "Modélisation relationnelle"], desc: "Modèles conceptuels et logiques construits à partir d'un cahier des charges." },
+  { cat: "Conception", nom: "UML", logo: "mono-uml", desc: "Diagrammes de classes et de cas d'utilisation." },
+  { cat: "Conception", nom: "Architecture MVC", logo: "mono-mvc", alias: ["MVC"], desc: "Séparation modèle, vue, contrôleur dans MineTaRouille et la buvette." },
+  { cat: "Conception", nom: "Design Patterns", logo: "mono-patterns", largeur: 2, desc: "Solutions de conception réutilisables, appliquées pendant la refactorisation de MineTaRouille." },
+  { cat: "Frameworks", nom: "JavaFX", logo: "javafx.png", desc: "Interface graphique de MineTaRouille : rendu du monde et inventaire." },
+  { cat: "Frameworks", nom: "JUnit", logo: "junit", alias: ["Tests"], desc: "Tests unitaires des projets Java." },
+  { cat: "Outils", nom: "Git / GitHub", logo: "git", alias: ["Git"], desc: "Dépôts partagés, branches et suivi du travail en équipe." },
+  { cat: "Outils", nom: "Trello", logo: "trello", desc: "Suivi des tâches de MineTaRouille et du site pour les JO." },
+  { cat: "Outils", nom: "IntelliJ", logo: "intellij", desc: "IDE JetBrains pour Java et PHP." },
+  { cat: "Outils", nom: "PyCharm", logo: "pycharm", desc: "IDE pour les scripts Python." },
   { cat: "Outils", nom: "VS Code", logo: "vscode", desc: "Éditeur pour le web et les scripts." },
-  { cat: "Outils", nom: "Suite Office", logo: "office", touche: "Office", desc: "Rapports, présentations et documents de projet." },
-  { cat: "Systèmes", nom: "Linux", logo: "mono-linux", desc: "Environnement de travail quotidien à l'IUT." },
-  { cat: "Systèmes", nom: "Windows", logo: "windows", desc: "Poste personnel et outils bureautiques." },
-  { cat: "Systèmes", nom: "VirtualBox", logo: "mono-virtualbox", largeur: 2, desc: "Machines virtuelles pour tester des systèmes et des services." }
+  { cat: "Outils", nom: "Suite Office", logo: "office", largeur: 2, desc: "Rapports, présentations et documents de projet." },
+  { cat: "Systèmes", nom: "Bash", logo: "bash", desc: "Commandes et scripts shell sous Linux." },
+  { cat: "Systèmes", nom: "Linux", logo: "mono-linux", desc: "Environnement de travail quotidien, poste virtuel de développement." },
+  { cat: "Systèmes", nom: "Windows", logo: "windows", desc: "Poste personnel et parc applicatif en stage." },
+  { cat: "Systèmes", nom: "Apache", logo: "apache", desc: "Serveur web du poste de développement (Apache, PHP, MySQL)." },
+  { cat: "Systèmes", nom: "VirtualBox", logo: "mono-virtualbox", largeur: 3, desc: "Machine virtuelle Linux configurée pour le développement." }
 ];
 
-/* Logos des outils cités dans les projets mais absents du clavier */
+/* Logos des notions citées dans les projets mais absentes du clavier */
 const AUTRES_LOGOS = {
-  "Tests": "mono-tests",
-  "Algorithmique": "mono-algo"
+  "Algorithmique": "mono-algo",
+  "Modélisation OLAP": "mono-olap",
+  "Cybersécurité": "mono-cyber",
+  "Parc applicatif": "mono-parc",
+  "Nettoyage de données": "mono-data"
 };
 
 /* Compétences du parcours C (numérotation nationale C4, C5, C6).
@@ -101,29 +116,108 @@ const COMPETENCES = {
       "6.3d": "Accompagner le management de projet informatique" } } } }
 };
 
-/* PROJETS
+/* PROJETS, du plus ancien au plus récent
+   annee : rattache le projet à une étape de la frise (BUT1, BUT2, BUT3)
+   stage : true pour un stage
    liens : { Cx: { "AC": { preuve: "texte", aConfirmer: true|false } } }
+   outils : noms d'outils ; ceux qui ont un logo s'affichent en logo
    images : chemins vers assets/img/ (facultatif)
    ressources : [{ label, url }] (dépôts, vidéos, PDF…) */
 const PROJETS = [
   {
-    id: "sae-bd",
-    nom: "SAE Base de données",
+    id: "sae-echecs",
+    nom: "Le jeu d'échecs",
+    annee: "BUT1",
     periode: "BUT1",
-    equipe: "En groupe",
-    resume: "Conception et exploitation de la base de données d'une boutique en ligne de câbles.",
-    contexte: "SAE de première année consacrée à la conception et à l'exploitation d'une base de données relationnelle à partir d'un cahier des charges.",
-    objectif: "Réaliser le MCD, créer la base et interroger les données : utilisateurs, catalogue de câbles, panier, commandes et suivi de leur état.",
-    role: "Modélisation du MCD, création de la base sous PostgreSQL et écriture des requêtes SQL.",
-    resultats: "Base fonctionnelle, requêtes abouties et livrables conformes.",
-    outils: ["PostgreSQL", "pgAdmin", "SQL", "MCD / MLD"],
-    images: [],        // ex. ["assets/img/sae-bd-mcd.png"]
-    ressources: [],    // ex. [{ label: "Script SQL", url: "assets/docs/sae-bd.sql" }]
+    equipe: "En équipe",
+    resume: "Implémentation d'un besoin client : un moteur de jeu d'échecs en Java.",
+    contexte: "SAE de première année de développement en équipe, à partir d'un besoin client.",
+    objectif: "Implémenter un moteur de jeu d'échecs capable de détecter l'échec et l'échec et mat.",
+    role: "Développement du moteur, écriture des jeux de tests et préparation de la soutenance.",
+    resultats: "Fonctionnalités opérationnelles, soutenance réussie.",
+    outils: ["Java", "JUnit", "Git / GitHub"],
+    images: [],
+    ressources: [],   // ajouter le lien GitHub, la vidéo et les jeux de tests
+    liens: {
+      C5: {
+        "5.1a": { preuve: "Moteur développé pour répondre au besoin exprimé par le client." },
+        "5.1b": { preuve: "Dépôt Git partagé et branches pour organiser le travail de l'équipe." }
+      },
+      C6: {
+        "6.1d": { preuve: "Développement à plusieurs sur un même code." },
+        "6.2d": { preuve: "Soutenance et démonstration de la détection de l'échec et mat." }
+      }
+    }
+  },
+  {
+    id: "sae-poste",
+    nom: "Poste de développement",
+    annee: "BUT1",
+    periode: "BUT1",
+    equipe: "Individuel puis en groupe",
+    resume: "Installation d'un poste virtuel Linux avec MySQL, Apache2 et PHP.",
+    contexte: "SAE d'installation d'un poste pour le développement.",
+    objectif: "Installer un poste virtuel Linux équipé de MySQL, Apache2 et PHP, créer une base de données, puis un site qui en affiche le contenu.",
+    role: "Configuration individuelle de chaque logiciel, puis mise en commun à travers un site PHP servi par Apache qui affiche le contenu de la base créée en amont.",
+    resultats: "Poste fonctionnel et site web affichant les données de la base.",
+    outils: ["Linux", "VirtualBox", "Apache", "MySQL", "PHP", "Bash"],
+    images: [],
+    ressources: [],
     liens: {
       C4: {
-        "4.1c": { preuve: "MCD de 8 entités (utilisateur, câble, commande, état…) construit à partir du cahier des charges." },
-        "4.1a": { preuve: "Script de création de la base et requêtes d'interrogation." },
-        "4.2b": { preuve: "Intégrité référentielle assurée par des clés primaires composées et des clés étrangères.", aConfirmer: true }
+        "4.1a": { preuve: "Base MySQL créée puis interrogée depuis le site PHP." },
+        "4.1b": { preuve: "Page web qui affiche le contenu de la base.", aConfirmer: true }
+      },
+      C6: {
+        "6.1a": { preuve: "Installation et configuration d'un environnement Linux, Apache, MySQL, PHP.", aConfirmer: true }
+      }
+    }
+  },
+  {
+    id: "sae-jo",
+    nom: "Site pour les JO",
+    annee: "BUT1",
+    periode: "BUT1",
+    equipe: "En équipe",
+    resume: "Création d'un site web autour des Jeux olympiques, en réponse à un besoin client.",
+    contexte: "SAE de première année : concevoir un site web pour un client.",
+    objectif: "Créer un site web qui réponde au besoin exprimé par le client.",
+    role: "Création du site et suivi de l'équipe via Trello.",
+    resultats: "Site web livré.",
+    outils: ["HTML / CSS", "Trello"],
+    images: [],
+    ressources: [],
+    aCompleter: true,
+    liens: {
+      C5: {
+        "5.1a": { preuve: "Site conçu pour répondre au besoin du client." },
+        "5.1b": { preuve: "Tableau Trello pour suivre les tâches de l'équipe." }
+      },
+      C6: {
+        "6.1d": { preuve: "Travail en équipe coordonné sur Trello.", aConfirmer: true }
+      }
+    }
+  },
+  {
+    id: "sae-bd",
+    nom: "Création d'une base de données",
+    annee: "BUT1",
+    periode: "BUT1 · SAE 1.04",
+    equipe: "En groupe",
+    resume: "Base de données relationnelle complète d'une boutique en ligne, sous PostgreSQL.",
+    contexte: "SAE 1.04 consacrée à la conception et à l'exploitation d'une base de données relationnelle à partir d'un cahier des charges.",
+    objectif: "Concevoir et mettre en place la base d'une boutique en ligne : utilisateurs, catalogue, panier, commandes et suivi de leur état.",
+    role: "Modèles conceptuel et logique (MCD, MLD), création de la base sous PostgreSQL, écriture et optimisation des requêtes (jointures, contraintes, index), jeu de données de test.",
+    resultats: "Base fonctionnelle, peuplée et testée avec 5 utilisateurs et 50 produits. Livrables et documentation conformes.",
+    outils: ["PostgreSQL", "pgAdmin", "SQL", "MCD / MLD"],
+    images: [],        // ex. ["assets/img/sae-bd-mcd.png"]
+    ressources: [],
+    liens: {
+      C4: {
+        "4.1c": { preuve: "MCD et MLD construits à partir du cahier des charges." },
+        "4.1a": { preuve: "Script de création, jeu de test de 5 utilisateurs et 50 produits, requêtes d'interrogation." },
+        "4.2a": { preuve: "Requêtes optimisées avec des jointures et des index.", aConfirmer: true },
+        "4.2b": { preuve: "Cohérence des données assurée par des contraintes et des clés étrangères." }
       },
       C6: {
         "6.1d": { preuve: "Travail de modélisation réparti au sein du groupe." }
@@ -131,31 +225,9 @@ const PROJETS = [
     }
   },
   {
-    id: "sae-echecs",
-    nom: "SAE Jeu d'échecs",
-    periode: "BUT1",
-    equipe: "En équipe",
-    resume: "Moteur de jeu d'échecs en Java avec détection de l'échec et mat.",
-    contexte: "SAE de première année de développement en équipe.",
-    objectif: "Implémenter un moteur de jeu d'échecs capable de détecter l'échec et l'échec et mat.",
-    role: "Développement du moteur, écriture des jeux de tests et préparation de la soutenance.",
-    resultats: "Fonctionnalités opérationnelles, soutenance réussie.",
-    outils: ["Java", "Git / GitHub", "Tests"],
-    images: [],
-    ressources: [],   // ajouter le lien GitHub, la vidéo et les jeux de tests
-    liens: {
-      C5: {
-        "5.1b": { preuve: "Dépôt Git partagé et branches pour organiser le travail de l'équipe." }
-      },
-      C6: {
-        "6.1d": { preuve: "Développement à plusieurs sur un même code." },
-        "6.2d": { preuve: "Soutenance et vidéo de démonstration de l'échec et mat." }
-      }
-    }
-  },
-  {
     id: "sae-algo",
-    nom: "SAE Recherche algorithmique",
+    nom: "Recherche algorithmique",
+    annee: "BUT1",
     periode: "BUT1",
     equipe: "Individuel, encadré",
     resume: "Comparaison de stratégies de recherche de chemin dans un labyrinthe.",
@@ -175,15 +247,16 @@ const PROJETS = [
   {
     id: "minetarouille",
     nom: "MineTaRouille",
-    periode: "S2, 2024–2025",
+    annee: "BUT1",
+    periode: "BUT1 · S2, 2025",
     equipe: "3 personnes, 2 mois",
-    resume: "Jeu 2D de type Terraria en Java et JavaFX.",
+    resume: "Jeu 2D de type Terraria en Java et JavaFX, en programmation orientée objet.",
     contexte: "SAE S2.01, S2.02, S2.05 et S2.06, réalisées autour d'un même projet de jeu.",
     objectif: "Développer un jeu où le joueur mine, pose des blocs et se déplace, avec un rendu fluide et une sauvegarde de la partie.",
     role: "Gestion des blocs (types, comportements, interactions), inventaire graphique, déplacements avec gravité et collisions.",
     resultats: "Jeu jouable avec génération de carte, inventaire et sauvegarde. Architecture MVC et choix techniques documentés.",
     outils: ["Java", "JavaFX", "Architecture MVC", "Git / GitHub", "Trello", "IntelliJ"],
-    images: [],      // ex. ["assets/img/mine-blocs.png", "assets/img/mine-inventaire.png"]
+    images: [],
     ressources: [{ label: "Dépôt GitHub", url: "https://github.com/Bloombtw/MineTaRouille" }],
     liens: {
       C4: {
@@ -201,30 +274,138 @@ const PROJETS = [
     }
   },
   {
-    id: "sae-web",
-    nom: "SAE Développement web",
-    periode: "BUT2",
-    equipe: "Avec Sorana et Djeneba",
-    resume: "Application web réalisée à trois.",
-    contexte: "À compléter.",
-    objectif: "À compléter.",
-    role: "À compléter.",
-    resultats: "À compléter.",
-    outils: ["À compléter"],
+    id: "sae-buvette",
+    nom: "Buvette associative",
+    annee: "BUT2",
+    periode: "BUT2 · 3 mois, 2025",
+    equipe: "3 personnes (Anton, Sorana, Djeneba)",
+    resume: "Application web PHP de gestion d'une buvette associative, en architecture MVC.",
+    contexte: "SAE de développement web : une plateforme de gestion pour une buvette associative, hébergée localement.",
+    objectif: "Concevoir une application aux rôles distincts : espace client, administration, module barman, module gestionnaire et sélection de l'association, avec une authentification sécurisée.",
+    role: "Analyse et conception (personas, user stories, backlog), modélisation de la base MySQL, back-end PHP orienté objet (sessions, routage, accès aux données par PDO), hachage des mots de passe, interface ergonomique et responsive.",
+    resultats: "Application fonctionnelle, structurée en modèles, vues et contrôleurs pour chaque module, avec authentification par mots de passe hachés.",
+    outils: ["PHP", "MySQL", "SQL", "Architecture MVC", "HTML / CSS", "IntelliJ", "Git / GitHub"],
     images: [],
     ressources: [{ label: "Dépôt GitHub", url: "https://github.com/DUT-Info-Montreuil/SAE_Dev_Web_Anton_Sorana_Djeneba" }],
+    liens: {
+      C4: {
+        "4.1c": { preuve: "Base relationnelle MySQL modélisée pour les utilisateurs et les modules métiers." },
+        "4.1a": { preuve: "Script SQL de structure et requêtes via PDO." },
+        "4.2b": { preuve: "Mots de passe hachés (password_hash) et sessions pour l'authentification." },
+        "4.2c": { preuve: "Données restituées par programmation dans les vues de chaque module." }
+      },
+      C5: {
+        "5.1a": { preuve: "Personas construits pour comprendre les utilisateurs de la buvette." },
+        "5.2b": { preuve: "Besoins formalisés en user stories et en backlog." },
+        "5.1b": { preuve: "Dépôt Git commun." }
+      },
+      C6: {
+        "6.1d": { preuve: "Projet mené à trois." }
+      }
+    }
+  },
+  {
+    id: "refacto-mtr",
+    nom: "Refactorisation de MineTaRouille",
+    annee: "BUT2",
+    periode: "BUT2",
+    equipe: "En équipe, avec un nouveau membre",
+    resume: "Reprise du jeu : propreté du code, journaux de bord, suivi Git et soutenance.",
+    contexte: "SAE de deuxième année : reprendre et améliorer le code de MineTaRouille.",
+    objectif: "Mettre en avant la propreté du code, documenter le travail dans des journaux de bord et suivre l'avancement avec Git.",
+    role: "Création du nouveau dépôt, intégration d'un nouveau membre (explication du code, de la documentation Markdown et du Trello, aide à la configuration de son environnement), relecture du code en groupe et répartition des tâches de refactorisation.",
+    resultats: "Code refactorisé, journaux de bord tenus et soutenance.",
+    outils: ["Java", "JavaFX", "Design Patterns", "Git / GitHub", "Trello", "IntelliJ"],
+    images: [],
+    ressources: [],
+    liens: {
+      C5: {
+        "5.1b": { preuve: "Nouveau dépôt Git et tableau Trello pour suivre les fonctionnalités." },
+        "5.2d": { preuve: "Journaux de bord et suivi Git de l'avancement." }
+      },
+      C6: {
+        "6.1c": { preuve: "Tâches de refactorisation déléguées à chaque membre après une relecture commune." },
+        "6.2b": { preuve: "Intégration d'un nouveau membre : présentation du code, de la documentation et du Trello." },
+        "6.2c": { preuve: "Accompagnement du nouveau membre dans la configuration de son environnement." },
+        "6.2d": { preuve: "Journaux de bord et soutenance." }
+      }
+    }
+  },
+  {
+    id: "sae-air",
+    nom: "Qualité de l'air mondial",
+    annee: "BUT2",
+    periode: "BUT2 · SAE S4.C.01, 2026",
+    equipe: "4 personnes",
+    resume: "Croisement de données mondiales sur la pollution de l'air, la démographie et l'économie.",
+    contexte: "SAE S4.C.01 de gestion et qualité des données, à partir de trois sources : OpenAQ (pollution), World Cities (démographie) et la Banque mondiale (indicateurs socio-économiques).",
+    objectif: "Analyser et croiser ces jeux de données dans une base relationnelle, puis dans un modèle multidimensionnel adapté à l'analyse.",
+    role: "Scripts Python d'extraction, de nettoyage, de dédoublonnage et de fusion des fichiers CSV. Base normalisée en 3NF de 6 tables (Pays, Ville, Station, Polluant, Mesure, indicateur_pays). Schéma en constellation à deux tables de faits (mesures horaires, indicateurs annuels). Visualisation dans Qlik et rapport.",
+    resultats: "Requêtes analytiques en moyenne 15 fois plus rapides qu'avec le modèle relationnel. Visualisation d'un sous-ensemble des données et rapport explicatif.",
+    outils: ["Python", "SQL", "Modélisation relationnelle", "Modélisation OLAP", "Nettoyage de données", "Qlik", "PyCharm"],
+    images: [],
+    ressources: [],
+    liens: {
+      C4: {
+        "4.2a": { preuve: "Modèle normalisé en 3NF puis schéma en constellation, 15 fois plus rapide sur les requêtes analytiques." },
+        "4.2c": { preuve: "Visualisation d'un sous-ensemble des données dans Qlik." },
+        "4.2d": { preuve: "Fusion de trois sources CSV hétérogènes (OpenAQ, World Cities, Banque mondiale)." },
+        "4.3a": { preuve: "Stockage de mesures horaires mondiales et d'indicateurs annuels.", aConfirmer: true },
+        "4.3b": { preuve: "Scripts Python d'extraction, de nettoyage et de dédoublonnage.", aConfirmer: true },
+        "4.3c": { preuve: "Exploration des données par le modèle multidimensionnel.", aConfirmer: true }
+      },
+      C6: {
+        "6.1d": { preuve: "Collaboration au sein d'un groupe de quatre étudiants." }
+      }
+    }
+  },
+  {
+    id: "stage-afpols",
+    nom: "Stage à l'AFPOLS",
+    stage: true,
+    annee: "Stage",
+    periode: "BUT2 · 8 semaines, 2026",
+    equipe: "Stage en entreprise",
+    resume: "Mise en œuvre d'un plan d'action de cybersécurité et gestion du parc applicatif.",
+    contexte: "Stage de 8 semaines au sein de l'AFPOLS.",
+    objectif: "Mettre en œuvre un plan d'action de cybersécurité et gérer le parc applicatif.",
+    role: "À compléter.",
+    resultats: "À compléter.",
+    outils: ["Cybersécurité", "Parc applicatif", "Windows"],
+    images: [],
+    ressources: [],
     aCompleter: true,
     liens: {
       C4: {
-        "4.1a": { preuve: "Requêtes vers la base de l'application.", aConfirmer: true },
-        "4.2c": { preuve: "Affichage des données dans l'application.", aConfirmer: true }
+        "4.2b": { preuve: "Mise en œuvre d'un plan d'action de cybersécurité.", aConfirmer: true }
       },
       C5: {
-        "5.1b": { preuve: "Dépôt Git commun.", aConfirmer: true }
+        "5.2a": { preuve: "Gestion du parc applicatif de la structure.", aConfirmer: true },
+        "5.2d": { preuve: "Suivi du plan d'action.", aConfirmer: true }
       },
       C6: {
-        "6.1d": { preuve: "Projet mené à trois.", aConfirmer: true }
+        "6.2a": { preuve: "Découverte de l'organisation informatique d'une structure.", aConfirmer: true },
+        "6.2b": { preuve: "Intégration dans l'équipe informatique pendant 8 semaines.", aConfirmer: true }
       }
     }
   }
+];
+
+/* FRISE CHRONOLOGIQUE de l'accueil
+   type : Formation, Expérience, Stage…
+   annee : affiche les projets qui ont la même « annee »
+   projet : lien vers la fiche d'un projet */
+const FRISE = [
+  { date: "2023", type: "Expérience", titre: "Encadrant scolaire bénévole",
+    texte: "Un an d'accompagnement d'élèves : communication pédagogique et gestion du temps." },
+  { date: "2024", type: "Formation", titre: "Baccalauréat général, mention bien",
+    texte: "Lycée Maurice Ravel, Paris 12." },
+  { date: "2024 – 2025", type: "Formation", titre: "BUT Informatique, 1re année", annee: "BUT1",
+    texte: "IUT de Montreuil, Université Paris 8. Premiers projets en équipe : développement, bases de données, systèmes." },
+  { date: "2025 – 2026", type: "Formation", titre: "BUT Informatique, 2e année", annee: "BUT2",
+    texte: "Parcours C : administration, gestion et exploitation des données." },
+  { date: "2026", type: "Stage", titre: "Stage à l'AFPOLS · 8 semaines", projet: "stage-afpols",
+    texte: "Mise en œuvre d'un plan d'action de cybersécurité et gestion du parc applicatif." },
+  { date: "2026 – 2027", type: "Formation", titre: "BUT Informatique, 3e année", annee: "BUT3",
+    texte: "Année en cours : les projets de 3e année viendront démontrer le niveau 3." }
 ];
