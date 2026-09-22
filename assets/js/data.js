@@ -19,8 +19,7 @@ const PROFIL = {
   photo: "assets/img/photo.jpg"
 };
 
-/* PAGE « À PROPOS »
-   icone : clé dans ICONES_PERSO (assets/js/app.js) */
+/* PAGE « À PROPOS » */
 const PERSO = {
   titre: "Bonjour, moi c'est Anton.",
   presentation: [
@@ -35,20 +34,20 @@ const PERSO = {
     ["Expérience", "Stage de 8 semaines à l'AFPOLS"]
   ],
   moteurs: [
-    { icone: "ia", titre: "La data et l'IA", texte: "Comprendre ce que racontent les données, et comment l'intelligence artificielle peut les exploiter." },
-    { icone: "code", titre: "Construire", texte: "Passer d'un besoin à une application qui fonctionne : un jeu, une buvette, une base de données." },
-    { icone: "equipe", titre: "Le travail d'équipe", texte: "Répartir les tâches, relire le code ensemble et accueillir de nouveaux membres dans un projet." }
+    { titre: "La data et l'IA", texte: "Comprendre ce que racontent les données, et comment l'intelligence artificielle peut les exploiter." },
+    { titre: "Construire", texte: "Passer d'un besoin à une application qui fonctionne : un jeu, une buvette, une base de données." },
+    { titre: "Le travail d'équipe", texte: "Répartir les tâches, relire le code ensemble et accueillir de nouveaux membres dans un projet." }
   ],
   qualites: [
-    { icone: "parole", titre: "Communication pédagogique", texte: "Un an d'encadrement scolaire bénévole." },
-    { icone: "temps", titre: "Gestion du temps", texte: "Accompagnement d'élèves en parallèle des études." },
-    { icone: "boussole", titre: "Autonomie", texte: "Avancer seul sur ma partie, avec GitHub pour suivre mon travail." },
-    { icone: "bug", titre: "Résolution de problèmes", texte: "Débogage méthodique sous IntelliJ." }
+    { titre: "Communication pédagogique", texte: "Un an d'encadrement scolaire bénévole." },
+    { titre: "Gestion du temps", texte: "Accompagnement d'élèves en parallèle des études." },
+    { titre: "Autonomie", texte: "Avancer seul sur ma partie, avec GitHub pour suivre mon travail." },
+    { titre: "Résolution de problèmes", texte: "Débogage méthodique sous IntelliJ." }
   ],
   interets: [
-    { icone: "violoncelle", titre: "Violoncelle", chiffre: "9 ans", texte: "Neuf ans de pratique, pour la rigueur et l'écoute." },
-    { icone: "football", titre: "Football", texte: "Le plaisir du jeu collectif." },
-    { icone: "halteres", titre: "Musculation", texte: "La régularité et le dépassement de soi." }
+    { titre: "Violoncelle", chiffre: "9 ans", texte: "Neuf ans de pratique, pour la rigueur et l'écoute." },
+    { titre: "Football", texte: "Le plaisir du jeu collectif." },
+    { titre: "Musculation", texte: "La régularité et le dépassement de soi." }
   ]
 };
 
@@ -59,15 +58,13 @@ const ORGANISMES = {
   afpols: { nom: "AFPOLS", logo: "afpols.png", url: "https://www.afpols.fr/" }
 };
 
-/* OUTILS : chaque entrée devient une touche du clavier 3D de l'accueil.
+/* OUTILS : liste « Outils » de l'accueil, et logos des fiches projets.
+   cat : catégorie (une ligne par catégorie sur l'accueil)
    logo : fichier dans assets/img/logos/. Sans extension, « .svg » est ajouté ;
           un PNG s'écrit avec son extension (ex. "javafx.png"). Les fichiers
-          « mono-….svg » sont des icônes d'une seule couleur, adaptée au thème.
+          « mono-….svg » sont des icônes d'une seule couleur.
    alias : autres noms sous lesquels l'outil apparaît dans les projets
-   touche : texte imprimé sur la touche si l'outil n'a pas de logo
-   largeur : largeur de la touche (1 par défaut)
-   Les touches sont posées dans l'ordre de la liste, 7 unités par rangée.
-   La catégorie donne la couleur. */
+   desc : texte affiché au survol */
 const OUTILS = [
   { cat: "Langages", nom: "Java", logo: "java", desc: "MineTaRouille (JavaFX, MVC) et le moteur du jeu d'échecs." },
   { cat: "Langages", nom: "Python", logo: "python", desc: "Scripts d'extraction, de nettoyage et de fusion de données (SAE Qualité de l'air)." },
@@ -76,15 +73,15 @@ const OUTILS = [
   { cat: "Langages", nom: "C", logo: "c.png", desc: "Programmation bas niveau : mémoire, pointeurs, structures." },
   { cat: "Langages", nom: "SQL", logo: "mono-sql", desc: "Création de bases, contraintes, jointures et index." },
   { cat: "Langages", nom: "HTML / CSS", logo: "html", alias: ["HTML", "CSS"], desc: "Sites web, interface responsive de la buvette et ce portfolio." },
-  { cat: "Données", nom: "PostgreSQL", logo: "postgresql", largeur: 2, desc: "SGBD de la SAE Base de données : boutique en ligne complète." },
+  { cat: "Données", nom: "PostgreSQL", logo: "postgresql", desc: "SGBD de la SAE Base de données : boutique en ligne complète." },
   { cat: "Données", nom: "MySQL", logo: "mysql", desc: "Base relationnelle de la buvette et du poste de développement." },
   { cat: "Données", nom: "MongoDB", logo: "mongodb", desc: "Base de données orientée documents." },
   { cat: "Données", nom: "pgAdmin", logo: "mono-pgadmin", desc: "Administration et interrogation des bases PostgreSQL." },
-  { cat: "Données", nom: "Qlik", logo: "qlik", largeur: 2, desc: "Visualisation d'un sous-ensemble des données sur la qualité de l'air." },
+  { cat: "Données", nom: "Qlik", logo: "qlik", desc: "Visualisation d'un sous-ensemble des données sur la qualité de l'air." },
   { cat: "Conception", nom: "Modélisation MCD / MLD", logo: "mono-mcd", alias: ["MCD / MLD", "Modélisation", "Modélisation relationnelle"], desc: "Modèles conceptuels et logiques construits à partir d'un cahier des charges." },
   { cat: "Conception", nom: "UML", logo: "mono-uml", desc: "Diagrammes de classes et de cas d'utilisation." },
   { cat: "Conception", nom: "Architecture MVC", logo: "mono-mvc", alias: ["MVC"], desc: "Séparation modèle, vue, contrôleur dans MineTaRouille et la buvette." },
-  { cat: "Conception", nom: "Design Patterns", logo: "mono-patterns", largeur: 2, desc: "Solutions de conception réutilisables, appliquées pendant la refactorisation de MineTaRouille." },
+  { cat: "Conception", nom: "Design Patterns", logo: "mono-patterns", desc: "Solutions de conception réutilisables, appliquées pendant la refactorisation de MineTaRouille." },
   { cat: "Frameworks", nom: "JavaFX", logo: "javafx.png", desc: "Interface graphique de MineTaRouille : rendu du monde et inventaire." },
   { cat: "Frameworks", nom: "JUnit", logo: "junit", alias: ["Tests"], desc: "Tests unitaires des projets Java." },
   { cat: "Outils", nom: "Git / GitHub", logo: "git", alias: ["Git"], desc: "Dépôts partagés, branches et suivi du travail en équipe." },
@@ -92,15 +89,15 @@ const OUTILS = [
   { cat: "Outils", nom: "IntelliJ", logo: "intellij", desc: "IDE JetBrains pour Java et PHP." },
   { cat: "Outils", nom: "PyCharm", logo: "pycharm", desc: "IDE pour les scripts Python." },
   { cat: "Outils", nom: "VS Code", logo: "vscode", desc: "Éditeur pour le web et les scripts." },
-  { cat: "Outils", nom: "Suite Office", logo: "office", largeur: 2, desc: "Rapports, présentations et documents de projet." },
+  { cat: "Outils", nom: "Suite Office", logo: "office", desc: "Rapports, présentations et documents de projet." },
   { cat: "Systèmes", nom: "Bash", logo: "bash", desc: "Commandes et scripts shell sous Linux." },
   { cat: "Systèmes", nom: "Linux", logo: "mono-linux", desc: "Environnement de travail quotidien, poste virtuel de développement." },
   { cat: "Systèmes", nom: "Windows", logo: "windows", desc: "Poste personnel et parc applicatif en stage." },
   { cat: "Systèmes", nom: "Apache", logo: "apache", desc: "Serveur web du poste de développement (Apache, PHP, MySQL)." },
-  { cat: "Systèmes", nom: "VirtualBox", logo: "mono-virtualbox", largeur: 3, desc: "Machine virtuelle Linux configurée pour le développement." }
+  { cat: "Systèmes", nom: "VirtualBox", logo: "mono-virtualbox", desc: "Machine virtuelle Linux configurée pour le développement." }
 ];
 
-/* Logos des notions citées dans les projets mais absentes du clavier */
+/* Logos des notions citées dans les projets mais absentes de la liste OUTILS */
 const AUTRES_LOGOS = {
   "Algorithmique": "mono-algo",
   "Modélisation OLAP": "mono-olap",

@@ -11,25 +11,10 @@ const numComp = c => c.slice(1);
 const niveauxDe = c => Object.keys(COMPETENCES[c].niveaux).map(Number);
 /* « 4.2c » → « AC 3 », comme dans le référentiel */
 const numAC = ac => `AC ${ac.charCodeAt(ac.length - 1) - 96}`;
-const groupeDe = c => (typeof GROUPES !== "undefined" ? GROUPES : []).find(g => g.comps.includes(c));
-const deux = n => String(n).padStart(2, "0");
+const groupes = () => (typeof GROUPES !== "undefined" ? GROUPES : [{ nom: "", comps: COMPS }]);
 const compsDe = p => COMPS.filter(c => Object.keys(p.liens[c] || {}).length);
-const fleche = `<svg class="fleche" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
 
-/* ---------- Logos et icônes ---------- */
-const ICONES_COMP = {
-  C1: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
-  C2: '<path d="M4 17a8 8 0 1 1 16 0"/><path d="m12 17 4-5"/><circle cx="12" cy="17" r="1.2"/><path d="M6.5 13.5h.01M8.5 10.5h.01M12 9h.01"/>',
-  C3: '<rect x="4" y="3.5" width="16" height="6" rx="1.5"/><rect x="4" y="12.5" width="16" height="6" rx="1.5"/><path d="M7.5 6.5h.01M7.5 15.5h.01M12 18.5v2.5M8 21h8"/>',
-  C4: '<ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v13c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-13M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/>',
-  C5: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9 4v16M15 4v16M5.5 8h1.5M11.5 8h1.5M11.5 11.5h1.5M17.5 8h1"/>',
-  C6: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 4.9a3.2 3.2 0 0 1 0 6.2M21 20c0-2.6-1.4-4.5-3.6-5.2"/>'
-};
-const icone = c => ICONES_COMP[c]
-  ? `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONES_COMP[c]}</svg>` : "";
-/* Pastille « icône + code » d'une compétence */
-const puceComp = c => `<span class="puce" title="${esc(COMPETENCES[c].nom)}">${icone(c)}${c}</span>`;
-
+/* ---------- Logos ---------- */
 /* Retrouve le logo d'un outil par son nom (ou un alias) */
 function logoDe(nom) {
   const o = OUTILS.find(x => x.nom === nom || x.touche === nom || (x.alias || []).includes(nom));
@@ -42,25 +27,18 @@ function imageLogo(logo, nom) {
   const src = cheminLogo(logo);
   return estMono(logo)
     // URL absolue : dans une variable CSS, un chemin relatif serait résolu depuis style.css
-    ? `<span class="lg mono" style="--m:url('${new URL(src, document.baseURI).href}')" role="img" aria-label="${esc(nom)}"></span>`
-    : `<img class="lg" src="${src}" alt="${esc(nom)}" loading="lazy">`;
+    ? `<span class="lg mono" style="--m:url('${new URL(src, document.baseURI).href}')" aria-hidden="true"></span>`
+    : `<img class="lg" src="${src}" alt="" loading="lazy">`;
 }
-/* Tuile logo avec infobulle, ou texte si l'outil n'a pas de logo */
-function tuileOutil(nom) {
+/* Outil : petit logo (s'il existe) suivi du nom */
+function outil(nom) {
   const logo = logoDe(nom);
-  return logo
-    ? `<span class="tuile" data-nom="${esc(nom)}">${imageLogo(logo, nom)}</span>`
-    : `<span class="tag">${esc(nom)}</span>`;
+  return `<span class="outil">${logo ? imageLogo(logo, nom) : ""}${esc(nom)}</span>`;
 }
-
-/* Logo d'un organisme sur une tuile blanche (lisible dans les deux thèmes) */
-function tuileOrganisme(cle, classe = "") {
+function logoOrganisme(cle, classe = "") {
   const o = typeof ORGANISMES !== "undefined" && ORGANISMES[cle];
   if (!o) return "";
-  const img = `<img src="${cheminLogo(o.logo)}" alt="${esc(o.nom)}" loading="lazy">`;
-  return o.url
-    ? `<a class="organisme ${classe}" href="${esc(o.url)}" title="${esc(o.nom)}" target="_blank" rel="noopener">${img}</a>`
-    : `<span class="organisme ${classe}" title="${esc(o.nom)}">${img}</span>`;
+  return `<img class="organisme ${classe}" src="${cheminLogo(o.logo)}" alt="${esc(o.nom)}" loading="lazy">`;
 }
 
 /* AC d'une compétence : démontrés (au moins une preuve validée)
@@ -74,50 +52,26 @@ function couverture(c, n) {
   return { couverts, attente, total: acs.length };
 }
 
-/* ---------- Thème ---------- */
-function themeActuel() {
-  return document.documentElement.dataset.theme
-    || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-}
-function basculerTheme() {
-  const t = themeActuel() === "dark" ? "light" : "dark";
-  document.documentElement.dataset.theme = t;
-  try { localStorage.setItem("theme", t); } catch (e) {}
-  window.dispatchEvent(new CustomEvent("theme", { detail: t }));
-}
-
 /* ---------- En-tête et pied de page ---------- */
 function entete() {
   const nav = [
-    ["index.html", "Accueil", "accueil"],
     ["projets.html", "Projets", "projets"],
     ["competences.html", "Compétences", "competences"],
     ["apropos.html", "À propos", "apropos"]
   ].map(([href, label, id]) =>
     `<a href="${href}"${id === page ? ' aria-current="page"' : ""}>${label}</a>`).join("");
-  const el = document.getElementById("entete");
-  el.innerHTML = `
+  document.getElementById("entete").innerHTML = `
     <div class="wrap barre">
-      <a class="marque" href="index.html" aria-label="${esc(PROFIL.nom)}, accueil">
-        <span class="logo">AM</span><span class="marque-nom">${esc(PROFIL.nom)}</span>
-      </a>
+      <a class="marque" href="index.html"${page === "accueil" ? ' aria-current="page"' : ""}>${esc(PROFIL.nom)}</a>
       <nav aria-label="Navigation principale">${nav}</nav>
-      <button class="theme" type="button" aria-label="Changer de thème">
-        <svg class="soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-        <svg class="lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>
-      </button>
     </div>`;
-  el.querySelector(".theme").addEventListener("click", basculerTheme);
-  const suivre = () => el.classList.toggle("defile", scrollY > 8);
-  addEventListener("scroll", suivre, { passive: true });
-  suivre();
 }
 
 function liensContact() {
   const l = [];
-  if (PROFIL.email) l.push(["mailto:" + PROFIL.email, "E-mail"]);
-  if (PROFIL.github) l.push([PROFIL.github, "GitHub"]);
+  if (PROFIL.email) l.push(["mailto:" + PROFIL.email, PROFIL.email]);
   if (PROFIL.linkedin) l.push([PROFIL.linkedin, "LinkedIn"]);
+  if (PROFIL.github) l.push([PROFIL.github, "GitHub"]);
   if (PROFIL.cv) l.push([PROFIL.cv, "CV (PDF)"]);
   return l;
 }
@@ -125,362 +79,194 @@ function liensContact() {
 function pied() {
   document.getElementById("pied").innerHTML = `
     <div class="wrap barre">
-      <span class="pied-gauche">${tuileOrganisme(PROFIL.ecole, "petit")}<span>© ${new Date().getFullYear()} ${esc(PROFIL.nom)} · ${esc(PROFIL.formation)}</span></span>
-      <span class="liens">${liensContact().map(([u, t]) => `<a href="${esc(u)}">${t}</a>`).join("")}</span>
+      <span>${esc(PROFIL.nom)} · ${esc(PROFIL.formation)}</span>
+      <span class="liens">${liensContact().map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}</span>
     </div>`;
 }
 
-/* ---------- Pastilles de niveau ---------- */
-function pastille(n, aConfirmer, compte) {
-  return `<span class="pip n${n}${aConfirmer ? " tbc" : ""}" title="Niveau ${n}${aConfirmer ? ", à confirmer" : ""}">N${n}${compte > 1 ? "×" + compte : ""}</span>`;
-}
-
-function entreeSection(num, titre, intro) {
-  return `<header class="tete-section rv">
-    <p class="surtitre"><span>${num}</span>${titre}</p>
+/* ---------- Blocs réutilisables ---------- */
+function titreSection(titre, intro, lien) {
+  return `<header class="tete-section">
+    <h2>${titre}</h2>
+    ${lien ? `<a class="lien-section" href="${lien[0]}">${lien[1]}</a>` : ""}
     ${intro ? `<p class="intro">${intro}</p>` : ""}
   </header>`;
 }
 
+function ligneProjet(p) {
+  const comps = compsDe(p);
+  return `<li class="projet" data-comps="${comps.join(" ")}">
+    <span class="projet-date">${esc(p.periode)}</span>
+    <div class="projet-corps">
+      <a class="projet-titre" href="projets.html?id=${p.id}">${esc(p.nom)}</a>
+      ${p.stage ? `<span class="etiquette">Stage</span>` : ""}
+      ${p.aCompleter ? `<span class="etiquette discrete">Fiche à compléter</span>` : ""}
+      <p>${esc(p.resume)}</p>
+    </div>
+    <span class="projet-comps">${comps.join(" · ")}</span>
+  </li>`;
+}
+
+/* Liste des compétences, groupées, avec leur avancement */
+function listeCompetences() {
+  return groupes().map(g => `
+    <section class="groupe">
+      ${g.nom ? `<h3 class="groupe-nom">${esc(g.nom)}</h3>` : ""}
+      <ul class="competences">
+        ${g.comps.map(c => {
+          const C = COMPETENCES[c];
+          const t = couverture(c);
+          return `<li>
+            <a class="competence" href="competences.html?id=${c}">
+              <span class="competence-code">C${numComp(c)}</span>
+              <span class="competence-nom">${esc(C.nom)}</span>
+              <span class="competence-avancement">
+                <span class="barre-avancement" aria-hidden="true"><span style="width:${t.couverts / t.total * 100}%"></span></span>
+                ${t.couverts}/${t.total} AC
+              </span>
+            </a>
+          </li>`;
+        }).join("")}
+      </ul>
+    </section>`).join("");
+}
+
 /* ---------- Tableau croisé ---------- */
-/* Trois points = N1, N2, N3 : plein si démontré, creux si seulement à confirmer */
-function indicateurCase(projet, c) {
+function marqueCase(projet, c) {
   const liens = Object.entries(projet.liens[c] || {});
   if (!liens.length) return null;
   const etat = {};
   liens.forEach(([ac, l]) => {
     const n = niveauDe(ac);
-    if (!l.aConfirmer) etat[n] = "on";
-    else etat[n] ??= "tbc";
+    if (!l.aConfirmer) etat[n] = "valide";
+    else etat[n] ??= "attente";
   });
-  const points = niveauxDe(c).map(n => `<i class="pt${etat[n] ? " " + etat[n] : ""}"></i>`).join("");
-  const libelle = niveauxDe(c).filter(n => etat[n])
-    .map(n => `niveau ${n}${etat[n] === "tbc" ? " à confirmer" : ""}`).join(", ");
-  return { html: `<span class="points" aria-hidden="true">${points}</span><span class="nb">${liens.length}</span>`, libelle };
+  const niveaux = niveauxDe(c).filter(n => etat[n]);
+  return {
+    html: niveaux.map(n => `<span class="niv ${etat[n]}">N${n}</span>`).join(" "),
+    libelle: niveaux.map(n => `niveau ${n}${etat[n] === "attente" ? " à confirmer" : ""}`).join(", ")
+  };
 }
 
 function tableauCroise() {
-  const groupes = typeof GROUPES !== "undefined" ? GROUPES : [{ nom: "", comps: COMPS }];
-  const ordre = groupes.flatMap(g => g.comps);
-  const teteGroupes = groupes.map(g =>
-    `<th scope="colgroup" colspan="${g.comps.length}" class="groupe-col">${esc(g.nom)}</th>`).join("");
-  const tete = ordre.map((c, i) =>
-    `<th scope="col"${groupes.some(g => g.comps[0] === c) && i ? ' class="debut-groupe"' : ""}><a href="competences.html?id=${c}" title="Compétence ${numComp(c)} : ${esc(COMPETENCES[c].nom)}">${icone(c)}<span>${esc(COMPETENCES[c].court)}</span></a></th>`).join("");
+  const ordre = groupes().flatMap(g => g.comps);
+  const tete = ordre.map(c =>
+    `<th scope="col"><a href="competences.html?id=${c}" title="${esc(COMPETENCES[c].nom)}">C${numComp(c)}</a></th>`).join("");
   const lignes = PROJETS.map(p => {
-    const cases = ordre.map((c, i) => {
-      const x = indicateurCase(p, c);
-      const debut = groupes.some(g => g.comps[0] === c) && i ? ' class="debut-groupe"' : "";
+    const cases = ordre.map(c => {
+      const x = marqueCase(p, c);
       return x
-        ? `<td${debut}><a class="case" href="projets.html?id=${p.id}#${c}" aria-label="${esc(p.nom)}, ${esc(COMPETENCES[c].nom)} : ${x.libelle}">${x.html}</a></td>`
-        : `<td${debut}><span class="case vide" aria-label="Pas de lien">—</span></td>`;
+        ? `<td><a href="projets.html?id=${p.id}#${c}" aria-label="${esc(p.nom)}, compétence ${numComp(c)} : ${x.libelle}">${x.html}</a></td>`
+        : `<td class="vide"></td>`;
     }).join("");
-    return `<tr><th scope="row"><a href="projets.html?id=${p.id}">${esc(p.nom)}<small>${esc(p.periode)}</small></a></th>${cases}</tr>`;
+    return `<tr><th scope="row"><a href="projets.html?id=${p.id}">${esc(p.nom)}</a></th>${cases}</tr>`;
   }).join("");
-
-  const niveau3 = PROJETS.some(p => Object.values(p.liens).some(l => Object.keys(l).some(ac => niveauDe(ac) === 3)));
-
-  return `<div class="tableau rv">
-    <div class="defile-x">
-      <table class="croise">
-        <caption class="sr">Projets en lignes, compétences en colonnes</caption>
-        <thead>
-          <tr class="ligne-groupes"><td></td>${teteGroupes}</tr>
-          <tr><th scope="col"><span class="sr">Projet</span></th>${tete}</tr>
-        </thead>
-        <tbody>${lignes}</tbody>
-      </table>
-    </div>
-    <div class="legende">
-      <span><span class="points"><i class="pt on"></i><i class="pt"></i><i class="pt"></i></span>N1 · N2 · N3 (C1 à C3 : N1 · N2)</span>
-      <span><i class="pt on"></i>démontré</span>
-      <span><i class="pt tbc"></i>à confirmer</span>
-      <span><span class="nb">3</span>nombre de preuves</span>
-      ${niveau3 ? "" : `<p class="note">Le niveau 3 viendra avec les projets de 3e année.</p>`}
-    </div>
-  </div>`;
+  return `<div class="defile-x">
+    <table class="croise">
+      <caption class="sr">Projets en lignes, compétences en colonnes</caption>
+      <thead><tr><th scope="col">Projet</th>${tete}</tr></thead>
+      <tbody>${lignes}</tbody>
+    </table>
+  </div>
+  <p class="legende"><span class="niv valide">N1</span> niveau démontré · <span class="niv attente">N1</span> preuve à confirmer</p>`;
 }
 
-/* ---------- Blocs réutilisables ---------- */
-function carteCompetence(c, i) {
-  const C = COMPETENCES[c];
-  const tout = couverture(c);
-  const pct = Math.round(tout.couverts / tout.total * 100);
-  const barres = niveauxDe(c).map(n => {
-    const { couverts, attente, total } = couverture(c, n);
-    return `<div class="jauge" title="${couverts} démontré(s)${attente ? `, ${attente} à confirmer` : ""} sur ${total}"><span>N${n}</span>
-      <span class="piste"><span class="rempli n${n}" style="--v:${couverts / total}"></span><span class="rempli attente" style="--v:${attente / total}; --decal:${couverts / total}"></span></span>
-      <span class="mono">${couverts}/${total}</span></div>`;
-  }).join("");
-  return `<a class="carte comp rv" style="--d:${i}" href="competences.html?id=${c}">
-    <div class="carte-haut">
-      <span class="carte-ico">${icone(c)}<span class="mono">Compétence ${numComp(c)}</span></span>
-      <span class="anneau" style="--p:${pct}"><span>${pct}%</span></span>
-    </div>
-    <h3><span class="court">${esc(C.court)}</span>${esc(C.nom)}</h3>
-    <div class="jauges">${barres}</div>
-    <span class="voir">Voir les preuves ${fleche}</span>
-  </a>`;
-}
-
-function grilleGroupee() {
-  if (typeof GROUPES === "undefined") return `<div class="grille-comp">${COMPS.map(carteCompetence).join("")}</div>`;
-  return `<div class="groupes">${GROUPES.map((g, k) => `
-    <section class="groupe rv" style="--d:${k}">
-      <header class="groupe-tete">
-        <span class="mono">${deux(k + 1)}</span>
-        <h3>${esc(g.nom)}</h3>
-        <p>${esc(g.texte)}</p>
-      </header>
-      <div class="grille-comp">${g.comps.map(carteCompetence).join("")}</div>
-    </section>`).join("")}</div>`;
-}
-
-function ligneProjet(p, i) {
-  const comps = compsDe(p);
-  return `<a class="ligne rv" style="--d:${i}" href="projets.html?id=${p.id}" data-comps="${comps.join(" ")}">
-    <span class="num mono">${deux(i + 1)}</span>
-    <span class="ligne-corps">
-      <span class="ligne-titre">${esc(p.nom)}${p.stage ? ` <span class="badge accent">stage</span>` : ""}${p.organisme && ORGANISMES[p.organisme] ? ` <img class="mini-organisme" src="${cheminLogo(ORGANISMES[p.organisme].logo)}" alt="${esc(ORGANISMES[p.organisme].nom)}">` : ""}${p.aCompleter ? ` <span class="badge">en cours</span>` : ""}</span>
-      <span class="ligne-resume"><span class="mono">${esc(p.periode)}</span> · ${esc(p.resume)}</span>
-    </span>
-    <span class="ligne-meta">
-      <span class="logos-ligne">${p.outils.filter(logoDe).slice(0, 5).map(o => imageLogo(logoDe(o), o)).join("")}</span>
-      <span class="puces">${comps.map(puceComp).join("")}</span>
-    </span>
-    ${fleche}
-  </a>`;
-}
-
-/* ---------- Frise chronologique ---------- */
-function frise() {
-  const jalons = FRISE.map((e, i) => `
-    <button class="jalon" type="button" role="tab" id="jalon-${i}" data-i="${i}"
-      aria-selected="false" aria-controls="frise-detail" tabindex="-1">
-      <span class="jalon-point" aria-hidden="true"></span>
-      <span class="jalon-date mono">${esc(e.date)}</span>
-      <span class="jalon-type">${esc(e.type)}</span>
-    </button>`).join("");
-  return `<div class="frise rv" style="--n:${FRISE.length}">
-    <div class="frise-piste">
-      <div class="frise-jalons" role="tablist" aria-label="Étapes du parcours">
-        <div class="frise-rail" aria-hidden="true"><span class="frise-progres"></span></div>
-        ${jalons}
+/* ---------- Parcours (frise verticale) ---------- */
+function parcours() {
+  return `<ol class="parcours">${FRISE.map(e => {
+    const projets = e.annee ? PROJETS.filter(p => p.annee === e.annee) : [];
+    const fiche = e.projet && PROJETS.find(p => p.id === e.projet);
+    return `<li>
+      <span class="parcours-date">${esc(e.date)}</span>
+      <div class="parcours-corps">
+        <h3>${fiche ? `<a href="projets.html?id=${fiche.id}">${esc(e.titre)}</a>` : esc(e.titre)}</h3>
+        <p>${esc(e.texte)}</p>
+        ${projets.length ? `<p class="parcours-projets">Projets : ${projets.map(p => `<a href="projets.html?id=${p.id}">${esc(p.nom)}</a>`).join(", ")}</p>` : ""}
       </div>
-    </div>
-    <div class="frise-bas">
-      <div class="frise-detail" id="frise-detail" role="tabpanel" aria-live="polite"></div>
-      <div class="frise-nav">
-        <button type="button" class="rond" data-pas="-1" aria-label="Étape précédente">←</button>
-        <span class="mono frise-compte"></span>
-        <button type="button" class="rond" data-pas="1" aria-label="Étape suivante">→</button>
-      </div>
-    </div>
-  </div>`;
+      ${logoOrganisme(e.organisme, "petit")}
+    </li>`;
+  }).join("")}</ol>`;
 }
 
-function detailFrise(e) {
-  const projets = e.annee ? PROJETS.filter(p => p.annee === e.annee) : [];
-  const lies = projets.map(p => {
-    const logos = p.outils.filter(logoDe).slice(0, 3).map(o => imageLogo(logoDe(o), o)).join("");
-    return `<a class="mini" href="projets.html?id=${p.id}"><span class="mini-logos">${logos}</span>${esc(p.nom)}</a>`;
-  }).join("");
-  const fiche = e.projet && PROJETS.find(p => p.id === e.projet);
-  return `
-    <div class="frise-titre">
-      <div>
-        <p class="frise-meta"><span class="badge accent">${esc(e.type)}</span><span class="mono">${esc(e.date)}</span></p>
-        <h3>${esc(e.titre)}</h3>
-      </div>
-      ${tuileOrganisme(e.organisme, "grand")}
-    </div>
-    <p class="frise-texte">${esc(e.texte)}</p>
-    ${lies ? `<div class="minis">${lies}</div>` : ""}
-    ${fiche ? `<a class="btn" href="projets.html?id=${fiche.id}">Voir la fiche ${fleche}</a>` : ""}`;
-}
-
-/* Effets mo.js (chargé en asynchrone ; la frise marche sans) */
-let effets = null;
-function eclat(point, piste) {
-  if (!window.mojs || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const style = getComputedStyle(document.documentElement);
-  const accent = style.getPropertyValue("--accent").trim();
-  const accent2 = style.getPropertyValue("--accent-2").trim();
-  if (!effets) {
-    const commun = { parent: piste, left: 0, top: 0, isShowStart: false };
-    effets = {
-      gerbe: new mojs.Burst({ ...commun, radius: { 6: 34 }, count: 10, degree: 360,
-        children: { shape: "circle", radius: { 3.5: 0 }, fill: [accent, accent2], duration: 700, easing: "quad.out" } }),
-      anneau: new mojs.Shape({ ...commun, shape: "circle", radius: { 4: 22 }, fill: "none",
-        stroke: accent, strokeWidth: { 5: 0 }, opacity: { 1: 0 }, duration: 600, easing: "cubic.out" }),
-      eclats: new mojs.Burst({ ...commun, radius: { 14: 44 }, count: 6, angle: 30,
-        children: { shape: "line", radius: 5, scale: { 1: 0 }, stroke: accent2, strokeWidth: 2, duration: 550, easing: "quad.out", delay: 60 } })
-    };
-  }
-  const r = point.getBoundingClientRect(), b = piste.getBoundingClientRect();
-  const x = r.left + r.width / 2 - b.left + piste.scrollLeft;
-  const y = r.top + r.height / 2 - b.top + piste.scrollTop;
-  Object.values(effets).forEach(e => e.tune({ x, y }).replay());
-}
-
-function activerFrise() {
-  const racine = document.querySelector(".frise");
-  if (!racine) return;
-  const piste = racine.querySelector(".frise-piste");
-  const jalons = [...racine.querySelectorAll(".jalon")];
-  const detail = racine.querySelector(".frise-detail");
-  const compte = racine.querySelector(".frise-compte");
-  let actuel = -1;
-
-  const choisir = (i, { effet = true, focus = false } = {}) => {
-    i = Math.max(0, Math.min(jalons.length - 1, i));
-    if (i === actuel) return;
-    const sens = i > actuel ? 1 : -1;
-    actuel = i;
-    jalons.forEach((j, k) => {
-      j.setAttribute("aria-selected", k === i);
-      j.tabIndex = k === i ? 0 : -1;
-      j.classList.toggle("passe", k < i);
-    });
-    racine.style.setProperty("--p", jalons.length > 1 ? i / (jalons.length - 1) : 1);
-    detail.style.setProperty("--sens", sens);
-    detail.classList.remove("entre");
-    void detail.offsetWidth;
-    detail.innerHTML = detailFrise(FRISE[i]);
-    detail.classList.add("entre");
-    compte.textContent = `${deux(i + 1)} / ${deux(jalons.length)}`;
-    racine.querySelector('[data-pas="-1"]').disabled = i === 0;
-    racine.querySelector('[data-pas="1"]').disabled = i === jalons.length - 1;
-    // défilement horizontal de la frise seulement (pas de la page)
-    const j = jalons[i];
-    piste.scrollTo({ left: j.offsetLeft + j.offsetWidth / 2 - piste.clientWidth / 2, behavior: effet ? "smooth" : "auto" });
-    if (focus) jalons[i].focus({ preventScroll: true });
-    if (effet) eclat(jalons[i].querySelector(".jalon-point"), piste);
-  };
-
-  jalons.forEach((j, i) => j.addEventListener("click", () => choisir(i)));
-  racine.querySelectorAll("[data-pas]").forEach(b =>
-    b.addEventListener("click", () => choisir(actuel + Number(b.dataset.pas))));
-  racine.querySelector(".frise-jalons").addEventListener("keydown", e => {
-    const pas = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-    if (pas) { e.preventDefault(); choisir(actuel + pas, { focus: true }); }
-    if (e.key === "Home") { e.preventDefault(); choisir(0, { focus: true }); }
-    if (e.key === "End") { e.preventDefault(); choisir(jalons.length - 1, { focus: true }); }
-  });
-
-  // Au départ : première étape, puis la frise se remplit jusqu'à l'étape en cours à l'apparition
-  choisir(0, { effet: false });
-  const derniere = jalons.length - 1;
-  const io = new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return;
-    io.disconnect();
-    setTimeout(() => choisir(derniere), 600);
-  }, { threshold: 0.4 });
-  io.observe(racine);
+/* ---------- Outils ---------- */
+function listeOutils() {
+  const cats = [...new Set(OUTILS.map(o => o.cat))];
+  return `<dl class="outils">${cats.map(cat => `
+    <div>
+      <dt>${esc(cat)}</dt>
+      <dd>${OUTILS.filter(o => o.cat === cat).map(o => `<span class="outil" title="${esc(o.desc || "")}">${o.logo ? imageLogo(o.logo, o.nom) : ""}${esc(o.nom)}</span>`).join("")}</dd>
+    </div>`).join("")}</dl>`;
 }
 
 /* ---------- Page d'accueil ---------- */
 function pageAccueil() {
-  const cats = [...new Set(OUTILS.map(o => o.cat))];
-  const repli = OUTILS.map(o =>
-    `<span class="touche-repli" data-cat="${cats.indexOf(o.cat)}" title="${esc(o.nom)}">${o.logo ? imageLogo(o.logo, o.nom) : esc(o.touche || o.nom)}</span>`).join("");
   const contact = liensContact();
-  const nbAC = PROJETS.reduce((s, p) => s + Object.values(p.liens).reduce((t, l) => t + Object.keys(l).length, 0), 0);
-
   document.getElementById("contenu").innerHTML = `
-    <section class="hero">
-      <div class="wrap hero-grille">
-        <div class="hero-texte">
-          <div class="statut-ligne rv">
-            ${tuileOrganisme(PROFIL.ecole, "moyen")}
-            <p class="statut"><span class="point"></span>${esc(PROFIL.formation)}</p>
-          </div>
-          <h1 class="rv" style="--d:1">${esc(PROFIL.nom.split(" ")[0])}<br><span class="degrade">${esc(PROFIL.nom.split(" ").slice(1).join(" "))}</span></h1>
-          <p class="parcours rv" style="--d:2">${esc(PROFIL.parcours)}</p>
-          <p class="accroche rv" style="--d:3">${esc(PROFIL.accroche)}</p>
-          <div class="actions rv" style="--d:4">
-            <a class="btn plein" href="#projets">Voir les projets</a>
-            <a class="btn" href="competences.html">Compétences</a>
-            ${PROFIL.cv ? `<a class="btn" href="${esc(PROFIL.cv)}">CV</a>` : ""}
-          </div>
-          <dl class="chiffres rv" style="--d:5">
-            <div><dt>Projets</dt><dd>${deux(PROJETS.length)}</dd></div>
-            <div><dt>Compétences</dt><dd>${deux(COMPS.length)}</dd></div>
-            <div><dt>Preuves</dt><dd>${deux(nbAC)}</dd></div>
-          </dl>
-        </div>
-        <div class="scene-zone">
-          <div id="clavier" class="clavier">
-            <div class="repli" data-cats='${esc(JSON.stringify(cats))}'>${repli}</div>
-          </div>
-          <div class="info-touche" id="info-touche" aria-live="polite">
-            <span class="info-logo" aria-hidden="true"></span>
-            <span class="info-cat mono">Outils et langages</span>
-            <strong class="info-nom">Survolez une touche</strong>
-            <span class="info-desc">Chaque touche du clavier est un outil que j'ai utilisé en projet.</span>
-          </div>
-        </div>
+    <section class="wrap intro-accueil">
+      <div>
+        <p class="sur-titre">${esc(PROFIL.formation)} · ${esc(PROFIL.parcours)}</p>
+        <h1>${esc(PROFIL.nom)}</h1>
+        <p class="chapeau">${esc(PROFIL.accroche)}</p>
+        <p class="liens-intro">
+          <a class="bouton" href="projets.html">Voir mes projets</a>
+          ${contact.map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}
+        </p>
       </div>
-      <a class="descendre" href="#parcours" aria-label="Descendre"><span></span></a>
+      ${PROFIL.photo ? `<img class="photo" src="${esc(PROFIL.photo)}" alt="Photo d'${esc(PROFIL.nom)}" width="180" height="180">` : ""}
     </section>
 
-    <section class="wrap section" id="parcours">
-      ${entreeSection("01", "Parcours", "De l'encadrement scolaire au stage : cliquez sur une étape, ou utilisez les flèches du clavier.")}
-      ${frise()}
+    <section class="wrap section">
+      ${titreSection("Projets", "", ["projets.html", "Tous les projets"])}
+      <ol class="projets">${PROJETS.slice().reverse().map(ligneProjet).join("")}</ol>
     </section>
 
-    <section class="wrap section" id="competences">
-      ${entreeSection("02", "Compétences", "Les six compétences du BUT Informatique, parcours C, regroupées en trois ensembles. Chaque jauge montre la part des apprentissages critiques démontrés par au moins un projet.")}
-      ${grilleGroupee()}
+    <section class="wrap section">
+      ${titreSection("Compétences", "Les six compétences du BUT Informatique, parcours C. Le compteur indique les apprentissages critiques (AC) démontrés par au moins un projet.", ["competences.html", "Détail des compétences"])}
+      ${listeCompetences()}
     </section>
 
-    <section class="wrap section" id="projets">
-      ${entreeSection("03", "Projets", "Les projets menés pendant le BUT et les compétences qu'ils mobilisent.")}
-      <div class="lignes">${PROJETS.map(ligneProjet).join("")}</div>
+    <section class="wrap section">
+      ${titreSection("Parcours")}
+      ${parcours()}
     </section>
 
-    <section class="wrap section" id="croise">
-      ${entreeSection("04", "Projets × compétences", "Chaque ligne est un projet, chaque colonne une compétence. Une case indique le niveau des apprentissages démontrés ; cliquez dessus pour lire la preuve.")}
-      ${tableauCroise()}
+    <section class="wrap section">
+      ${titreSection("Outils")}
+      ${listeOutils()}
     </section>
 
-    <section class="wrap section" id="contact">
-      <div class="final rv">
-        <p class="surtitre"><span>05</span>Et après ?</p>
-        <p class="final-texte">${esc(PROFIL.objectif)}</p>
-        <div class="actions">
-          ${contact.map(([u, t], i) => `<a class="btn${i ? "" : " plein"}" href="${esc(u)}">${t}</a>`).join("")}
-        </div>
-      </div>
+    <section class="wrap section contact">
+      ${titreSection("Contact")}
+      <p>${esc(PROFIL.objectif)}</p>
+      <p class="liens-intro">${contact.map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}</p>
     </section>`;
 }
 
 /* ---------- Page projets ---------- */
 function ficheProjet(p) {
   const cs = compsDe(p);
-  const comps = cs.map((c, i) => `
-    <section class="bloc-comp rv" style="--d:${i}" id="${c}">
-      <h3><a href="competences.html?id=${c}">${puceComp(c)}Compétence ${numComp(c)} : ${esc(COMPETENCES[c].nom)} ${fleche}</a></h3>
-      ${Object.entries(p.liens[c]).map(([ac, l]) => `
-        <div class="ac">
-          <p class="ac-titre">${pastille(niveauDe(ac), l.aConfirmer)}<span><span class="mono">${numAC(ac)}</span> ${esc(texteAC(ac))}</span></p>
-          <p class="preuve">${esc(l.preuve)}${l.aConfirmer ? " <em>à confirmer</em>" : ""}</p>
-        </div>`).join("")}
+  const comps = cs.map(c => `
+    <section class="bloc-comp" id="${c}">
+      <h3><a href="competences.html?id=${c}">Compétence ${numComp(c)} : ${esc(COMPETENCES[c].nom)}</a></h3>
+      <ul>${Object.entries(p.liens[c]).map(([ac, l]) => `
+        <li>
+          <p class="ac-titre"><span class="ac-code">N${niveauDe(ac)} · ${numAC(ac)}</span> ${esc(texteAC(ac))}</p>
+          <p class="preuve">${esc(l.preuve)}${l.aConfirmer ? ` <span class="a-confirmer">à confirmer</span>` : ""}</p>
+        </li>`).join("")}</ul>
     </section>`).join("");
 
   // une image peut être un chemin ou { src, legende }
-  const images = (p.images || []).map(im => typeof im === "string" ? { src: im } : im).map((im, i) => `
-    <figure class="vignette rv" style="--d:${i}">
+  const images = (p.images || []).map(im => typeof im === "string" ? { src: im } : im).map(im => `
+    <figure class="vignette">
       <button type="button" class="agrandir" data-src="${esc(im.src)}" data-legende="${esc(im.legende || "")}" aria-label="Agrandir l'image">
         <img src="${esc(im.src)}" alt="${esc(im.legende || `Capture du projet ${p.nom}`)}" loading="lazy">
       </button>
       ${im.legende ? `<figcaption>${esc(im.legende)}</figcaption>` : ""}
     </figure>`).join("");
-  const extraits = (p.code || []).map((c, i) => `
-    <figure class="extrait rv" style="--d:${i}" data-fichier="${esc(c.fichier)}" data-langage="${esc(c.langage || "")}">
+  const extraits = (p.code || []).map(c => `
+    <figure class="extrait" data-fichier="${esc(c.fichier)}">
       <figcaption>
-        <span class="extrait-points" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="extrait-titre">${esc(c.titre)}</span>
-        <span class="mono extrait-fichier">${esc(c.fichier.split("/").pop())}</span>
+        <span>${esc(c.titre)} <span class="extrait-fichier">${esc(c.fichier.split("/").pop())}</span></span>
         <button type="button" class="copier">Copier</button>
       </figcaption>
       <pre><code class="language-${esc(c.langage || "plaintext")}">Chargement…</code></pre>
@@ -489,7 +275,7 @@ function ficheProjet(p) {
   const details = (p.details || []).map(d => `<li>${esc(d)}</li>`).join("");
   const ressources = (p.ressources || []).map(r => {
     const externe = /^https?:/.test(r.url);
-    return `<a class="btn" href="${esc(r.url)}"${externe ? ' target="_blank" rel="noopener"' : ""}>${esc(r.label)} ${fleche}</a>`;
+    return `<li><a href="${esc(r.url)}"${externe ? ' target="_blank" rel="noopener"' : ""}>${esc(r.label)}</a></li>`;
   }).join("");
   const idx = PROJETS.indexOf(p);
   const suivant = PROJETS[(idx + 1) % PROJETS.length];
@@ -497,40 +283,33 @@ function ficheProjet(p) {
 
   return `
     <article class="wrap fiche">
-      <a class="retour rv" href="projets.html">← Tous les projets</a>
+      <p class="fil"><a href="projets.html">Projets</a> / ${esc(p.nom)}</p>
       <header class="fiche-tete">
-        <p class="surtitre rv"><span>${deux(idx + 1)}</span>${p.stage ? "Stage" : "Projet"}</p>
-        <div class="fiche-titre rv" style="--d:1">
+        <div>
           <h1>${esc(p.nom)}</h1>
-          ${tuileOrganisme(p.organisme, "grand")}
+          <p class="chapeau">${esc(p.resume)}</p>
+          <p class="meta">${esc(p.periode)} · ${esc(p.equipe)}</p>
         </div>
-        <p class="fiche-resume rv" style="--d:2">${esc(p.resume)}</p>
-        <dl class="meta rv" style="--d:3">
-          <div><dt>Période</dt><dd>${esc(p.periode)}</dd></div>
-          <div><dt>Équipe</dt><dd>${esc(p.equipe)}</dd></div>
-          <div><dt>Compétences</dt><dd class="puces">${cs.map(c => `<a href="#${c}">${puceComp(c)}</a>`).join("") || "—"}</dd></div>
-        </dl>
-        ${p.aCompleter ? `<p class="alerte rv">Fiche en cours de rédaction.</p>` : ""}
+        ${logoOrganisme(p.organisme)}
       </header>
+      ${p.aCompleter ? `<p class="note">Cette fiche est en cours de rédaction.</p>` : ""}
       <div class="fiche-grille">
-        <div class="rubriques">
-          ${rubriques.map(([t, v]) => `<section class="rubrique rv"><h2>${t}</h2><p>${esc(v)}</p></section>`).join("")}
+        <div class="texte">
+          ${rubriques.map(([t, v]) => `<h2>${t}</h2><p>${esc(v)}</p>`).join("")}
+          ${details ? `<h2>Points clés</h2><ul class="points">${details}</ul>` : ""}
         </div>
-        <aside class="panneau rv">
+        <aside class="panneau">
           <h2>Outils</h2>
-          <div class="tuiles">${p.outils.map(tuileOutil).join("")}</div>
-          ${ressources ? `<h2>Ressources</h2><div class="pile">${ressources}</div>` : ""}
+          <p class="liste-outils">${p.outils.map(outil).join("")}</p>
+          ${ressources ? `<h2>Liens</h2><ul class="ressources">${ressources}</ul>` : ""}
+          ${cs.length ? `<h2>Compétences</h2><p>${cs.map(c => `<a href="#${c}">C${numComp(c)}</a>`).join(", ")}</p>` : ""}
         </aside>
       </div>
-      ${details ? `<h2 class="titre-bloc rv">Points clés</h2><ul class="points-cles rv">${details}</ul>` : ""}
-      ${images ? `<h2 class="titre-bloc rv">En images</h2><div class="galerie">${images}</div>` : ""}
-      ${extraits ? `<h2 class="titre-bloc rv">Dans le code</h2><div class="extraits">${extraits}</div>` : ""}
-      <h2 class="titre-bloc rv">Compétences mobilisées</h2>
+      ${images ? `<h2 class="titre-bloc">Images</h2><div class="galerie">${images}</div>` : ""}
+      ${extraits ? `<h2 class="titre-bloc">Code</h2><div class="extraits">${extraits}</div>` : ""}
+      <h2 class="titre-bloc">Compétences mobilisées</h2>
       ${comps || "<p>Aucune compétence associée pour l'instant.</p>"}
-      <a class="suivant rv" href="projets.html?id=${suivant.id}">
-        <span class="mono">Projet suivant</span>
-        <strong>${esc(suivant.nom)} ${fleche}</strong>
-      </a>
+      <p class="suivant">Projet suivant : <a href="projets.html?id=${suivant.id}">${esc(suivant.nom)}</a></p>
     </article>`;
 }
 
@@ -579,7 +358,7 @@ function activerVisionneuse(zone) {
   if (!boutons.length) return;
   const d = document.createElement("dialog");
   d.className = "visionneuse";
-  d.innerHTML = `<button type="button" class="rond fermer" aria-label="Fermer">✕</button><img alt=""><p></p>`;
+  d.innerHTML = `<button type="button" class="fermer">Fermer</button><img alt=""><p></p>`;
   document.body.append(d);
   const fermer = () => d.close();
   d.querySelector(".fermer").addEventListener("click", fermer);
@@ -598,28 +377,27 @@ function pageProjets() {
   const p = PROJETS.find(x => x.id === id);
   const zone = document.getElementById("contenu");
   if (p) {
-    document.title = `${p.nom} | ${PROFIL.nom}`;
+    document.title = `${p.nom} · ${PROFIL.nom}`;
     zone.innerHTML = ficheProjet(p);
     chargerExtraits(zone);
     activerVisionneuse(zone);
     if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
     return;
   }
-  const filtres = ["Tous", ...COMPS].map((c, i) =>
-    `<button type="button" data-filtre="${i ? c : ""}" aria-pressed="${i === 0}">${i ? `${icone(c)}${esc(COMPETENCES[c].court)}` : c}</button>`).join("");
+  const filtres = [["", "Tous"], ...COMPS.map(c => [c, `C${numComp(c)} ${COMPETENCES[c].court}`])].map(([v, t], i) =>
+    `<button type="button" data-filtre="${v}" aria-pressed="${i === 0}">${esc(t)}</button>`).join("");
   zone.innerHTML = `
     <section class="wrap page-tete">
-      <p class="surtitre rv"><span>${deux(PROJETS.length)}</span>Projets</p>
-      <h1 class="rv" style="--d:1">Ce que j'ai construit</h1>
-      <p class="intro rv" style="--d:2">Les projets menés pendant le BUT et les compétences qu'ils ont mobilisées.</p>
-      ${id ? `<p class="alerte">Ce projet n'existe pas. Voici la liste complète.</p>` : ""}
-      <div class="filtres rv" style="--d:3" role="group" aria-label="Filtrer par compétence">${filtres}</div>
-      <div class="lignes">${PROJETS.map(ligneProjet).join("")}</div>
+      <h1>Projets</h1>
+      <p class="chapeau">Les projets réalisés pendant le BUT, du plus récent au plus ancien.</p>
+      ${id ? `<p class="note">Ce projet n'existe pas. Voici la liste complète.</p>` : ""}
+      <div class="filtres" role="group" aria-label="Filtrer par compétence"><span>Filtrer :</span>${filtres}</div>
+      <ol class="projets">${PROJETS.slice().reverse().map(ligneProjet).join("")}</ol>
     </section>`;
   zone.querySelectorAll("[data-filtre]").forEach(b => b.addEventListener("click", () => {
     const f = b.dataset.filtre;
     zone.querySelectorAll("[data-filtre]").forEach(x => x.setAttribute("aria-pressed", x === b));
-    zone.querySelectorAll(".ligne").forEach(l => {
+    zone.querySelectorAll(".projet").forEach(l => {
       l.hidden = f && !l.dataset.comps.split(" ").includes(f);
     });
   }));
@@ -633,48 +411,39 @@ function ficheCompetence(c) {
     const N = C.niveaux[n];
     const { couverts, attente, total } = couverture(c, n);
     const acs = Object.entries(N.acs).map(([ac, texte]) => {
-      const preuves = PROJETS.filter(p => (p.liens[c] || {})[ac]).map(p => {
+      const liens = PROJETS.filter(p => (p.liens[c] || {})[ac]);
+      const valide = liens.some(p => !p.liens[c][ac].aConfirmer);
+      const preuves = liens.map(p => {
         const l = p.liens[c][ac];
-        return `<li><a href="projets.html?id=${p.id}#${c}">${esc(p.nom)}</a><span>${esc(l.preuve)}${l.aConfirmer ? " <em>à confirmer</em>" : ""}</span></li>`;
+        return `<li><a href="projets.html?id=${p.id}#${c}">${esc(p.nom)}</a> : ${esc(l.preuve)}${l.aConfirmer ? ` <span class="a-confirmer">à confirmer</span>` : ""}</li>`;
       }).join("");
-      const liens = PROJETS.map(p => (p.liens[c] || {})[ac]).filter(Boolean);
-      const etat = liens.some(l => !l.aConfirmer) ? " fait" : liens.length ? " attente" : "";
-      return `<div class="ac${etat}">
-        <p class="ac-titre"><span class="coche" aria-hidden="true"></span><span><span class="mono">${numAC(ac)}</span> ${esc(texte)}</span></p>
-        ${preuves ? `<ul class="preuves">${preuves}</ul>` : `<p class="vide">Pas encore de preuve</p>`}
-      </div>`;
+      return `<li class="${valide ? "valide" : liens.length ? "attente" : "manquant"}">
+        <p class="ac-titre"><span class="ac-code">${numAC(ac)}</span> ${esc(texte)}</p>
+        ${preuves ? `<ul class="preuves">${preuves}</ul>` : `<p class="vide">Pas encore de preuve.</p>`}
+      </li>`;
     }).join("");
-    return `<section class="niveau n${n} rv">
-      <div class="niveau-tete">
-        <h2><span class="mono niveau-num">Niveau ${n}</span>${esc(N.titre)}</h2>
-        <span class="mono compte">${couverts}/${total}${attente ? ` <span class="attente-txt">+${attente} à confirmer</span>` : ""}</span>
-      </div>
-      ${acs}
+    return `<section class="niveau">
+      <h2>Niveau ${n} : ${esc(N.titre)}</h2>
+      <p class="compte">${couverts} AC démontrés sur ${total}${attente ? `, ${attente} à confirmer` : ""}</p>
+      <ol class="acs">${acs}</ol>
     </section>`;
   }).join("");
+  const groupe = groupes().find(g => g.comps.includes(c));
   return `
     <article class="wrap fiche">
-      <a class="retour rv" href="competences.html">← Toutes les compétences</a>
-      <header class="fiche-tete">
-        <p class="surtitre rv"><span class="avec-ico">${icone(c)}Compétence ${numComp(c)}</span>${esc(groupeDe(c)?.nom || C.court)}</p>
-        <h1 class="rv" style="--d:1">${esc(C.nom)}</h1>
-        <p class="fiche-resume rv" style="--d:2">${esc(C.description || "")}</p>
-        <p class="compte-global rv" style="--d:3"><span class="mono">${tout.couverts}/${tout.total}</span> apprentissages critiques démontrés sur ${niveauxDe(c).length} niveaux${tout.attente ? `, ${tout.attente} de plus à confirmer` : ""}.</p>
+      <p class="fil"><a href="competences.html">Compétences</a> / Compétence ${numComp(c)}</p>
+      <header>
+        <p class="sur-titre">Compétence ${numComp(c)}${groupe?.nom ? ` · ${esc(groupe.nom)}` : ""}</p>
+        <h1>${esc(C.nom)}</h1>
+        <p class="chapeau">${esc(C.description || "")}</p>
+        <p class="meta">${tout.couverts} apprentissages critiques démontrés sur ${tout.total}${tout.attente ? `, ${tout.attente} à confirmer` : ""}.</p>
       </header>
-      ${C.composantes ? `<div class="referentiel rv">
-        <section>
-          <h2>Composantes essentielles</h2>
-          <ul>${C.composantes.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
-        </section>
-        <section>
-          <h2>Situations professionnelles</h2>
-          <ul>${C.situations.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
-        </section>
+      ${C.composantes ? `<div class="referentiel">
+        <section><h2>Composantes essentielles</h2><ul>${C.composantes.map(x => `<li>${esc(x)}</li>`).join("")}</ul></section>
+        <section><h2>Situations professionnelles</h2><ul>${C.situations.map(x => `<li>${esc(x)}</li>`).join("")}</ul></section>
       </div>` : ""}
-      <div class="niveaux">${niveaux}</div>
-      <nav class="autres-comps rv" aria-label="Autres compétences">
-        ${COMPS.filter(x => x !== c).map(x => `<a href="competences.html?id=${x}">${puceComp(x)}<span>${esc(COMPETENCES[x].court)}</span></a>`).join("")}
-      </nav>
+      ${niveaux}
+      <p class="suivant">Autres compétences : ${COMPS.filter(x => x !== c).map(x => `<a href="competences.html?id=${x}">C${numComp(x)} ${esc(COMPETENCES[x].court)}</a>`).join(", ")}</p>
     </article>`;
 }
 
@@ -682,196 +451,62 @@ function pageCompetences() {
   const id = param("id");
   const zone = document.getElementById("contenu");
   if (COMPETENCES[id]) {
-    document.title = `Compétence ${numComp(id)} : ${COMPETENCES[id].nom} | ${PROFIL.nom}`;
+    document.title = `Compétence ${numComp(id)} : ${COMPETENCES[id].nom} · ${PROFIL.nom}`;
     zone.innerHTML = ficheCompetence(id);
     return;
   }
   zone.innerHTML = `
     <section class="wrap page-tete">
-      <p class="surtitre rv"><span>${deux(COMPS.length)}</span>Compétences</p>
-      <h1 class="rv" style="--d:1">Parcours C, en preuves</h1>
-      <p class="intro rv" style="--d:2">Les six compétences du référentiel national du BUT Informatique, parcours C « Administration, gestion et exploitation des données ». C1 à C3 se valident sur deux niveaux, C4 à C6 sur trois. Les jauges montrent la part des apprentissages critiques démontrés par au moins un projet.</p>
-      ${id ? `<p class="alerte">Cette compétence n'existe pas. Voici la liste complète.</p>` : ""}
-      ${grilleGroupee()}
+      <h1>Compétences</h1>
+      <p class="chapeau">Les six compétences du référentiel national du BUT Informatique, parcours C « Administration, gestion et exploitation des données ». C1 à C3 se valident sur deux niveaux, C4 à C6 sur trois.</p>
+      ${id ? `<p class="note">Cette compétence n'existe pas. Voici la liste complète.</p>` : ""}
+      ${listeCompetences()}
     </section>
     <section class="wrap section">
-      ${entreeSection("↳", "Projets × compétences")}
+      ${titreSection("Projets et compétences", "Pour chaque projet, les niveaux de compétence qu'il permet de démontrer.")}
       ${tableauCroise()}
     </section>`;
 }
 
-/* ---------- Apparitions au défilement ---------- */
-function apparitions() {
-  const els = document.querySelectorAll(".rv");
-  if (!("IntersectionObserver" in window)) return els.forEach(e => e.classList.add("vu"));
-  const io = new IntersectionObserver(entrees => entrees.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add("vu"); io.unobserve(e.target); }
-  }), { rootMargin: "0px 0px -8% 0px" });
-  els.forEach(e => io.observe(e));
-}
-
-/* Reflet qui suit la souris sur les cartes */
-function reflets() {
-  document.addEventListener("pointermove", e => {
-    const c = e.target.closest?.(".carte");
-    if (!c) return;
-    const r = c.getBoundingClientRect();
-    c.style.setProperty("--mx", `${e.clientX - r.left}px`);
-    c.style.setProperty("--my", `${e.clientY - r.top}px`);
-  }, { passive: true });
-}
-
-/* ---------- Fond étoilé ---------- */
-function etoiles() {
-  const cv = document.getElementById("etoiles");
-  const ctx = cv?.getContext("2d");
-  if (!ctx) return;
-  const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let pts = [], w, h, couleur, px = 0, py = 0;
-  const lireCouleur = () => { couleur = getComputedStyle(document.documentElement).getPropertyValue("--etoile").trim() || "255,255,255"; };
-  const taille = () => {
-    const r = Math.min(devicePixelRatio || 1, 2);
-    w = innerWidth; h = innerHeight;
-    cv.width = w * r; cv.height = h * r;
-    ctx.setTransform(r, 0, 0, r, 0, 0);
-    const n = Math.round(Math.min(220, w * h / 7000));
-    pts = Array.from({ length: n }, () => ({
-      x: Math.random() * w, y: Math.random() * h,
-      z: Math.random() * .8 + .2, t: Math.random() * 6.28
-    }));
-  };
-  addEventListener("pointermove", e => { px = e.clientX / w - .5; py = e.clientY / h - .5; }, { passive: true });
-  const dessin = temps => {
-    ctx.clearRect(0, 0, w, h);
-    const sy = scrollY * .04;
-    for (const p of pts) {
-      if (!calme) { p.y -= p.z * .08; if (p.y < -4) { p.y = h + 4; p.x = Math.random() * w; } }
-      const a = (.25 + .55 * p.z) * (calme ? 1 : .65 + .35 * Math.sin(temps / 900 + p.t));
-      const x = (p.x - px * 18 * p.z + w) % w;
-      const y = ((p.y - py * 18 * p.z - sy * p.z) % h + h) % h;
-      ctx.fillStyle = `rgba(${couleur},${a})`;
-      ctx.beginPath(); ctx.arc(x, y, p.z * 1.1, 0, 6.29); ctx.fill();
-    }
-    if (!calme) requestAnimationFrame(dessin);
-  };
-  lireCouleur(); taille();
-  addEventListener("resize", () => { taille(); if (calme) dessin(0); });
-  addEventListener("theme", () => { lireCouleur(); if (calme) dessin(0); });
-  requestAnimationFrame(dessin);
-}
-
 /* ---------- Page « À propos » ---------- */
-const ICONES_PERSO = {
-  ia: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>',
-  code: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
-  equipe: ICONES_COMP.C6,
-  parole: '<path d="M4 5.5h16v10.5H10l-5 4v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/>',
-  temps: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
-  boussole: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
-  bug: '<rect x="7" y="7.5" width="10" height="13" rx="5"/><path d="M12 7.5v13M9 4l1.5 3.5M15 4l-1.5 3.5M3 11.5h4M17 11.5h4M3.5 17h3.7M16.8 17h3.7"/>',
-  violoncelle: '<path d="M12 9c-2.5 0-4 1.5-4 3.3 0 1 .6 1.7.6 2.4 0 .8-1.1 1.4-1.1 3 0 2 2 3.8 4.5 3.8s4.5-1.8 4.5-3.8c0-1.6-1.1-2.2-1.1-3 0-.7.6-1.4.6-2.4C16 10.5 14.5 9 12 9z"/><path d="M12 9V2.5M10.8 2.5h2.4M10.4 13.5v2.5M13.6 13.5v2.5M10.6 18h2.8"/>',
-  football: '<circle cx="12" cy="12" r="9.5"/><path d="m12 7.5 3.3 2.4-1.3 3.9h-4l-1.3-3.9z"/><path d="M12 7.5V2.6M15.3 9.9l4.4-1.6M14 13.8l2.8 3.9M10 13.8l-2.8 3.9M8.7 9.9 4.3 8.3"/>',
-  halteres: '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>'
-};
-const iconePerso = k => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONES_PERSO[k] || ""}</svg>`;
-
-function cartesPerso(liste, classe) {
-  return liste.map((c, i) => `
-    <article class="${classe} rv" style="--d:${i}">
-      <span class="perso-ico">${iconePerso(c.icone)}</span>
-      ${c.chiffre ? `<span class="chiffre">${esc(c.chiffre)}</span>` : ""}
-      <h3>${esc(c.titre)}</h3>
-      <p>${esc(c.texte)}</p>
-    </article>`).join("");
-}
-
 function pageAPropos() {
   if (typeof PERSO === "undefined") return;
-  document.title = `À propos | ${PROFIL.nom}`;
+  document.title = `À propos · ${PROFIL.nom}`;
   const contact = liensContact();
+  const liste = items => `<ul class="liste-simple">${items.map(x =>
+    `<li><strong>${esc(x.titre)}</strong>${x.chiffre ? ` (${esc(x.chiffre)})` : ""} : ${esc(x.texte)}</li>`).join("")}</ul>`;
   document.getElementById("contenu").innerHTML = `
-    <section class="wrap perso-tete">
-      <div class="portrait-zone rv">
-        <button type="button" class="portrait" aria-label="Photo d'${esc(PROFIL.nom)}">
-          <span class="portrait-anneau" aria-hidden="true"></span>
-          <img src="${esc(PROFIL.photo)}" alt="Portrait d'${esc(PROFIL.nom)}" width="246" height="246">
-        </button>
-        <div class="portrait-legende">
-          <strong>${esc(PROFIL.nom)}</strong>
-          <span class="mono">${esc(PROFIL.formation)}</span>
-          ${tuileOrganisme(PROFIL.ecole, "moyen")}
+    <article class="wrap apropos">
+      <header class="apropos-tete">
+        ${PROFIL.photo ? `<img class="photo" src="${esc(PROFIL.photo)}" alt="Photo d'${esc(PROFIL.nom)}" width="180" height="180">` : ""}
+        <div>
+          <h1>${esc(PERSO.titre)}</h1>
+          <p class="meta">${esc(PROFIL.formation)}</p>
         </div>
-      </div>
-      <div class="perso-texte">
-        <p class="surtitre rv"><span>✦</span>À propos</p>
-        <h1 class="rv" style="--d:1">${esc(PERSO.titre)}</h1>
-        ${PERSO.presentation.map((t, i) => `<p class="perso-para rv" style="--d:${i + 2}">${esc(t)}</p>`).join("")}
-        <dl class="en-bref rv" style="--d:5">
-          ${PERSO.enBref.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}
-        </dl>
-      </div>
-    </section>
-
-    <section class="wrap section">
-      ${entreeSection("01", "Ce qui me fait avancer")}
-      <div class="grille-perso">${cartesPerso(PERSO.moteurs, "carte-perso")}</div>
-    </section>
-
-    <section class="wrap section">
-      ${entreeSection("02", "Mes qualités", "Tirées de mon engagement bénévole et de mes projets en équipe.")}
-      <div class="grille-qualites">${cartesPerso(PERSO.qualites, "qualite")}</div>
-    </section>
-
-    <section class="wrap section">
-      ${entreeSection("03", "En dehors du code")}
-      <div class="grille-perso">${cartesPerso(PERSO.interets, "carte-perso interet")}</div>
-    </section>
-
-    <section class="wrap section">
-      <div class="final rv">
-        <p class="surtitre"><span>04</span>Et maintenant ?</p>
-        <p class="final-texte">${esc(PROFIL.objectif)}</p>
-        <div class="actions">
-          <a class="btn" href="index.html#parcours">Voir mon parcours ${fleche}</a>
-          ${contact.map(([u, t], i) => `<a class="btn${i ? "" : " plein"}" href="${esc(u)}">${t}</a>`).join("")}
+      </header>
+      <div class="apropos-grille">
+        <div class="texte">
+          ${PERSO.presentation.map(t => `<p>${esc(t)}</p>`).join("")}
+          <h2>Ce qui me motive</h2>
+          ${liste(PERSO.moteurs)}
+          <h2>Qualités</h2>
+          ${liste(PERSO.qualites)}
+          <h2>En dehors des études</h2>
+          ${liste(PERSO.interets)}
+          <h2>Contact</h2>
+          <p>${esc(PROFIL.objectif)}</p>
+          <p class="liens-intro">${contact.map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}</p>
         </div>
+        <aside class="panneau">
+          <h2>En bref</h2>
+          <dl class="en-bref">${PERSO.enBref.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+          ${logoOrganisme(PROFIL.ecole)}
+        </aside>
       </div>
-    </section>`;
-  activerPortrait();
-}
-
-/* Portrait : s'incline vers la souris, éclat mo.js au clic */
-function activerPortrait() {
-  const p = document.querySelector(".portrait");
-  if (!p) return;
-  const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!calme) {
-    p.addEventListener("pointermove", e => {
-      const r = p.getBoundingClientRect();
-      p.style.setProperty("--rx", `${((e.clientY - r.top) / r.height - 0.5) * -14}deg`);
-      p.style.setProperty("--ry", `${((e.clientX - r.left) / r.width - 0.5) * 14}deg`);
-    });
-    p.addEventListener("pointerleave", () => { p.style.setProperty("--rx", "0deg"); p.style.setProperty("--ry", "0deg"); });
-  }
-  let gerbe = null;
-  p.addEventListener("click", () => {
-    if (!window.mojs || calme) return;
-    const style = getComputedStyle(document.documentElement);
-    gerbe ??= new mojs.Burst({
-      parent: p, left: "50%", top: "50%", radius: { 60: 150 }, count: 14,
-      children: { shape: ["circle", "polygon"], radius: { 7: 0 }, points: 5,
-        fill: [style.getPropertyValue("--accent").trim(), style.getPropertyValue("--accent-2").trim()],
-        duration: 900, easing: "cubic.out" }
-    });
-    gerbe.replay();
-  });
+    </article>`;
 }
 
 /* ---------- Démarrage ---------- */
 entete();
 pied();
 ({ accueil: pageAccueil, projets: pageProjets, competences: pageCompetences, apropos: pageAPropos })[page]?.();
-activerFrise();
-apparitions();
-reflets();
-etoiles();

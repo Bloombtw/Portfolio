@@ -1,0 +1,1177 @@
+TEXTES DU PORTFOLIO À RÉÉCRIRE
+
+Chaque phrase affichée sur le site est listée ci-dessous avec son emplacement.
+Réécris-la sur la ligne « → » en dessous (laisse vide pour la garder telle quelle).
+Tu peux ensuite me renvoyer ce fichier : je reporterai les nouvelles versions au bon endroit.
+Si tu modifies toi-même, cherche le texte d'origine dans le fichier indiqué (Ctrl + F).
+
+Ne sont PAS listés : les libellés officiels du référentiel (noms des compétences,
+niveaux, apprentissages critiques, composantes, situations), qui doivent rester
+mot pour mot, ni les noms propres (outils, logiciels).
+
+==============================================================================
+1. PROFIL ET ACCUEIL (assets/js/data.js › PROFIL)
+==============================================================================
+
+[001] PROFIL › formation (en-tête de l'accueil, pied de page)
+    BUT Informatique, IUT de Montreuil
+    → 
+
+[002] PROFIL › parcours (en-tête de l'accueil)
+    Parcours C : administration, gestion et exploitation des données
+    → 
+
+[003] PROFIL › accroche (texte sous ton nom, accueil)
+    Étudiant en 3e année, passionné par la data et l'intelligence artificielle. Je conçois des bases de données et les applications qui les exploitent, en équipe et de bout en bout.
+    → 
+
+[004] PROFIL › objectif (section Contact de l'accueil et de « À propos »)
+    Mettre mes compétences en données au service d'une équipe, et approfondir la data et l'intelligence artificielle dans un environnement tourné vers l'innovation.
+    → 
+
+==============================================================================
+2. PAGE « À PROPOS » (assets/js/data.js › PERSO)
+==============================================================================
+
+[005] PERSO › titre
+    Bonjour, moi c'est Anton.
+    → 
+
+[006] PERSO › presentation, paragraphe 1
+    Étudiant en troisième année de BUT Informatique à l'IUT de Montreuil, je suis le parcours C, consacré à l'administration, à la gestion et à l'exploitation des données.
+    → 
+
+[007] PERSO › presentation, paragraphe 2
+    Je suis passionné par la data et l'intelligence artificielle. J'aime partir de données brutes, les nettoyer, les structurer puis les rendre utiles, comme dans la SAE sur la qualité de l'air mondial.
+    → 
+
+[008] PERSO › presentation, paragraphe 3
+    Je veux mettre ces compétences en pratique au sein d'une équipe dynamique et continuer à apprendre dans un environnement tourné vers l'innovation.
+    → 
+
+[009] PERSO › enBref › Formation
+    BUT Informatique, 3e année
+    → 
+
+[010] PERSO › enBref › Parcours
+    C · données
+    → 
+
+[011] PERSO › enBref › Baccalauréat
+    Général, mention bien
+    → 
+
+[012] PERSO › enBref › Expérience
+    Stage de 8 semaines à l'AFPOLS
+    → 
+
+[013] PERSO › moteurs (« Ce qui me motive ») › La data et l'IA
+    Comprendre ce que racontent les données, et comment l'intelligence artificielle peut les exploiter.
+    → 
+
+[014] PERSO › moteurs (« Ce qui me motive ») › Construire
+    Passer d'un besoin à une application qui fonctionne : un jeu, une buvette, une base de données.
+    → 
+
+[015] PERSO › moteurs (« Ce qui me motive ») › Le travail d'équipe
+    Répartir les tâches, relire le code ensemble et accueillir de nouveaux membres dans un projet.
+    → 
+
+[016] PERSO › qualites (« Qualités ») › Communication pédagogique
+    Un an d'encadrement scolaire bénévole.
+    → 
+
+[017] PERSO › qualites (« Qualités ») › Gestion du temps
+    Accompagnement d'élèves en parallèle des études.
+    → 
+
+[018] PERSO › qualites (« Qualités ») › Autonomie
+    Avancer seul sur ma partie, avec GitHub pour suivre mon travail.
+    → 
+
+[019] PERSO › qualites (« Qualités ») › Résolution de problèmes
+    Débogage méthodique sous IntelliJ.
+    → 
+
+[020] PERSO › interets (« En dehors des études ») › Violoncelle
+    Neuf ans de pratique, pour la rigueur et l'écoute.
+    → 
+
+[021] PERSO › interets (« En dehors des études ») › Football
+    Le plaisir du jeu collectif.
+    → 
+
+[022] PERSO › interets (« En dehors des études ») › Musculation
+    La régularité et le dépassement de soi.
+    → 
+
+==============================================================================
+3. PARCOURS (assets/js/data.js › FRISE)
+==============================================================================
+
+[023] FRISE › 2023 › titre
+    Encadrant scolaire bénévole
+    → 
+
+[024] FRISE › 2023 › texte
+    Un an d'accompagnement d'élèves : communication pédagogique et gestion du temps.
+    → 
+
+[025] FRISE › 2024 › titre
+    Baccalauréat général, mention bien
+    → 
+
+[026] FRISE › 2024 › texte
+    Lycée Maurice Ravel, Paris 12.
+    → 
+
+[027] FRISE › 2024 – 2025 › titre
+    BUT Informatique, 1re année
+    → 
+
+[028] FRISE › 2024 – 2025 › texte
+    IUT de Montreuil, Université Paris 8. Premiers projets en équipe : développement, bases de données, systèmes.
+    → 
+
+[029] FRISE › 2025 – 2026 › titre
+    BUT Informatique, 2e année
+    → 
+
+[030] FRISE › 2025 – 2026 › texte
+    Parcours C : administration, gestion et exploitation des données.
+    → 
+
+[031] FRISE › 2026 › titre
+    Stage à l'AFPOLS · 8 semaines
+    → 
+
+[032] FRISE › 2026 › texte
+    Mise en œuvre d'un plan d'action de cybersécurité et gestion du parc applicatif.
+    → 
+
+[033] FRISE › 2026 – 2027 › titre
+    BUT Informatique, 3e année
+    → 
+
+[034] FRISE › 2026 – 2027 › texte
+    Année en cours : les projets de 3e année viendront démontrer le niveau 3.
+    → 
+
+==============================================================================
+4. PROJETS (assets/js/data.js › PROJETS)
+==============================================================================
+
+--- Le jeu d'échecs (id: sae-echecs) -----------------------------------------
+
+[035] sae-echecs › nom
+    Le jeu d'échecs
+    → 
+
+[036] sae-echecs › resume (phrase sous le titre)
+    Implémentation d'un besoin client : un moteur de jeu d'échecs en Java.
+    → 
+
+[037] sae-echecs › equipe
+    En équipe
+    → 
+
+[038] sae-echecs › contexte
+    SAE de première année de développement en équipe, à partir d'un besoin client.
+    → 
+
+[039] sae-echecs › objectif
+    Implémenter un moteur de jeu d'échecs capable de détecter l'échec et l'échec et mat.
+    → 
+
+[040] sae-echecs › role (« Mon rôle »)
+    Développement du moteur, écriture des jeux de tests et préparation de la soutenance.
+    → 
+
+[041] sae-echecs › resultats
+    Fonctionnalités opérationnelles, soutenance réussie.
+    → 
+
+[042] sae-echecs › details (« Points clés ») n°1
+    Code découpé en classes : Main (déroulement), Menu (saisies), Plateau et Pieces (règles).
+    → 
+
+[043] sae-echecs › details (« Points clés ») n°2
+    Échiquier représenté par un tableau char[8][8] : majuscules pour les noirs, minuscules pour les blancs.
+    → 
+
+[044] sae-echecs › details (« Points clés ») n°3
+    Au lancement : saisie des deux pseudos, tirage du joueur qui a les blancs, puis tours alternés.
+    → 
+
+[045] sae-echecs › details (« Points clés ») n°4
+    Tests JUnit sur les règles : pièces alliées, obstacles sur le trajet, prise d'une pièce adverse, obstacles du roque.
+    → 
+
+[046] sae-echecs › code › titre de Main.java
+    Boucle de jeu
+    → 
+
+[047] sae-echecs › code › titre de Junit.java
+    Tests unitaires des règles
+    → 
+
+[048] sae-echecs › liens › C1 › 1.1a (preuve)
+    Moteur d'échecs implémenté en Java à partir du besoin client.
+    → 
+
+[049] sae-echecs › liens › C1 › 1.1c (preuve)
+    Tests JUnit sur les règles : pièces alliées, obstacles, prises, roque.
+    → 
+
+[050] sae-echecs › liens › C2 › 2.1a (preuve)
+    Règles découpées en fonctions : obstacle sur le trajet, prise, roque, sur un tableau char[8][8].
+    → 
+
+[051] sae-echecs › liens › C5 › 5.1a (preuve)
+    Moteur développé pour répondre au besoin exprimé par le client.
+    → 
+
+[052] sae-echecs › liens › C5 › 5.1b (preuve)
+    Dépôt Git partagé et branches pour organiser le travail de l'équipe.
+    → 
+
+[053] sae-echecs › liens › C6 › 6.1d (preuve)
+    Développement à plusieurs sur un même code.
+    → 
+
+[054] sae-echecs › liens › C6 › 6.2d (preuve)
+    Soutenance et démonstration de la détection de l'échec et mat.
+    → 
+
+--- Poste de développement (id: sae-poste) -----------------------------------
+
+[055] sae-poste › nom
+    Poste de développement
+    → 
+
+[056] sae-poste › resume (phrase sous le titre)
+    Installation d'un poste virtuel Linux avec MySQL, Apache2 et PHP.
+    → 
+
+[057] sae-poste › equipe
+    Individuel puis en groupe
+    → 
+
+[058] sae-poste › contexte
+    SAE d'installation d'un poste pour le développement.
+    → 
+
+[059] sae-poste › objectif
+    Installer un poste virtuel Linux équipé de MySQL, Apache2 et PHP, créer une base de données, puis un site qui en affiche le contenu.
+    → 
+
+[060] sae-poste › role (« Mon rôle »)
+    Configuration individuelle de chaque logiciel, puis mise en commun à travers un site PHP servi par Apache qui affiche le contenu de la base créée en amont.
+    → 
+
+[061] sae-poste › resultats
+    Poste fonctionnel et site web affichant les données de la base.
+    → 
+
+[062] sae-poste › details (« Points clés ») n°1
+    Machine virtuelle Linux créée sous VirtualBox.
+    → 
+
+[063] sae-poste › details (« Points clés ») n°2
+    Pile Apache, MySQL et PHP installée avec apt, services lancés au démarrage avec systemctl.
+    → 
+
+[064] sae-poste › details (« Points clés ») n°3
+    Base MySQL dédiée et utilisateur aux droits limités à cette base.
+    → 
+
+[065] sae-poste › details (« Points clés ») n°4
+    Page PHP servie par Apache qui lit la base avec PDO et l'affiche dans un tableau.
+    → 
+
+[066] sae-poste › details (« Points clés ») n°5
+    Vérification des versions installées, dont Python 3.11.7 pour les scripts.
+    → 
+
+[067] sae-poste › images › légende de poste-terminal.png
+    Vérification de l'environnement dans le terminal : Python 3.11.7.
+    → 
+
+[068] sae-poste › code › titre de installation.sh
+    Installation du poste
+    → 
+
+[069] sae-poste › code › titre de index.php
+    Page qui affiche la base
+    → 
+
+[070] sae-poste › liens › C3 › 3.1a (preuve)
+    Identification des logiciels à installer : serveur web, SGBD, langage de script.
+    → 
+
+[071] sae-poste › liens › C3 › 3.1b (preuve)
+    Utilisation du terminal Linux pour installer et gérer les services.
+    → 
+
+[072] sae-poste › liens › C3 › 3.1c (preuve)
+    Installation et configuration d'une machine virtuelle Linux avec Apache, MySQL et PHP.
+    → 
+
+[073] sae-poste › liens › C3 › 3.2b (preuve)
+    Services web et base de données hébergés sur une machine virtuelle.
+    → 
+
+[074] sae-poste › liens › C4 › 4.1a (preuve)
+    Base MySQL créée puis interrogée depuis le site PHP.
+    → 
+
+[075] sae-poste › liens › C4 › 4.1b (preuve)
+    Page web qui affiche le contenu de la base.
+    → 
+
+[076] sae-poste › liens › C6 › 6.1a (preuve)
+    Installation et configuration d'un environnement Linux, Apache, MySQL, PHP.
+    → 
+
+--- Site pour les JO (id: sae-jo) --------------------------------------------
+
+[077] sae-jo › nom
+    Site pour les JO
+    → 
+
+[078] sae-jo › resume (phrase sous le titre)
+    Création d'un site web autour des Jeux olympiques, en réponse à un besoin client.
+    → 
+
+[079] sae-jo › equipe
+    En équipe
+    → 
+
+[080] sae-jo › contexte
+    SAE de première année : concevoir un site web pour un client.
+    → 
+
+[081] sae-jo › objectif
+    Créer un site web qui réponde au besoin exprimé par le client.
+    → 
+
+[082] sae-jo › role (« Mon rôle »)
+    Création du site et suivi de l'équipe via Trello.
+    → 
+
+[083] sae-jo › resultats
+    Site web livré.
+    → 
+
+[084] sae-jo › liens › C1 › 1.1d (preuve)
+    Pages du site web pour les JO.
+    → 
+
+[085] sae-jo › liens › C5 › 5.1a (preuve)
+    Site conçu pour répondre au besoin du client.
+    → 
+
+[086] sae-jo › liens › C5 › 5.1b (preuve)
+    Tableau Trello pour suivre les tâches de l'équipe.
+    → 
+
+[087] sae-jo › liens › C6 › 6.1d (preuve)
+    Travail en équipe coordonné sur Trello.
+    → 
+
+--- Création d'une base de données (id: sae-bd) ------------------------------
+
+[088] sae-bd › nom
+    Création d'une base de données
+    → 
+
+[089] sae-bd › resume (phrase sous le titre)
+    Base de données relationnelle complète d'une boutique en ligne, sous PostgreSQL.
+    → 
+
+[090] sae-bd › equipe
+    En groupe
+    → 
+
+[091] sae-bd › contexte
+    SAE 1.04 consacrée à la conception et à l'exploitation d'une base de données relationnelle à partir d'un cahier des charges.
+    → 
+
+[092] sae-bd › objectif
+    Concevoir et mettre en place la base d'une boutique en ligne : utilisateurs, catalogue, panier, commandes et suivi de leur état.
+    → 
+
+[093] sae-bd › role (« Mon rôle »)
+    Modèles conceptuel et logique (MCD, MLD), création de la base sous PostgreSQL, écriture et optimisation des requêtes (jointures, contraintes, index), jeu de données de test.
+    → 
+
+[094] sae-bd › resultats
+    Base fonctionnelle, peuplée et testée avec 5 utilisateurs et 50 produits. Livrables et documentation conformes.
+    → 
+
+[095] sae-bd › liens › C4 › 4.1c (preuve)
+    MCD et MLD construits à partir du cahier des charges.
+    → 
+
+[096] sae-bd › liens › C4 › 4.1a (preuve)
+    Script de création, jeu de test de 5 utilisateurs et 50 produits, requêtes d'interrogation.
+    → 
+
+[097] sae-bd › liens › C4 › 4.2a (preuve)
+    Requêtes optimisées avec des jointures et des index.
+    → 
+
+[098] sae-bd › liens › C4 › 4.2b (preuve)
+    Cohérence des données assurée par des contraintes et des clés étrangères.
+    → 
+
+[099] sae-bd › liens › C6 › 6.1d (preuve)
+    Travail de modélisation réparti au sein du groupe.
+    → 
+
+--- Recherche algorithmique (id: sae-algo) -----------------------------------
+
+[100] sae-algo › nom
+    Recherche algorithmique
+    → 
+
+[101] sae-algo › resume (phrase sous le titre)
+    Comparaison de stratégies de recherche de chemin dans un labyrinthe.
+    → 
+
+[102] sae-algo › equipe
+    Individuel, encadré
+    → 
+
+[103] sae-algo › contexte
+    Projet individuel encadré portant sur la recherche de solutions optimisées.
+    → 
+
+[104] sae-algo › objectif
+    Comparer plusieurs stratégies de recherche dans un labyrinthe.
+    → 
+
+[105] sae-algo › role (« Mon rôle »)
+    Implémentation des algorithmes, analyse comparative et présentation orale.
+    → 
+
+[106] sae-algo › resultats
+    Présentation orale et analyse comparative des algorithmes.
+    → 
+
+[107] sae-algo › liens › C2 › 2.1a (preuve)
+    Modélisation du labyrinthe et découpage des algorithmes de recherche.
+    → 
+
+[108] sae-algo › liens › C2 › 2.1b (preuve)
+    Comparaison de plusieurs stratégies de recherche de chemin.
+    → 
+
+[109] sae-algo › liens › C6 › 6.2d (preuve)
+    Présentation orale de l'analyse comparative.
+    → 
+
+--- MineTaRouille (id: minetarouille) ----------------------------------------
+
+[110] minetarouille › nom
+    MineTaRouille
+    → 
+
+[111] minetarouille › resume (phrase sous le titre)
+    Jeu 2D de type Terraria en Java et JavaFX, en programmation orientée objet.
+    → 
+
+[112] minetarouille › equipe
+    3 personnes, 2 mois
+    → 
+
+[113] minetarouille › contexte
+    SAE S2.01, S2.02, S2.05 et S2.06, réalisées autour d'un même projet de jeu.
+    → 
+
+[114] minetarouille › objectif
+    Développer un jeu où le joueur mine, pose des blocs et se déplace, avec un rendu fluide et une sauvegarde de la partie.
+    → 
+
+[115] minetarouille › role (« Mon rôle »)
+    Gestion des blocs (types, comportements, interactions), inventaire graphique, déplacements avec gravité et collisions.
+    → 
+
+[116] minetarouille › resultats
+    Jeu jouable avec génération de carte, inventaire et sauvegarde. Architecture MVC et choix techniques documentés.
+    → 
+
+[117] minetarouille › details (« Points clés ») n°1
+    Moteur de jeu et interfaces en JavaFX, avec génération de la carte.
+    → 
+
+[118] minetarouille › details (« Points clés ») n°2
+    Monde stocké dans des tableaux à deux dimensions, choisis pour les performances.
+    → 
+
+[119] minetarouille › details (« Points clés ») n°3
+    Blocs : types, comportements et interactions (miner, poser).
+    → 
+
+[120] minetarouille › details (« Points clés ») n°4
+    Inventaire graphique : barre d'objets avec leurs quantités.
+    → 
+
+[121] minetarouille › details (« Points clés ») n°5
+    Déplacement du joueur avec gravité et collisions.
+    → 
+
+[122] minetarouille › details (« Points clés ») n°6
+    Sauvegarde de la partie et modélisation des entités du jeu.
+    → 
+
+[123] minetarouille › details (« Points clés ») n°7
+    GitHub pour les versions et les branches, Trello pour les tâches, débogage sous IntelliJ et choix techniques documentés.
+    → 
+
+[124] minetarouille › images › légende de mtr-jeu.png
+    Le monde généré, avec le joueur à la surface.
+    → 
+
+[125] minetarouille › images › légende de mtr-blocs.png
+    Rendu des blocs.
+    → 
+
+[126] minetarouille › images › légende de mtr-inventaire.png
+    Rendu de l'inventaire.
+    → 
+
+[127] minetarouille › images › légende de mtr-deplacement.png
+    Rendu du déplacement du joueur.
+    → 
+
+[128] minetarouille › ressources › libellé du lien
+    Dépôt GitHub
+    → 
+
+[129] minetarouille › ressources › libellé du lien
+    Présentation (PDF)
+    → 
+
+[130] minetarouille › liens › C1 › 1.1a (preuve)
+    Moteur de jeu et génération de la carte en Java.
+    → 
+
+[131] minetarouille › liens › C1 › 1.1b (preuve)
+    Conception en MVC des blocs, de l'inventaire et du joueur.
+    → 
+
+[132] minetarouille › liens › C1 › 1.1d (preuve)
+    Interfaces JavaFX : rendu du monde et inventaire graphique.
+    → 
+
+[133] minetarouille › liens › C2 › 2.1a (preuve)
+    Monde représenté par des tableaux à deux dimensions.
+    → 
+
+[134] minetarouille › liens › C2 › 2.2a (preuve)
+    Structures de données choisies pour les performances du rendu.
+    → 
+
+[135] minetarouille › liens › C4 › 4.2d (preuve)
+    Système de sauvegarde et modélisation des entités du jeu.
+    → 
+
+[136] minetarouille › liens › C5 › 5.1b (preuve)
+    Tableau Trello et branches Git pour suivre les tâches.
+    → 
+
+[137] minetarouille › liens › C5 › 5.1c (preuve)
+    Découpage du projet en phases sur deux mois.
+    → 
+
+[138] minetarouille › liens › C6 › 6.1c (preuve)
+    Rôles répartis entre les trois membres : blocs, inventaire, déplacement.
+    → 
+
+[139] minetarouille › liens › C6 › 6.1d (preuve)
+    Collaboration à trois sur le même dépôt.
+    → 
+
+[140] minetarouille › liens › C6 › 6.2d (preuve)
+    Présentation technique du projet et choix documentés.
+    → 
+
+--- Buvette associative (id: sae-buvette) ------------------------------------
+
+[141] sae-buvette › nom
+    Buvette associative
+    → 
+
+[142] sae-buvette › resume (phrase sous le titre)
+    Application web PHP de gestion d'une buvette associative, en architecture MVC.
+    → 
+
+[143] sae-buvette › equipe
+    3 personnes (Anton, Sorana, Djeneba)
+    → 
+
+[144] sae-buvette › contexte
+    SAE de développement web : une plateforme de gestion pour une buvette associative, hébergée localement.
+    → 
+
+[145] sae-buvette › objectif
+    Concevoir une application aux rôles distincts : espace client, administration, module barman, module gestionnaire et sélection de l'association, avec une authentification sécurisée.
+    → 
+
+[146] sae-buvette › role (« Mon rôle »)
+    Analyse et conception (personas, user stories, backlog), modélisation de la base MySQL, back-end PHP orienté objet (sessions, routage, accès aux données par PDO), hachage des mots de passe, interface ergonomique et responsive.
+    → 
+
+[147] sae-buvette › resultats
+    Application fonctionnelle, structurée en modèles, vues et contrôleurs pour chaque module, avec authentification par mots de passe hachés.
+    → 
+
+[148] sae-buvette › details (« Points clés ») n°1
+    Base MySQL de 9 tables : Utilisateur, Role, Membre, Association, Produit, Categorie, Panier_validation, Historique, Depenses.
+    → 
+
+[149] sae-buvette › details (« Points clés ») n°2
+    Quatre rôles (administrateur, barman, membre, gestionnaire) ; un utilisateur peut appartenir à plusieurs associations avec un rôle dans chacune.
+    → 
+
+[150] sae-buvette › details (« Points clés ») n°3
+    Panier validé au comptoir grâce à un code, avec un état (en attente, validé, annulé) et son contenu en JSON.
+    → 
+
+[151] sae-buvette › details (« Points clés ») n°4
+    Solde de chaque membre, historique des achats et des rechargements, suivi des stocks et des dépenses.
+    → 
+
+[152] sae-buvette › details (« Points clés ») n°5
+    Intégrité assurée par des clés étrangères (suppression en cascade) et une adresse e-mail unique.
+    → 
+
+[153] sae-buvette › images › légende de buvette-panier.png
+    Panier d'un membre : solde, détail de la commande et bouton Commander.
+    → 
+
+[154] sae-buvette › code › titre de structure.sql
+    Structure de la base (extrait)
+    → 
+
+[155] sae-buvette › ressources › libellé du lien
+    Dépôt GitHub
+    → 
+
+[156] sae-buvette › liens › C1 › 1.2a (preuve)
+    Personas, user stories et backlog traduits en modules métiers.
+    → 
+
+[157] sae-buvette › liens › C1 › 1.2b (preuve)
+    Interface ergonomique et responsive.
+    → 
+
+[158] sae-buvette › liens › C1 › 1.2c (preuve)
+    Architecture MVC complète et PHP orienté objet.
+    → 
+
+[159] sae-buvette › liens › C2 › 2.2c (preuve)
+    Mots de passe hachés avec password_hash.
+    → 
+
+[160] sae-buvette › liens › C3 › 3.2a (preuve)
+    Application web client-serveur hébergée localement.
+    → 
+
+[161] sae-buvette › liens › C3 › 3.2c (preuve)
+    Authentification sécurisée et sessions.
+    → 
+
+[162] sae-buvette › liens › C4 › 4.1c (preuve)
+    Base relationnelle MySQL modélisée pour les utilisateurs et les modules métiers.
+    → 
+
+[163] sae-buvette › liens › C4 › 4.1a (preuve)
+    Script SQL de structure et requêtes via PDO.
+    → 
+
+[164] sae-buvette › liens › C4 › 4.2b (preuve)
+    Mots de passe hachés (password_hash) et sessions pour l'authentification.
+    → 
+
+[165] sae-buvette › liens › C4 › 4.2c (preuve)
+    Données restituées par programmation dans les vues de chaque module.
+    → 
+
+[166] sae-buvette › liens › C5 › 5.1a (preuve)
+    Personas construits pour comprendre les utilisateurs de la buvette.
+    → 
+
+[167] sae-buvette › liens › C5 › 5.2b (preuve)
+    Besoins formalisés en user stories et en backlog.
+    → 
+
+[168] sae-buvette › liens › C5 › 5.1b (preuve)
+    Dépôt Git commun.
+    → 
+
+[169] sae-buvette › liens › C6 › 6.1d (preuve)
+    Projet mené à trois.
+    → 
+
+--- Refactorisation de MineTaRouille (id: refacto-mtr) -----------------------
+
+[170] refacto-mtr › nom
+    Refactorisation de MineTaRouille
+    → 
+
+[171] refacto-mtr › resume (phrase sous le titre)
+    Reprise du jeu : propreté du code, journaux de bord, suivi Git et soutenance.
+    → 
+
+[172] refacto-mtr › equipe
+    En équipe, avec un nouveau membre
+    → 
+
+[173] refacto-mtr › contexte
+    SAE de deuxième année : reprendre et améliorer le code de MineTaRouille.
+    → 
+
+[174] refacto-mtr › objectif
+    Mettre en avant la propreté du code, documenter le travail dans des journaux de bord et suivre l'avancement avec Git.
+    → 
+
+[175] refacto-mtr › role (« Mon rôle »)
+    Création du nouveau dépôt, intégration d'un nouveau membre (explication du code, de la documentation Markdown et du Trello, aide à la configuration de son environnement), relecture du code en groupe et répartition des tâches de refactorisation.
+    → 
+
+[176] refacto-mtr › resultats
+    Code refactorisé, journaux de bord tenus et soutenance.
+    → 
+
+[177] refacto-mtr › liens › C1 › 1.2c (preuve)
+    Refactorisation axée sur la propreté du code et les design patterns.
+    → 
+
+[178] refacto-mtr › liens › C5 › 5.1b (preuve)
+    Nouveau dépôt Git et tableau Trello pour suivre les fonctionnalités.
+    → 
+
+[179] refacto-mtr › liens › C5 › 5.2d (preuve)
+    Journaux de bord et suivi Git de l'avancement.
+    → 
+
+[180] refacto-mtr › liens › C6 › 6.1c (preuve)
+    Tâches de refactorisation déléguées à chaque membre après une relecture commune.
+    → 
+
+[181] refacto-mtr › liens › C6 › 6.2b (preuve)
+    Intégration d'un nouveau membre : présentation du code, de la documentation et du Trello.
+    → 
+
+[182] refacto-mtr › liens › C6 › 6.2c (preuve)
+    Accompagnement du nouveau membre dans la configuration de son environnement.
+    → 
+
+[183] refacto-mtr › liens › C6 › 6.2d (preuve)
+    Journaux de bord et soutenance.
+    → 
+
+--- Qualité de l'air mondial (id: sae-air) -----------------------------------
+
+[184] sae-air › nom
+    Qualité de l'air mondial
+    → 
+
+[185] sae-air › resume (phrase sous le titre)
+    Croisement de données mondiales sur la pollution de l'air, la démographie et l'économie.
+    → 
+
+[186] sae-air › equipe
+    4 personnes (Djeneba Diallo, Anton Meimoun, Yanis Ouadah, Ilyes Brahim)
+    → 
+
+[187] sae-air › contexte
+    SAE S4.C.01 de gestion et qualité des données, à partir de trois sources : OpenAQ (pollution), World Cities (démographie) et la Banque mondiale (indicateurs socio-économiques).
+    → 
+
+[188] sae-air › objectif
+    Analyser et croiser ces jeux de données dans une base relationnelle, puis dans un modèle multidimensionnel adapté à l'analyse.
+    → 
+
+[189] sae-air › role (« Mon rôle »)
+    Scripts Python d'extraction, de nettoyage, de dédoublonnage et de fusion des fichiers CSV. Base normalisée en 3NF de 6 tables (Pays, Ville, Station, Polluant, Mesure, indicateur_pays). Schéma en constellation à deux tables de faits (mesures horaires, indicateurs annuels). Visualisation dans Qlik et rapport.
+    → 
+
+[190] sae-air › resultats
+    Requêtes analytiques en moyenne 15 fois plus rapides qu'avec le modèle relationnel. Visualisation d'un sous-ensemble des données et rapport explicatif.
+    → 
+
+[191] sae-air › details (« Points clés ») n°1
+    Trois sources : OpenAQ (PM2.5, PM10, NO₂, CO, O₃, SO₂), World Cities (environ 40 000 villes) et les indicateurs de la Banque mondiale.
+    → 
+
+[192] sae-air › details (« Points clés ») n°2
+    World Cities sert de table pivot : iso2 pour rejoindre OpenAQ, iso3 pour la Banque mondiale.
+    → 
+
+[193] sae-air › details (« Points clés ») n°3
+    Scripts Python : fusion des CSV d'OpenAQ (en-têtes normalisés, doublons supprimés) et pivot des indicateurs par pays et par année.
+    → 
+
+[194] sae-air › details (« Points clés ») n°4
+    Nettoyage : doublons, valeurs nulles, négatives ou aberrantes écartées ; noms de villes et codes pays harmonisés.
+    → 
+
+[195] sae-air › details (« Points clés ») n°5
+    Modèle relationnel en 3NF : Pays, Ville, Station, Mesure, Polluant (avec le seuil OMS) et indicateur_pays.
+    → 
+
+[196] sae-air › details (« Points clés ») n°6
+    Schéma en constellation : deux tables de faits, les mesures (valeur rapportée au seuil OMS, score de fiabilité) et les indicateurs annuels, qui partagent les dimensions Temps et Pays.
+    → 
+
+[197] sae-air › details (« Points clés ») n°7
+    Dimension Temps découpée en année, mois et jour pour des ROLLUP et CUBE sans fonction de date.
+    → 
+
+[198] sae-air › images › légende de air-mcd.png
+    Modèle conceptuel (MCD).
+    → 
+
+[199] sae-air › images › légende de air-mld.png
+    Modèle logique (MLD) avec les clés étrangères.
+    → 
+
+[200] sae-air › images › légende de air-constellation.png
+    Modèle multidimensionnel en constellation.
+    → 
+
+[201] sae-air › ressources › libellé du lien
+    Rapport détaillé (PDF)
+    → 
+
+[202] sae-air › liens › C4 › 4.2a (preuve)
+    Modèle normalisé en 3NF puis schéma en constellation, 15 fois plus rapide sur les requêtes analytiques.
+    → 
+
+[203] sae-air › liens › C4 › 4.2c (preuve)
+    Visualisation d'un sous-ensemble des données dans Qlik.
+    → 
+
+[204] sae-air › liens › C4 › 4.2d (preuve)
+    Fusion de trois sources CSV hétérogènes (OpenAQ, World Cities, Banque mondiale).
+    → 
+
+[205] sae-air › liens › C4 › 4.3a (preuve)
+    Stockage de mesures horaires mondiales et d'indicateurs annuels.
+    → 
+
+[206] sae-air › liens › C4 › 4.3b (preuve)
+    Scripts Python d'extraction, de nettoyage et de dédoublonnage.
+    → 
+
+[207] sae-air › liens › C4 › 4.3c (preuve)
+    Exploration des données par le modèle multidimensionnel.
+    → 
+
+[208] sae-air › liens › C6 › 6.1d (preuve)
+    Collaboration au sein d'un groupe de quatre étudiants.
+    → 
+
+--- Stage à l'AFPOLS (id: stage-afpols) --------------------------------------
+
+[209] stage-afpols › nom
+    Stage à l'AFPOLS
+    → 
+
+[210] stage-afpols › resume (phrase sous le titre)
+    Mise en œuvre d'un plan d'action de cybersécurité et gestion du parc applicatif.
+    → 
+
+[211] stage-afpols › equipe
+    Stage en entreprise
+    → 
+
+[212] stage-afpols › contexte
+    Stage de 8 semaines au sein de l'AFPOLS.
+    → 
+
+[213] stage-afpols › objectif
+    Mettre en œuvre un plan d'action de cybersécurité et gérer le parc applicatif.
+    → 
+
+[214] stage-afpols › role (« Mon rôle »)
+    À compléter.
+    → 
+
+[215] stage-afpols › resultats
+    À compléter.
+    → 
+
+[216] stage-afpols › liens › C3 › 3.2c (preuve)
+    Plan d'action de cybersécurité.
+    → 
+
+[217] stage-afpols › liens › C4 › 4.2b (preuve)
+    Mise en œuvre d'un plan d'action de cybersécurité.
+    → 
+
+[218] stage-afpols › liens › C5 › 5.2a (preuve)
+    Gestion du parc applicatif de la structure.
+    → 
+
+[219] stage-afpols › liens › C5 › 5.2d (preuve)
+    Suivi du plan d'action.
+    → 
+
+[220] stage-afpols › liens › C6 › 6.2a (preuve)
+    Découverte de l'organisation informatique d'une structure.
+    → 
+
+[221] stage-afpols › liens › C6 › 6.2b (preuve)
+    Intégration dans l'équipe informatique pendant 8 semaines.
+    → 
+
+==============================================================================
+5. OUTILS (assets/js/data.js › OUTILS, texte affiché au survol)
+==============================================================================
+
+[222] OUTILS › Java › desc
+    MineTaRouille (JavaFX, MVC) et le moteur du jeu d'échecs.
+    → 
+
+[223] OUTILS › Python › desc
+    Scripts d'extraction, de nettoyage et de fusion de données (SAE Qualité de l'air).
+    → 
+
+[224] OUTILS › JavaScript › desc
+    Interactions côté navigateur, dont ce portfolio.
+    → 
+
+[225] OUTILS › PHP › desc
+    Back-end orienté objet de la buvette associative : sessions, routage, PDO.
+    → 
+
+[226] OUTILS › C › desc
+    Programmation bas niveau : mémoire, pointeurs, structures.
+    → 
+
+[227] OUTILS › SQL › desc
+    Création de bases, contraintes, jointures et index.
+    → 
+
+[228] OUTILS › HTML / CSS › desc
+    Sites web, interface responsive de la buvette et ce portfolio.
+    → 
+
+[229] OUTILS › PostgreSQL › desc
+    SGBD de la SAE Base de données : boutique en ligne complète.
+    → 
+
+[230] OUTILS › MySQL › desc
+    Base relationnelle de la buvette et du poste de développement.
+    → 
+
+[231] OUTILS › MongoDB › desc
+    Base de données orientée documents.
+    → 
+
+[232] OUTILS › pgAdmin › desc
+    Administration et interrogation des bases PostgreSQL.
+    → 
+
+[233] OUTILS › Qlik › desc
+    Visualisation d'un sous-ensemble des données sur la qualité de l'air.
+    → 
+
+[234] OUTILS › Modélisation MCD / MLD › desc
+    Modèles conceptuels et logiques construits à partir d'un cahier des charges.
+    → 
+
+[235] OUTILS › UML › desc
+    Diagrammes de classes et de cas d'utilisation.
+    → 
+
+[236] OUTILS › Architecture MVC › desc
+    Séparation modèle, vue, contrôleur dans MineTaRouille et la buvette.
+    → 
+
+[237] OUTILS › Design Patterns › desc
+    Solutions de conception réutilisables, appliquées pendant la refactorisation de MineTaRouille.
+    → 
+
+[238] OUTILS › JavaFX › desc
+    Interface graphique de MineTaRouille : rendu du monde et inventaire.
+    → 
+
+[239] OUTILS › JUnit › desc
+    Tests unitaires des projets Java.
+    → 
+
+[240] OUTILS › Git / GitHub › desc
+    Dépôts partagés, branches et suivi du travail en équipe.
+    → 
+
+[241] OUTILS › Trello › desc
+    Suivi des tâches de MineTaRouille et du site pour les JO.
+    → 
+
+[242] OUTILS › IntelliJ › desc
+    IDE JetBrains pour Java et PHP.
+    → 
+
+[243] OUTILS › PyCharm › desc
+    IDE pour les scripts Python.
+    → 
+
+[244] OUTILS › VS Code › desc
+    Éditeur pour le web et les scripts.
+    → 
+
+[245] OUTILS › Suite Office › desc
+    Rapports, présentations et documents de projet.
+    → 
+
+[246] OUTILS › Bash › desc
+    Commandes et scripts shell sous Linux.
+    → 
+
+[247] OUTILS › Linux › desc
+    Environnement de travail quotidien, poste virtuel de développement.
+    → 
+
+[248] OUTILS › Windows › desc
+    Poste personnel et parc applicatif en stage.
+    → 
+
+[249] OUTILS › Apache › desc
+    Serveur web du poste de développement (Apache, PHP, MySQL).
+    → 
+
+[250] OUTILS › VirtualBox › desc
+    Machine virtuelle Linux configurée pour le développement.
+    → 
+
+==============================================================================
+6. GROUPES DE COMPÉTENCES (assets/js/data.js › GROUPES)
+==============================================================================
+
+[251] GROUPES › nom
+    Concevoir et développer
+    → 
+
+[252] GROUPES › Concevoir et développer › texte
+    Écrire, tester et optimiser des applications.
+    → 
+
+[253] GROUPES › nom
+    Systèmes et données
+    → 
+
+[254] GROUPES › Systèmes et données › texte
+    Installer les infrastructures et exploiter les données : le cœur du parcours C.
+    → 
+
+[255] GROUPES › nom
+    Piloter et collaborer
+    → 
+
+[256] GROUPES › Piloter et collaborer › texte
+    Conduire les projets et travailler en équipe.
+    → 
+
+==============================================================================
+7. TEXTES DE L'INTERFACE (assets/js/app.js et fichiers .html)
+==============================================================================
+
+[257] index.html, projets.html… › <meta name="description"> (résumé pour les moteurs de recherche)
+    Portfolio d'Anton Meimoun, étudiant en BUT Informatique (parcours données) à l'IUT de Montreuil : projets et compétences.
+    → 
+
+[258] app.js › pageAccueil › bouton
+    Voir mes projets
+    → 
+
+[259] app.js › pageAccueil › lien de la section Projets
+    Tous les projets
+    → 
+
+[260] app.js › pageAccueil › introduction de la section Compétences
+    Les six compétences du BUT Informatique, parcours C. Le compteur indique les apprentissages critiques (AC) démontrés par au moins un projet.
+    → 
+
+[261] app.js › pageAccueil › lien de la section Compétences
+    Détail des compétences
+    → 
+
+[262] app.js › pageAccueil › titres de sections
+    Projets · Compétences · Parcours · Outils · Contact
+    → 
+
+[263] app.js › pageProjets › phrase sous « Projets »
+    Les projets réalisés pendant le BUT, du plus récent au plus ancien.
+    → 
+
+[264] app.js › pageProjets › filtres
+    Filtrer :
+    → 
+
+[265] app.js › ficheProjet › titres des rubriques
+    Contexte · Objectif · Mon rôle · Résultats · Points clés
+    → 
+
+[266] app.js › ficheProjet › titres du panneau
+    Outils · Liens · Compétences
+    → 
+
+[267] app.js › ficheProjet › titres des blocs
+    Images · Code · Compétences mobilisées
+    → 
+
+[268] app.js › ficheProjet › fiche incomplète
+    Cette fiche est en cours de rédaction.
+    → 
+
+[269] app.js › ficheProjet › bas de page
+    Projet suivant :
+    → 
+
+[270] app.js › ligneProjet › étiquettes
+    Stage · Fiche à compléter
+    → 
+
+[271] app.js › pageCompetences › phrase sous « Compétences »
+    Les six compétences du référentiel national du BUT Informatique, parcours C « Administration, gestion et exploitation des données ». C1 à C3 se valident sur deux niveaux, C4 à C6 sur trois.
+    → 
+
+[272] app.js › pageCompetences › section du tableau
+    Projets et compétences
+    → 
+
+[273] app.js › pageCompetences › introduction du tableau
+    Pour chaque projet, les niveaux de compétence qu'il permet de démontrer.
+    → 
+
+[274] app.js › tableauCroise › légende
+    niveau démontré · preuve à confirmer
+    → 
+
+[275] app.js › ficheCompetence › compteur
+    … apprentissages critiques démontrés sur …, … à confirmer.
+    → 
+
+[276] app.js › ficheCompetence › AC sans preuve
+    Pas encore de preuve.
+    → 
+
+[277] app.js › ficheCompetence › bas de page
+    Autres compétences :
+    → 
+
+[278] app.js › pageAPropos › titres
+    Ce qui me motive · Qualités · En dehors des études · Contact · En bref
+    → 
+
+[279] app.js › mention sur une preuve non validée
+    à confirmer
+    → 
+
+
+Total : 279 textes.

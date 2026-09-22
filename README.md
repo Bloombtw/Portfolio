@@ -1,18 +1,19 @@
 # Portfolio — Anton Meimoun
 
 Portfolio de 3e année de BUT Informatique (parcours C, IUT de Montreuil).
-Site statique en HTML, CSS et JavaScript, sans compilation. Seul le clavier 3D de l'accueil
-charge [Three.js](https://threejs.org) depuis un CDN ; sans lui, une grille de touches en CSS s'affiche à la place.
-La frise chronologique utilise [mo.js](https://github.com/mojs/mojs) pour ses effets ; sans lui, elle fonctionne sans animation d'éclat.
+Site statique en HTML, CSS et JavaScript, sans compilation ni bibliothèque (sauf highlight.js pour colorer
+les extraits de code des fiches projets). Présentation volontairement sobre : fond clair, titres en serif,
+une seule couleur d'accent, pas d'animation.
 
 Le site propose une double lecture :
 - **par projets** : chaque projet et les compétences qu'il a mobilisées ;
 - **par compétences** : les six compétences du référentiel national (C1 à C6, parcours C), regroupées en trois ensembles,
   avec leurs apprentissages critiques par niveau et les projets qui les prouvent.
 
-La page d'accueil présente un clavier 3D interactif (une touche par outil : survoler ou toucher
-une touche affiche sa description), une frise chronologique interactive du parcours, puis les compétences, les projets et le tableau croisé
-projets × compétences. Un bouton bascule entre thème sombre et thème clair.
+La page d'accueil présente les projets, les compétences, le parcours (frise verticale), les outils et le contact.
+Le tableau croisé projets × compétences est sur la page Compétences.
+
+Toutes les phrases du site sont listées dans `textes-a-reecrire.txt`, avec leur emplacement.
 
 ## Structure
 
@@ -25,9 +26,8 @@ assets/
   css/style.css     Mise en forme
   js/data.js        TOUTES les données : profil, projets, liens avec les compétences
   js/app.js         Génération des pages (pas besoin d'y toucher)
-  js/clavier.js     Clavier 3D de l'accueil (Three.js)
   img/              Captures d'écran des projets
-  img/logos/        Logos des outils (clavier 3D, fiches projets)
+  img/logos/        Logos des outils (liste Outils, fiches projets)
   img/projets/      Captures et schémas des projets
   code/             Extraits de code affichés dans les fiches projets
   docs/             CV, rapports et présentations (PDF)
@@ -65,26 +65,26 @@ Tout se passe dans `assets/js/data.js`.
 
 **Profil** : compléter `objectif`, `email`, `linkedin`. Pour le CV, déposer le PDF dans `assets/docs/` et renseigner son chemin dans `cv`.
 
-**Touches du clavier 3D** : chaque entrée de `OUTILS` devient une touche. La catégorie (`cat`) donne la couleur,
-`touche` est le texte court imprimé dessus et `largeur` élargit la touche (1 par défaut) :
+**Outils** : chaque entrée de `OUTILS` apparaît dans la liste « Outils » de l'accueil, rangée par catégorie (`cat`).
+`desc` s'affiche au survol :
 
 ```js
-{ cat: "Données", nom: "PostgreSQL", logo: "postgresql", largeur: 1.5, desc: "Ce que j'en ai fait." }
+{ cat: "Données", nom: "PostgreSQL", logo: "postgresql", desc: "Ce que j'en ai fait." }
 ```
 
 **Logos** : `logo` est le nom d'un fichier SVG de `assets/img/logos/`. Les fichiers qui commencent par
-`mono-` sont des icônes d'une seule couleur, qui s'adaptent au thème. Le même logo s'affiche dans les
+`mono-` sont des icônes d'une seule couleur. Le même logo s'affiche dans les
 fiches projets dès que le nom d'un outil du projet correspond au `nom` ou à un `alias` de l'outil.
-Pour un outil qui n'est pas sur le clavier, l'ajouter dans `AUTRES_LOGOS`.
+Pour un outil absent de la liste `OUTILS`, l'ajouter dans `AUTRES_LOGOS`.
 
 Crédits : logos de [Devicon](https://devicon.dev) (licence MIT) et de [Simple Icons](https://simpleicons.org)
 (CC0). Les icônes `mono-sql`, `mono-pgadmin`, `mono-mcd`, `mono-mvc`, `mono-javafx`, `mono-tests` et
 `mono-algo` ont été dessinées pour ce site.
 
 **Ajouter un projet** : copier un bloc de `PROJETS` et modifier ses champs. L'`id` sert dans l'adresse de la fiche (lettres minuscules et tirets).
-`annee` (`BUT1`, `BUT2`, `BUT3`) rattache le projet à l'étape correspondante de la frise ; `stage: true` affiche le badge « stage ».
+`annee` (`BUT1`, `BUT2`, `BUT3`) rattache le projet à l'étape correspondante du parcours ; `stage: true` affiche l'étiquette « Stage ».
 
-**Frise chronologique** : chaque entrée de `FRISE` est une étape. `annee` liste automatiquement les projets
+**Parcours** : chaque entrée de `FRISE` est une étape de la frise verticale de l'accueil. `annee` liste automatiquement les projets
 de la même année, `projet` ajoute un lien vers une fiche :
 
 ```js
@@ -109,12 +109,12 @@ En parcours C, C1 à C3 ont deux niveaux et C4 à C6 en ont trois.
 Les groupes de compétences se règlent dans `GROUPES`.
 
 **Page « À propos »** : tout est dans `PERSO` (présentation, « en bref », moteurs, qualités, centres d'intérêt).
-Chaque carte a une `icone` parmi celles de `ICONES_PERSO` (dans `app.js`). Pour changer la photo, remplacer
+Pour changer la photo, remplacer
 `assets/img/photo.jpg` par une image carrée d'au moins 400 × 400 px.
 
 **Logos d'écoles et d'entreprises** : les déclarer dans `ORGANISMES` (nom, logo, site), puis indiquer la clé
 dans `PROFIL.ecole`, dans `organisme` d'un projet (stage…) ou d'une étape de la `FRISE`.
-Ils s'affichent sur une tuile blanche pour rester lisibles dans les deux thèmes.
+Ils s'affichent à côté de l'étape ou en haut de la fiche.
 
 **Ajouter des liens** (dépôt, vidéo, PDF) dans `ressources` :
 
