@@ -30,7 +30,7 @@ const PERSO = {
   // une valeur peut être un texte ou une liste de lignes
   enBref: [
     ["Formation", "BUT Informatique, 3e année · Parcours C"],
-    ["Baccalauréat", "Général, mention bien"],
+    ["Baccalauréat", ["Général, mention bien", "Spécialités : Mathématiques, NSI"]],
     ["Expérience", ["Stage de 8 semaines à l'AFPOLS", "Bénévolat en soutien scolaire"]]
   ],
   // « moteurs » et « qualites » : une phrase par ligne, sans titre
