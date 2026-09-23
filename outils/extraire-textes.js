@@ -98,7 +98,7 @@ titre("7. TEXTES DE L'INTERFACE (assets/js/app.js et fichiers .html)");
   ["app.js › ficheCompetence › AC sans preuve", "Pas encore de preuve."],
   ["app.js › ficheCompetence › bas de page", "Autres compétences :"],
   ["app.js › pageAPropos › intitulés des sections", "En bref · Mon parcours · Qualités · En dehors des études · Contact"],
-  ["app.js › blocContact › intitulés", "Écrivez-moi · Me retrouver"],
+  ["app.js › blocContact › intitulés", "Mail · Mes réseaux"],
   ["app.js › blocContact › lien du CV (quand le PDF est déposé)", "Télécharger mon CV (PDF)"],
   ["app.js › mention sur une preuve non validée", "à confirmer"]
 ].forEach(([ou, t]) => ajout(ou, t));

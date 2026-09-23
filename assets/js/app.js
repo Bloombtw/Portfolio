@@ -90,12 +90,12 @@ function logosContact() {
 function blocContact() {
   return `<div class="bloc-contact">
     <div>
-      <p class="contact-label">Écrivez-moi</p>
+      <p class="contact-label">Mail</p>
       <a class="contact-mail" href="mailto:${esc(PROFIL.email)}">${imageLogo("mono-mail", "E-mail")}${esc(PROFIL.email)}</a>
       ${PROFIL.cv ? `<p class="contact-cv"><a href="${esc(PROFIL.cv)}">Télécharger mon CV (PDF)</a></p>` : ""}
     </div>
     <div>
-      <p class="contact-label">Me retrouver</p>
+      <p class="contact-label">Mes réseaux</p>
       <div class="contact-logos">${logosContact()}</div>
     </div>
   </div>`;

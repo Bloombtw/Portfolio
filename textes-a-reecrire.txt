@@ -1170,7 +1170,7 @@ mot pour mot, ni les noms propres (outils, logiciels).
     → 
 
 [279] app.js › blocContact › intitulés
-    Écrivez-moi · Me retrouver
+    Mail · Mes réseaux
     → 
 
 [280] app.js › blocContact › lien du CV (quand le PDF est déposé)
