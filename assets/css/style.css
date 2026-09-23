@@ -122,6 +122,19 @@ img.lg { width: auto; max-width: 2.2rem; }
 .lg.mono { width: 1rem; background: var(--doux); -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
 
 .contact p { max-width: 42rem; }
+.bloc-contact { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem 3rem; align-items: center; padding: 1.75rem 2rem; border: 1px solid var(--trait); border-radius: 6px; background: var(--surface); }
+.contact-label { margin: 0 0 .5rem; font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--pale); }
+.contact-mail { display: inline-flex; align-items: center; gap: .6rem; font-family: var(--serif); font-size: clamp(1.2rem, 2.6vw, 1.6rem); color: var(--texte); text-decoration: none; }
+.contact-mail:hover { color: var(--accent); text-decoration: underline; }
+.contact-mail .lg { width: 1.3rem; height: 1.3rem; background: var(--accent); }
+.contact-cv { margin: .75rem 0 0; font-size: .95rem; }
+.contact-logos { display: flex; gap: .75rem; }
+.rond-logo { display: grid; place-items: center; width: 2.9rem; height: 2.9rem; border: 1px solid var(--trait); border-radius: 50%; color: var(--doux); transition: color .15s, border-color .15s, background-color .15s; }
+.rond-logo:hover { color: #fff; background: var(--accent); border-color: var(--accent); }
+.rond-logo .lg { width: 1.25rem; height: 1.25rem; background: currentColor; }
+.liens-intro .rond-logo { width: 2.5rem; height: 2.5rem; }
+#pied .rond-logo { width: 2.1rem; height: 2.1rem; }
+#pied .liens { align-items: center; }
 
 /* =========================================================
    Pages liste
@@ -159,7 +172,7 @@ table.croise { border-collapse: collapse; width: 100%; min-width: 40rem; font-si
 .fiche header { margin-bottom: 2.5rem; }
 .fiche-tete { display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
 .fiche h1 { margin-bottom: .75rem; }
-.fiche-grille, .apropos-grille { display: grid; grid-template-columns: minmax(0, 1fr) 16rem; gap: 3.5rem; align-items: start; }
+.fiche-grille { display: grid; grid-template-columns: minmax(0, 1fr) 16rem; gap: 3.5rem; align-items: start; }
 .texte h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
 .texte h2:first-child { margin-top: 0; }
 .texte p { max-width: 40rem; }
@@ -228,11 +241,21 @@ table.croise { border-collapse: collapse; width: 100%; min-width: 40rem; font-si
 
 /* À propos */
 .apropos { padding-top: 3rem; }
-.apropos-tete { display: flex; align-items: center; gap: 2rem; margin-bottom: 3rem; }
-.apropos-tete h1 { margin-bottom: .4rem; }
-.en-bref { margin: 0 0 1.5rem; display: grid; gap: .2rem; }
-.en-bref dt { color: var(--pale); font-size: .85rem; margin-top: .6rem; }
+.apropos-tete { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3rem; align-items: center; padding-bottom: 2.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--texte); }
+.apropos-tete h1 { margin: .35rem 0 1rem; }
+.apropos-tete .photo { width: 200px; height: 200px; }
+.apropos-corps { display: grid; gap: 2.5rem; }
+.bloc-perso { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1rem 2.5rem; align-items: start; }
+.bloc-perso h2 { font-family: var(--sans); font-size: .82rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--pale); padding-top: .35rem; }
+.bloc-perso p { max-width: 42rem; }
+.bloc-perso p:last-child { margin-bottom: 0; }
+.bloc-perso .phrase { padding-left: 1rem; border-left: 2px solid var(--trait); }
+.bloc-perso .phrase strong { color: var(--texte); }
+.bloc-perso .organisme { margin-top: 1.25rem; }
+.en-bref { margin: 0; display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: .1rem 1.5rem; }
+.en-bref dt { color: var(--pale); font-size: .95rem; }
 .en-bref dd { margin: 0; }
+.en-bref dd + dd { grid-column: 2; }
 
 /* =========================================================
    Petits écrans
@@ -247,10 +270,15 @@ table.croise { border-collapse: collapse; width: 100%; min-width: 40rem; font-si
   .parcours li { grid-template-columns: 1fr; }
   .parcours .organisme { display: none; }
   .outils div { grid-template-columns: 1fr; gap: .3rem; }
-  .fiche-grille, .apropos-grille { grid-template-columns: 1fr; gap: 2rem; }
+  .fiche-grille { grid-template-columns: 1fr; gap: 2rem; }
   .fiche-tete .organisme { display: none; }
-  .apropos-tete { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
-  .apropos-tete .photo { width: 120px; height: 120px; }
+  .apropos-tete { grid-template-columns: 1fr; gap: 1.5rem; }
+  .apropos-tete .photo { order: -1; width: 120px; height: 120px; }
+  .bloc-perso { grid-template-columns: 1fr; gap: .6rem; }
+  .en-bref { grid-template-columns: 1fr; gap: 0; }
+  .en-bref dt { margin-top: .6rem; font-size: .85rem; }
+  .en-bref dd + dd, .en-bref dd { grid-column: 1; }
+  .bloc-contact { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.25rem; }
 }
 @media (max-width: 480px) {
   body { font-size: 1rem; }

@@ -76,11 +76,40 @@ function liensContact() {
   return l;
 }
 
+/* Liens vers les profils, en logos cliquables */
+function logosContact() {
+  const liens = [
+    [PROFIL.linkedin, "LinkedIn", "mono-linkedin"],
+    [PROFIL.github, "GitHub", "mono-github"]
+  ].filter(([u]) => u);
+  return liens.map(([u, nom, logo]) =>
+    `<a class="rond-logo" href="${esc(u)}" target="_blank" rel="noopener" title="${nom}" aria-label="${nom}">${imageLogo(logo, nom)}</a>`).join("");
+}
+
+/* Bloc de contact : e-mail en évidence, profils en logos */
+function blocContact() {
+  return `<div class="bloc-contact">
+    <div>
+      <p class="contact-label">Écrivez-moi</p>
+      <a class="contact-mail" href="mailto:${esc(PROFIL.email)}">${imageLogo("mono-mail", "E-mail")}${esc(PROFIL.email)}</a>
+      ${PROFIL.cv ? `<p class="contact-cv"><a href="${esc(PROFIL.cv)}">Télécharger mon CV (PDF)</a></p>` : ""}
+    </div>
+    <div>
+      <p class="contact-label">Me retrouver</p>
+      <div class="contact-logos">${logosContact()}</div>
+    </div>
+  </div>`;
+}
+
 function pied() {
   document.getElementById("pied").innerHTML = `
     <div class="wrap barre">
       <span>${esc(PROFIL.nom)} · ${esc(PROFIL.formation)}</span>
-      <span class="liens">${liensContact().map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}</span>
+      <span class="liens">
+        <a href="mailto:${esc(PROFIL.email)}">${esc(PROFIL.email)}</a>
+        ${PROFIL.cv ? `<a href="${esc(PROFIL.cv)}">CV (PDF)</a>` : ""}
+        ${logosContact()}
+      </span>
     </div>`;
 }
 
@@ -200,7 +229,6 @@ function listeOutils() {
 
 /* ---------- Page d'accueil ---------- */
 function pageAccueil() {
-  const contact = liensContact();
   document.getElementById("contenu").innerHTML = `
     <section class="wrap intro-accueil">
       <div>
@@ -209,7 +237,8 @@ function pageAccueil() {
         <p class="chapeau">${esc(PROFIL.accroche)}</p>
         <p class="liens-intro">
           <a class="bouton" href="projets.html">Voir mes projets</a>
-          ${contact.map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}
+          <a href="mailto:${esc(PROFIL.email)}">${esc(PROFIL.email)}</a>
+          ${logosContact()}
         </p>
       </div>
       ${PROFIL.photo ? `<img class="photo" src="${esc(PROFIL.photo)}" alt="Photo d'${esc(PROFIL.nom)}" width="180" height="180">` : ""}
@@ -238,7 +267,7 @@ function pageAccueil() {
     <section class="wrap section contact">
       ${titreSection("Contact")}
       ${PROFIL.objectif ? `<p>${esc(PROFIL.objectif)}</p>` : ""}
-      <p class="liens-intro">${contact.map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}</p>
+      ${blocContact()}
     </section>`;
 }
 
@@ -472,39 +501,33 @@ function pageCompetences() {
 function pageAPropos() {
   if (typeof PERSO === "undefined") return;
   document.title = `À propos · ${PROFIL.nom}`;
-  const contact = liensContact();
   // phrases simples, ou « titre : texte » quand l'entrée a un titre
-  const liste = items => items.map(x => typeof x === "string"
+  const phrases = items => items.map(x => typeof x === "string"
     ? `<p class="phrase">${esc(x)}</p>`
-    : `<p class="phrase"><strong>${esc(x.titre)}</strong> : ${esc(x.texte)}</p>`).join("");
+    : `<p class="phrase"><strong>${esc(x.titre)}</strong> ${esc(x.texte)}</p>`).join("");
+  const bloc = (titre, contenu) => `<section class="bloc-perso"><h2>${esc(titre)}</h2><div>${contenu}</div></section>`;
+  const [debut, ...suite] = PERSO.presentation;
+
   document.getElementById("contenu").innerHTML = `
     <article class="wrap apropos">
       <header class="apropos-tete">
-        ${PROFIL.photo ? `<img class="photo" src="${esc(PROFIL.photo)}" alt="Photo d'${esc(PROFIL.nom)}" width="180" height="180">` : ""}
         <div>
+          <p class="sur-titre">${esc(PROFIL.formation)}</p>
           <h1>${esc(PERSO.titre)}</h1>
-          <p class="meta">${esc(PROFIL.formation)}</p>
+          <p class="chapeau">${esc(debut)}</p>
         </div>
+        ${PROFIL.photo ? `<img class="photo" src="${esc(PROFIL.photo)}" alt="Photo d'${esc(PROFIL.nom)}" width="200" height="200">` : ""}
       </header>
-      <div class="apropos-grille">
-        <div class="texte">
-          ${PERSO.presentation.map(t => `<p>${esc(t)}</p>`).join("")}
-          <h2>${esc(PERSO.moteursTitre || "Ce qui m'intéresse")}</h2>
-          ${liste(PERSO.moteurs)}
-          <h2>Qualités</h2>
-          ${liste(PERSO.qualites)}
-          <h2>En dehors des études</h2>
-          ${liste(PERSO.interets)}
-          <h2>Contact</h2>
-          ${PROFIL.objectif ? `<p>${esc(PROFIL.objectif)}</p>` : ""}
-          <p class="liens-intro">${contact.map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}</p>
-        </div>
-        <aside class="panneau">
-          <h2>En bref</h2>
-          <dl class="en-bref">${PERSO.enBref.map(([k, v]) =>
-            `<dt>${esc(k)}</dt>${[].concat(v).map(x => `<dd>${esc(x)}</dd>`).join("")}`).join("")}</dl>
-          ${logoOrganisme(PROFIL.ecole)}
-        </aside>
+
+      <div class="apropos-corps">
+        ${bloc("En bref", `<dl class="en-bref">${PERSO.enBref.map(([k, v]) =>
+          `<dt>${esc(k)}</dt>${[].concat(v).map(x => `<dd>${esc(x)}</dd>`).join("")}`).join("")}</dl>
+          ${logoOrganisme(PROFIL.ecole)}`)}
+        ${suite.length ? bloc("Mon parcours", suite.map(t => `<p>${esc(t)}</p>`).join("")) : ""}
+        ${bloc(PERSO.moteursTitre || "Ce qui m'intéresse", phrases(PERSO.moteurs))}
+        ${bloc("Qualités", phrases(PERSO.qualites))}
+        ${bloc("En dehors des études", phrases(PERSO.interets))}
+        ${bloc("Contact", `${PROFIL.objectif ? `<p>${esc(PROFIL.objectif)}</p>` : ""}${blocContact()}`)}
       </div>
     </article>`;
 }

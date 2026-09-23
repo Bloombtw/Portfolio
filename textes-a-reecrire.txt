@@ -1165,13 +1165,21 @@ mot pour mot, ni les noms propres (outils, logiciels).
     Autres compétences :
     → 
 
-[278] app.js › pageAPropos › titres
-    Qualités · En dehors des études · Contact · En bref
+[278] app.js › pageAPropos › intitulés des sections
+    En bref · Mon parcours · Qualités · En dehors des études · Contact
     → 
 
-[279] app.js › mention sur une preuve non validée
+[279] app.js › blocContact › intitulés
+    Écrivez-moi · Me retrouver
+    → 
+
+[280] app.js › blocContact › lien du CV (quand le PDF est déposé)
+    Télécharger mon CV (PDF)
+    → 
+
+[281] app.js › mention sur une preuve non validée
     à confirmer
     → 
 
 
-Total : 279 textes.
+Total : 281 textes.
