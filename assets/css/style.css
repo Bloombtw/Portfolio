@@ -163,8 +163,9 @@ table.croise { border-collapse: collapse; width: 100%; min-width: 40rem; font-si
 .texte h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
 .texte h2:first-child { margin-top: 0; }
 .texte p { max-width: 40rem; }
-.points, .liste-simple { padding-left: 1.2rem; display: grid; gap: .45rem; }
-.points li, .liste-simple li { max-width: 40rem; }
+.points { padding-left: 1.2rem; display: grid; gap: .45rem; }
+.points li { max-width: 40rem; }
+.phrase { max-width: 40rem; margin-bottom: .5rem; }
 .panneau { border-top: 1px solid var(--texte); padding-top: 1rem; font-size: .95rem; }
 .panneau h2 { font-family: var(--sans); font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--doux); margin: 1.25rem 0 .5rem; }
 .panneau h2:first-child { margin-top: 0; }

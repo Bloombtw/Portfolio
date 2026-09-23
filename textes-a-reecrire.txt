@@ -22,87 +22,87 @@ mot pour mot, ni les noms propres (outils, logiciels).
     → 
 
 [003] PROFIL › accroche (texte sous ton nom, accueil)
-    Étudiant en 3e année, passionné par la data et l'intelligence artificielle. Je conçois des bases de données et les applications qui les exploitent, en équipe et de bout en bout.
-    → 
-
-[004] PROFIL › objectif (section Contact de l'accueil et de « À propos »)
-    Mettre mes compétences en données au service d'une équipe, et approfondir la data et l'intelligence artificielle dans un environnement tourné vers l'innovation.
+    Étudiant en 3e année, je conçois des bases de données et les applications qui les exploitent.
     → 
 
 ==============================================================================
 2. PAGE « À PROPOS » (assets/js/data.js › PERSO)
 ==============================================================================
 
-[005] PERSO › titre
-    Bonjour, moi c'est Anton.
+[004] PERSO › titre
+    À propos de moi
     → 
 
-[006] PERSO › presentation, paragraphe 1
-    Étudiant en troisième année de BUT Informatique à l'IUT de Montreuil, je suis le parcours C, consacré à l'administration, à la gestion et à l'exploitation des données.
+[005] PERSO › presentation, paragraphe 1
+    Étudiant en troisième année de BUT Informatique à l'IUT de Montreuil, je suis spécialisé dans la gestion, l'exploitation et la visualisation de données.
     → 
 
-[007] PERSO › presentation, paragraphe 2
-    Je suis passionné par la data et l'intelligence artificielle. J'aime partir de données brutes, les nettoyer, les structurer puis les rendre utiles, comme dans la SAE sur la qualité de l'air mondial.
+[006] PERSO › presentation, paragraphe 2
+    Je suis intéressé par la donnée et l'intelligence artificielle. J'aime donner du sens aux données que je traite, de manière à en tirer le plus d'informations.
     → 
 
-[008] PERSO › presentation, paragraphe 3
-    Je veux mettre ces compétences en pratique au sein d'une équipe dynamique et continuer à apprendre dans un environnement tourné vers l'innovation.
+[007] PERSO › presentation, paragraphe 3
+    Je souhaite mettre mes compétences en pratique au sein d'une équipe dynamique et continuer à les développer dans un environnement tourné vers le secteur social et l'innovation.
     → 
 
-[009] PERSO › enBref › Formation
-    BUT Informatique, 3e année
+[008] PERSO › enBref › Formation
+    BUT Informatique, 3e année · Parcours C
     → 
 
-[010] PERSO › enBref › Parcours
-    C · données
-    → 
-
-[011] PERSO › enBref › Baccalauréat
+[009] PERSO › enBref › Baccalauréat
     Général, mention bien
     → 
 
-[012] PERSO › enBref › Expérience
+[010] PERSO › enBref › Expérience
     Stage de 8 semaines à l'AFPOLS
     → 
 
-[013] PERSO › moteurs (« Ce qui me motive ») › La data et l'IA
-    Comprendre ce que racontent les données, et comment l'intelligence artificielle peut les exploiter.
+[011] PERSO › enBref › Expérience
+    Bénévolat en soutien scolaire
     → 
 
-[014] PERSO › moteurs (« Ce qui me motive ») › Construire
-    Passer d'un besoin à une application qui fonctionne : un jeu, une buvette, une base de données.
+[012] PERSO › moteursTitre (titre de section)
+    Ce qui m'intéresse
     → 
 
-[015] PERSO › moteurs (« Ce qui me motive ») › Le travail d'équipe
-    Répartir les tâches, relire le code ensemble et accueillir de nouveaux membres dans un projet.
+[013] PERSO › moteurs (« Ce qui m'intéresse ») n°1
+    J'aime comprendre le sens de mes projets et leur impact concret.
     → 
 
-[016] PERSO › qualites (« Qualités ») › Communication pédagogique
-    Un an d'encadrement scolaire bénévole.
+[014] PERSO › moteurs (« Ce qui m'intéresse ») n°2
+    Passer d'un besoin à une application qui fonctionne : une application, une base de données.
     → 
 
-[017] PERSO › qualites (« Qualités ») › Gestion du temps
-    Accompagnement d'élèves en parallèle des études.
+[015] PERSO › moteurs (« Ce qui m'intéresse ») n°3
+    Accueillir des membres dans un projet, discuter ensemble de la direction à prendre.
     → 
 
-[018] PERSO › qualites (« Qualités ») › Autonomie
-    Avancer seul sur ma partie, avec GitHub pour suivre mon travail.
+[016] PERSO › qualites (« Qualités ») n°1
+    Encadrement scolaire bénévole
     → 
 
-[019] PERSO › qualites (« Qualités ») › Résolution de problèmes
-    Débogage méthodique sous IntelliJ.
+[017] PERSO › qualites (« Qualités ») n°2
+    Accompagnement d'élèves en difficulté en parallèle des études.
+    → 
+
+[018] PERSO › qualites (« Qualités ») n°3
+    Faire avancer mes projets avec un code clair pour permettre le suivi
+    → 
+
+[019] PERSO › qualites (« Qualités ») n°4
+    Résolution de conflits au sein de groupes
     → 
 
 [020] PERSO › interets (« En dehors des études ») › Violoncelle
-    Neuf ans de pratique, pour la rigueur et l'écoute.
+    Neuf ans de pratique.
     → 
 
 [021] PERSO › interets (« En dehors des études ») › Football
-    Le plaisir du jeu collectif.
+    Une passion, autant sur le plan tactique que sportif.
     → 
 
 [022] PERSO › interets (« En dehors des études ») › Musculation
-    La régularité et le dépassement de soi.
+    Un esprit sain dans un corps sain.
     → 
 
 ==============================================================================
@@ -1166,7 +1166,7 @@ mot pour mot, ni les noms propres (outils, logiciels).
     → 
 
 [278] app.js › pageAPropos › titres
-    Ce qui me motive · Qualités · En dehors des études · Contact · En bref
+    Qualités · En dehors des études · Contact · En bref
     → 
 
 [279] app.js › mention sur une preuve non validée

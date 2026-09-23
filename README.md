@@ -14,6 +14,7 @@ La page d'accueil présente les projets, les compétences, le parcours (frise ve
 Le tableau croisé projets × compétences est sur la page Compétences.
 
 Toutes les phrases du site sont listées dans `textes-a-reecrire.txt`, avec leur emplacement.
+Après avoir modifié `data.js`, régénérer cette liste avec `node outils/extraire-textes.js`.
 
 ## Structure
 

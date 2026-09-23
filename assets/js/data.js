@@ -8,8 +8,8 @@ const PROFIL = {
   formation: "BUT Informatique, IUT de Montreuil",
   ecole: "iut",          // clé dans ORGANISMES
   parcours: "Parcours C : administration, gestion et exploitation des données",
-  accroche: "Étudiant en 3e année, passionné par la data et l'intelligence artificielle. Je conçois des bases de données et les applications qui les exploitent, en équipe et de bout en bout.",
-  objectif: "Mettre mes compétences en données au service d'une équipe, et approfondir la data et l'intelligence artificielle dans un environnement tourné vers l'innovation.",
+  accroche: "Étudiant en 3e année, je conçois des bases de données et les applications qui les exploitent.",
+  objectif: "",         // phrase de la section Contact ; vide = pas de phrase
   // Déposer le CV dans assets/docs/ puis renseigner son chemin
   cv: "",               // ex. "assets/docs/CV_Anton_Meimoun.pdf"
   github: "https://github.com/Bloombtw",
@@ -21,36 +21,37 @@ const PROFIL = {
 
 /* PAGE « À PROPOS » */
 const PERSO = {
-  titre: "Bonjour, moi c'est Anton.",
+  titre: "À propos de moi",
   presentation: [
-    "Étudiant en troisième année de BUT Informatique à l'IUT de Montreuil, je suis le parcours C, consacré à l'administration, à la gestion et à l'exploitation des données.",
-    "Je suis passionné par la data et l'intelligence artificielle. J'aime partir de données brutes, les nettoyer, les structurer puis les rendre utiles, comme dans la SAE sur la qualité de l'air mondial.",
-    "Je veux mettre ces compétences en pratique au sein d'une équipe dynamique et continuer à apprendre dans un environnement tourné vers l'innovation."
+    "Étudiant en troisième année de BUT Informatique à l'IUT de Montreuil, je suis spécialisé dans la gestion, l'exploitation et la visualisation de données.",
+    "Je suis intéressé par la donnée et l'intelligence artificielle. J'aime donner du sens aux données que je traite, de manière à en tirer le plus d'informations.",
+    "Je souhaite mettre mes compétences en pratique au sein d'une équipe dynamique et continuer à les développer dans un environnement tourné vers le secteur social et l'innovation."
   ],
+  // une valeur peut être un texte ou une liste de lignes
   enBref: [
-    ["Formation", "BUT Informatique, 3e année"],
-    ["Parcours", "C · données"],
+    ["Formation", "BUT Informatique, 3e année · Parcours C"],
     ["Baccalauréat", "Général, mention bien"],
-    ["Expérience", "Stage de 8 semaines à l'AFPOLS"]
+    ["Expérience", ["Stage de 8 semaines à l'AFPOLS", "Bénévolat en soutien scolaire"]]
   ],
+  // « moteurs » et « qualites » : une phrase par ligne, sans titre
+  moteursTitre: "Ce qui m'intéresse",
   moteurs: [
-    { titre: "La data et l'IA", texte: "Comprendre ce que racontent les données, et comment l'intelligence artificielle peut les exploiter." },
-    { titre: "Construire", texte: "Passer d'un besoin à une application qui fonctionne : un jeu, une buvette, une base de données." },
-    { titre: "Le travail d'équipe", texte: "Répartir les tâches, relire le code ensemble et accueillir de nouveaux membres dans un projet." }
+    "J'aime comprendre le sens de mes projets et leur impact concret.",
+    "Passer d'un besoin à une application qui fonctionne : une application, une base de données.",
+    "Accueillir des membres dans un projet, discuter ensemble de la direction à prendre."
   ],
   qualites: [
-    { titre: "Communication pédagogique", texte: "Un an d'encadrement scolaire bénévole." },
-    { titre: "Gestion du temps", texte: "Accompagnement d'élèves en parallèle des études." },
-    { titre: "Autonomie", texte: "Avancer seul sur ma partie, avec GitHub pour suivre mon travail." },
-    { titre: "Résolution de problèmes", texte: "Débogage méthodique sous IntelliJ." }
+    "Encadrement scolaire bénévole",
+    "Accompagnement d'élèves en difficulté en parallèle des études.",
+    "Faire avancer mes projets avec un code clair pour permettre le suivi",
+    "Résolution de conflits au sein de groupes"
   ],
   interets: [
-    { titre: "Violoncelle", chiffre: "9 ans", texte: "Neuf ans de pratique, pour la rigueur et l'écoute." },
-    { titre: "Football", texte: "Le plaisir du jeu collectif." },
-    { titre: "Musculation", texte: "La régularité et le dépassement de soi." }
+    { titre: "Violoncelle", texte: "Neuf ans de pratique." },
+    { titre: "Football", texte: "Une passion, autant sur le plan tactique que sportif." },
+    { titre: "Musculation", texte: "Un esprit sain dans un corps sain." }
   ]
 };
-
 /* ORGANISMES : écoles et entreprises, affichés avec leur logo
    (fichier dans assets/img/logos/) sur une tuile blanche */
 const ORGANISMES = {

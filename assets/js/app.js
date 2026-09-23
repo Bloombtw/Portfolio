@@ -237,7 +237,7 @@ function pageAccueil() {
 
     <section class="wrap section contact">
       ${titreSection("Contact")}
-      <p>${esc(PROFIL.objectif)}</p>
+      ${PROFIL.objectif ? `<p>${esc(PROFIL.objectif)}</p>` : ""}
       <p class="liens-intro">${contact.map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}</p>
     </section>`;
 }
@@ -473,8 +473,10 @@ function pageAPropos() {
   if (typeof PERSO === "undefined") return;
   document.title = `À propos · ${PROFIL.nom}`;
   const contact = liensContact();
-  const liste = items => `<ul class="liste-simple">${items.map(x =>
-    `<li><strong>${esc(x.titre)}</strong>${x.chiffre ? ` (${esc(x.chiffre)})` : ""} : ${esc(x.texte)}</li>`).join("")}</ul>`;
+  // phrases simples, ou « titre : texte » quand l'entrée a un titre
+  const liste = items => items.map(x => typeof x === "string"
+    ? `<p class="phrase">${esc(x)}</p>`
+    : `<p class="phrase"><strong>${esc(x.titre)}</strong> : ${esc(x.texte)}</p>`).join("");
   document.getElementById("contenu").innerHTML = `
     <article class="wrap apropos">
       <header class="apropos-tete">
@@ -487,19 +489,20 @@ function pageAPropos() {
       <div class="apropos-grille">
         <div class="texte">
           ${PERSO.presentation.map(t => `<p>${esc(t)}</p>`).join("")}
-          <h2>Ce qui me motive</h2>
+          <h2>${esc(PERSO.moteursTitre || "Ce qui m'intéresse")}</h2>
           ${liste(PERSO.moteurs)}
           <h2>Qualités</h2>
           ${liste(PERSO.qualites)}
           <h2>En dehors des études</h2>
           ${liste(PERSO.interets)}
           <h2>Contact</h2>
-          <p>${esc(PROFIL.objectif)}</p>
+          ${PROFIL.objectif ? `<p>${esc(PROFIL.objectif)}</p>` : ""}
           <p class="liens-intro">${contact.map(([u, t]) => `<a href="${esc(u)}">${esc(t)}</a>`).join("")}</p>
         </div>
         <aside class="panneau">
           <h2>En bref</h2>
-          <dl class="en-bref">${PERSO.enBref.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+          <dl class="en-bref">${PERSO.enBref.map(([k, v]) =>
+            `<dt>${esc(k)}</dt>${[].concat(v).map(x => `<dd>${esc(x)}</dd>`).join("")}`).join("")}</dl>
           ${logoOrganisme(PROFIL.ecole)}
         </aside>
       </div>
