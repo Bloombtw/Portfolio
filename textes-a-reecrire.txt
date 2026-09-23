@@ -1,4 +1,4 @@
-TEXTES DU PORTFOLIO À RÉÉCRIRE
+﻿TEXTES DU PORTFOLIO À RÉÉCRIRE
 
 Chaque phrase affichée sur le site est listée ci-dessous avec son emplacement.
 Réécris-la sur la ligne « → » en dessous (laisse vide pour la garder telle quelle).
